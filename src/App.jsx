@@ -34,25 +34,25 @@ export default function App() {
   });
 
   // Updated Contact Info
-  const RESTAURANT_NAME = "Sharq Al Marfa Restaurant";
-  const PHONE_NUMBER = "+971 56 523 9963";
-  const WHATSAPP_NUMBER = "971565239963"; // For URL formatting
-  const ADDRESS = "Dubai, UAE";
+  const RESTAURANT_NAME = "迪拜香港饭店 HONGKONG RESTAURANT";
+  const PHONE_NUMBER = "+971 50 883 9958";
+  const WHATSAPP_NUMBER = "971508839958"; // For URL formatting
+  const ADDRESS = "DNM-V03-FB20-0079,0080 Souk Al Marfa, Dubai, UAE";
   const INSTAGRAM_URL = "https://instagram.com/";
 
   const menuItems = [
-    { id: 1, title: "Peking Duck", price: 185, category: "Main", img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&q=80&w=800" },
-    { id: 2, title: "Crystal Dim Sum", price: 68, category: "Starter", img: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&q=80&w=800" },
-    { id: 3, title: "Kung Pao Chicken", price: 75, category: "Main", img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=800" },
-    { id: 4, title: "Szechuan Prawns", price: 95, category: "Main", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800" },
-    { id: 5, title: "Egg Fried Rice", price: 45, category: "Sides", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&q=80&w=800" },
-    { id: 6, title: "Spring Rolls", price: 40, category: "Starter", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" }
+    { id: 1, title: "Peking Duck (北京烤鸭)", price: 185, category: "Main", img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&q=80&w=800" },
+    { id: 2, title: "Crystal Dim Sum (水晶虾饺)", price: 68, category: "Starter", img: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&q=80&w=800" },
+    { id: 3, title: "Kung Pao Chicken (宫保鸡丁)", price: 75, category: "Main", img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=800" },
+    { id: 4, title: "Szechuan Prawns (川味虾)", price: 95, category: "Main", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800" },
+    { id: 5, title: "Egg Fried Rice (蛋炒饭)", price: 45, category: "Sides", img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&q=80&w=800" },
+    { id: 6, title: "Spring Rolls (春卷)", price: 40, category: "Starter", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" }
   ];
 
   const reviews = [
-    { name: "Sarah Ahmed", rating: 5, comment: "Absolutely fantastic flavors! Impeccable service.", date: "2 days ago" },
-    { name: "Rajesh Kumar", rating: 5, comment: "The food is a must-try. Reminds me of home.", date: "1 week ago" },
-    { name: "Michael Chen", rating: 4, comment: "Great ambiance and very friendly staff.", date: "3 days ago" }
+    { name: "Li Wei", rating: 5, comment: "Best Cantonese flavors in Dubai. Highly recommend!", date: "1 day ago" },
+    { name: "Sarah Ahmed", rating: 5, comment: "Authentic taste and great service. The dim sum is a must-try.", date: "3 days ago" },
+    { name: "John Doe", rating: 4, comment: "Very clean restaurant and friendly staff.", date: "1 week ago" }
   ];
 
   // Cart Logic
@@ -114,9 +114,9 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => scrollToSection('home')}>
-              <div className="text-xl sm:text-2xl font-bold tracking-tighter text-red-900 flex flex-col uppercase">
-                <span>SHARQ AL MARFA</span>
-                <span className="text-[10px] font-medium tracking-[0.3em] text-neutral-500 uppercase text-center">Restaurant</span>
+              <div className="text-xl sm:text-2xl font-bold tracking-tighter text-red-900 flex flex-col">
+                <span>迪拜香港饭店</span>
+                <span className="text-[10px] font-medium tracking-[0.1em] text-neutral-500 uppercase text-center">Hongkong Restaurant</span>
               </div>
             </div>
 
@@ -178,7 +178,7 @@ export default function App() {
                     <img src={item.img} alt={item.title} className="w-20 h-20 rounded-xl object-cover" />
                     <div className="flex-1">
                       <div className="flex justify-between font-bold text-neutral-900">
-                        <h3>{item.title}</h3>
+                        <h3 className="text-sm">{item.title}</h3>
                         <span>AED {item.price * item.qty}</span>
                       </div>
                       <p className="text-xs text-neutral-400 mb-3">{item.category}</p>
@@ -219,8 +219,8 @@ export default function App() {
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl animate-fade-in">
-          <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight">{RESTAURANT_NAME}</h1>
-          <p className="text-xl text-neutral-200 mb-8 italic">Authentic flavors located in the heart of {ADDRESS}.</p>
+          <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 tracking-tight uppercase">{RESTAURANT_NAME}</h1>
+          <p className="text-xl text-neutral-200 mb-8 italic">Authentic Chinese Flavors in the heart of Dubai.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button onClick={() => scrollToSection('menu')} className="bg-red-900 text-white px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transition-all shadow-xl">Order Now</button>
             <button onClick={() => scrollToSection('booking')} className="bg-white/10 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-full text-lg font-bold hover:bg-white/20 transition-all">Reserve Table</button>
@@ -233,19 +233,19 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
              <div className="relative">
-                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200" alt="About Sharq Al Marfa" className="rounded-3xl shadow-2xl h-[500px] w-full object-cover" />
-                <div className="absolute -bottom-6 -right-6 bg-red-900 text-white p-8 rounded-2xl hidden md:block">
-                   <p className="text-4xl font-bold">10+</p>
-                   <p className="text-sm opacity-80">Years Experience</p>
+                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200" alt="About Restaurant" className="rounded-3xl shadow-2xl h-[500px] w-full object-cover" />
+                <div className="absolute -bottom-6 -right-6 bg-red-900 text-white p-8 rounded-2xl hidden md:block text-center">
+                   <p className="text-4xl font-bold">15+</p>
+                   <p className="text-sm opacity-80">Years of Culinary Excellence</p>
                 </div>
              </div>
              <div>
-                <h4 className="text-red-900 font-bold uppercase tracking-widest text-sm mb-4">Our Heritage</h4>
-                <h2 className="text-4xl font-bold mb-6">Traditional Recipes, Modern Ambience</h2>
-                <p className="text-neutral-600 text-lg mb-6">{RESTAURANT_NAME} brings an exquisite dining experience to {ADDRESS}, offering the finest flavors and hospitality.</p>
+                <h4 className="text-red-900 font-bold uppercase tracking-widest text-sm mb-4">Our Heritage (我们的传承)</h4>
+                <h2 className="text-4xl font-bold mb-6">Authentic Hong Kong Taste in Dubai</h2>
+                <p className="text-neutral-600 text-lg mb-6">{RESTAURANT_NAME} offers an exquisite journey into traditional Cantonese and Szechuan cuisine at our new Souk Al Marfa location.</p>
                 <ul className="space-y-4 text-neutral-700">
                    <li className="flex items-center gap-3"><div className="h-2 w-2 bg-red-900 rounded-full"></div> Unforgettable Culinary Flavors</li>
-                   <li className="flex items-center gap-3"><div className="h-2 w-2 bg-red-900 rounded-full"></div> Hand-crafted Signature Dishes</li>
+                   <li className="flex items-center gap-3"><div className="h-2 w-2 bg-red-900 rounded-full"></div> Hand-crafted Signature Dim Sum</li>
                    <li className="flex items-center gap-3"><div className="h-2 w-2 bg-red-900 rounded-full"></div> Premium Dining Experience</li>
                 </ul>
              </div>
@@ -257,8 +257,8 @@ export default function App() {
       <section id="menu" className="py-24 bg-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Our Special Menu</h2>
-            <p className="text-neutral-500">Add items to your cart and send your order via WhatsApp</p>
+            <h2 className="text-4xl font-bold mb-4">Signature Dishes (招牌美食)</h2>
+            <p className="text-neutral-500">Order your favorites directly via WhatsApp</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -270,10 +270,10 @@ export default function App() {
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-bold text-neutral-900">{item.title}</h3>
-                    <span className="text-red-900 font-black">AED {item.price}</span>
+                    <h3 className="text-lg font-bold text-neutral-900 leading-tight">{item.title}</h3>
+                    <span className="text-red-900 font-black whitespace-nowrap ml-2">AED {item.price}</span>
                   </div>
-                  <p className="text-neutral-500 text-sm mb-6 line-clamp-2">Authentic flavor prepared with the freshest ingredients by our specialty chefs.</p>
+                  <p className="text-neutral-500 text-sm mb-6 line-clamp-2">Authentic flavor prepared with traditional recipes and the freshest ingredients.</p>
                   <button 
                     onClick={() => addToCart(item)}
                     className="mt-auto w-full border-2 border-red-900 text-red-900 py-3 rounded-xl font-bold hover:bg-red-900 hover:text-white transition-all flex items-center justify-center gap-2"
@@ -292,7 +292,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
              <h2 className="text-4xl font-bold text-neutral-900 mb-4">Gallery</h2>
-             <p className="text-neutral-600">Explore the atmosphere of {RESTAURANT_NAME}</p>
+             <p className="text-neutral-600">Discover the ambiance of {RESTAURANT_NAME}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
             <div className="md:col-span-2 md:row-span-2 rounded-2xl overflow-hidden shadow-lg group">
@@ -314,7 +314,7 @@ export default function App() {
       {/* Reviews */}
       <section id="reviews" className="py-24 bg-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-16">Customer Reviews</h2>
+          <h2 className="text-4xl font-bold mb-16">Happy Customers</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {reviews.map((r, i) => (
               <div key={i} className="bg-white p-10 rounded-3xl shadow-sm">
@@ -335,19 +335,19 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
-                 <h2 className="text-3xl font-bold mb-8">Reach Us</h2>
+                 <h2 className="text-3xl font-bold mb-8">Visit Us</h2>
                  <div className="space-y-8">
                     <div className="flex gap-4">
                        <div className="p-4 bg-red-100 text-red-900 rounded-2xl h-fit"><MapPin /></div>
                        <div>
-                          <h4 className="font-bold text-lg">{RESTAURANT_NAME}</h4>
+                          <h4 className="font-bold text-lg">Our Address</h4>
                           <p className="text-neutral-600 mt-1">{ADDRESS}</p>
                        </div>
                     </div>
                     <div className="flex gap-4">
                        <div className="p-4 bg-red-100 text-red-900 rounded-2xl h-fit"><Phone /></div>
                        <div>
-                          <h4 className="font-bold text-lg">Contact Number</h4>
+                          <h4 className="font-bold text-lg">Call Us</h4>
                           <p className="text-neutral-600 mt-1">{PHONE_NUMBER}</p>
                        </div>
                     </div>
@@ -356,7 +356,7 @@ export default function App() {
               <div className="h-[400px] rounded-3xl overflow-hidden shadow-2xl relative bg-neutral-100">
                 <iframe 
                   title="Location Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d231011.66014457494!2d55.1384752671875!3d25.1852571!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a67e24b%3A0xff45e5024bc030f!2sDubai!5e0!3m2!1sen!2sae!4v1710500000000!5m2!1sen!2sae" 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3606.353347514107!2d55.2892973!3d25.3259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f433b9343360b%3A0xc3d2427f712f0e0b!2sSouk%20Al%20Marfa!5e0!3m2!1sen!2sae!4v1710500000000!5m2!1sen!2sae" 
                   className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700"
                   allowFullScreen="" 
                   loading="lazy"
@@ -369,8 +369,8 @@ export default function App() {
       {/* Booking Form */}
       <section id="booking" className="py-24 bg-neutral-900 text-white">
         <div className="max-w-3xl mx-auto px-4 text-center">
-           <h2 className="text-4xl font-bold mb-6">Book a Table</h2>
-           <p className="text-neutral-400 mb-12">Confirm your reservation via WhatsApp.</p>
+           <h2 className="text-4xl font-bold mb-6">Reservation (订位)</h2>
+           <p className="text-neutral-400 mb-12">Submit your details and we will confirm via WhatsApp.</p>
            <form onSubmit={handleBookingSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
               <div className="w-full">
                 <input 
@@ -419,12 +419,12 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             
             <div className="space-y-6">
-              <div className="text-2xl font-bold tracking-tighter text-white flex flex-col uppercase">
-                <span>SHARQ AL MARFA</span>
-                <span className="text-[10px] font-medium tracking-[0.4em] text-neutral-500 uppercase">Restaurant</span>
+              <div className="text-2xl font-bold tracking-tighter text-white flex flex-col">
+                <span>迪拜香港饭店</span>
+                <span className="text-[10px] font-medium tracking-[0.2em] text-neutral-500 uppercase">Hongkong Restaurant</span>
               </div>
               <p className="text-neutral-400 leading-relaxed text-sm">
-                Experience the pinnacle of culinary artistry in {ADDRESS}. We blend tradition with luxury to serve you an unforgettable dining experience.
+                Bringing the authentic heart of Hong Kong cuisine to the shores of Dubai. Experience tradition, taste, and excellence.
               </p>
               <div className="flex gap-4">
                 <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="p-2.5 bg-neutral-900 rounded-full text-neutral-400 hover:text-white hover:bg-red-900 transition-all duration-300">
@@ -457,7 +457,7 @@ export default function App() {
 
             <div>
               <h3 className="text-lg font-bold mb-8 relative inline-block uppercase tracking-wider">
-                Contact
+                Contact Info
                 <span className="absolute -bottom-2 left-0 w-12 h-1 bg-red-900 rounded-full"></span>
               </h3>
               <ul className="space-y-6 text-sm">
@@ -471,7 +471,7 @@ export default function App() {
                 <li className="flex gap-4">
                   <div className="p-3 bg-neutral-900 rounded-xl text-red-500"><Phone size={18} /></div>
                   <div>
-                    <p className="font-bold text-neutral-200 uppercase tracking-tight">Phone</p>
+                    <p className="font-bold text-neutral-200 uppercase tracking-tight">Direct Line</p>
                     <p className="text-neutral-400 mt-1">{PHONE_NUMBER}</p>
                   </div>
                 </li>
@@ -480,11 +480,11 @@ export default function App() {
 
             <div>
               <h3 className="text-lg font-bold mb-8 relative inline-block uppercase tracking-wider">
-                Updates
+                Newsletter
                 <span className="absolute -bottom-2 left-0 w-12 h-1 bg-red-900 rounded-full"></span>
               </h3>
               <p className="text-neutral-400 text-sm mb-6 leading-relaxed">
-                Subscribe to our newsletter for seasonal menus and events.
+                Stay updated with our seasonal specials and events.
               </p>
               <div className="relative">
                 <input 
@@ -504,8 +504,8 @@ export default function App() {
               © {new Date().getFullYear()} <span className="text-neutral-300 font-bold uppercase">{RESTAURANT_NAME}</span>.
             </p>
             <div className="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-neutral-600">
-              <a href="#" className="hover:text-red-900">Privacy</a>
-              <a href="#" className="hover:text-red-900">Terms</a>
+              <a href="#" className="hover:text-red-900">Privacy Policy</a>
+              <a href="#" className="hover:text-red-900">Terms of Service</a>
             </div>
           </div>
         </div>
