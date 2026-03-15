@@ -11,16 +11,18 @@ import {
   ChevronRight,
   Utensils,
   Quote,
-  Car,
-  MoveUpRight,
+  Leaf,
   ShoppingCart,
   Trash2,
   Plus,
   Minus,
   Mail,
-  Send,
   Youtube,
-  Share2
+  Share2,
+  Navigation,
+  CalendarDays,
+  Send,
+  ArrowRight
 } from 'lucide-react';
 
 export default function App() {
@@ -35,46 +37,46 @@ export default function App() {
     guests: '2 People'
   });
 
-  // UPDATED RESTAURANT DETAILS
-  const RESTAURANT_NAME = "PLOYS ZAAB";
-  const PHONE_NUMBER = "+971 52 401 9988";
-  const WHATSAPP_NUMBER = "971524019988"; 
-  const ADDRESS = "Souk Al Marfa, Deira Islands, Dubai, UAE";
-  const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=Ploys+Zaab+Souk+Al+Marfa+Dubai";
-  const MAP_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3606.843641321487!2d55.2946253!3d25.3111406!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f430043534b41%3A0x8e87d0c36b8e66e8!2sSouk%20Al%20Marfa!5e0!3m2!1sen!2sae!4v1710000000000!5m2!1sen!2sae";
+  // RESTAURANT DATA
+  const RESTAURANT_NAME = "The Spice Tree";
+  const PHONE_NUMBER = "+971 50 387 2085";
+  const WHATSAPP_NUMBER = "971503872085"; 
+  const ADDRESS = "68X2+X7H - 1st Floor - Sheikh Khalifa Bin Zayed St, Ajman, UAE";
+  const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=The+Spice+Tree+Sheikh+Khalifa+Bin+Zayed+St";
+  const MAP_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3604.28822080352!2d55.4526!3d25.4053!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDI0JzE5LjEiTiA1NcKwMjcnMDkuNCJF!5e0!3m2!1sen!2sae!4v1710000000000!5m2!1sen!2sae";
 
-  const SOCIAL_LINKS = {
-    facebook: "https://facebook.com/ployszaab.dubai",
-    instagram: "https://instagram.com/ployszaab_uae",
-    youtube: "https://youtube.com/@ployszaab",
-    tiktok: "https://tiktok.com/@ployszaab"
-  };
-
+  // Updated menu items with working image URLs provided by the user
   const menuItems = [
-    { 
-      id: 1, 
-      title: "Zaab Special Fried Rice", 
-      price: 35, 
-      category: "Main", 
-      img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop" 
-    },
-    { 
-      id: 2, 
-      title: "Spicy Kalasan Chicken", 
-      price: 38, 
-      category: "Main", 
-      img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=800&auto=format&fit=crop" 
-    },
-    { id: 3, title: "Signature Satay Platter", price: 28, category: "Grill", img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop" },
-    { id: 4, title: "Thai-Indo Fusion Salad", price: 25, category: "Salad", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop" },
-    { id: 5, title: "Ploys Zaab Beef Soup", price: 32, category: "Soup", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=800&auto=format&fit=crop" },
-    { id: 6, title: "Mango Sticky Rice", price: 15, category: "Dessert", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=800&auto=format&fit=crop" }
+    { id: 1, title: "Signature Butter Chicken", price: 45, category: "Signature", img: "https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" },
+    { id: 2, title: "Lamb Rogan Josh", price: 52, category: "Main", img: "https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" },
+    { id: 3, title: "Tandoori Spice Platter", price: 65, category: "Grill", img: "https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" },
+    { id: 4, title: "Dal Makhani (Slow Cooked)", price: 35, category: "Veg", img: "https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" },
+    { id: 5, title: "Saffron Vegetable Biryani", price: 38, category: "Rice", img: "https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" },
+    { id: 6, title: "Gulab Jamun with Generic", price: 22, category: "Dessert", img: "https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" }
   ];
 
   const reviews = [
-    { id: 1, name: "Aisha M.", rating: 5, comment: "The most authentic spicy flavors in Souk Al Marfa! A hidden gem.", date: "2 days ago" },
-    { id: 2, name: "Kevin L.", rating: 5, comment: "Ploys Zaab never disappoints. The service is fast and the food is always fresh.", date: "1 week ago" },
-    { id: 3, name: "Sarah J.", rating: 4, comment: "Great location and even better food. The spicy chicken is a must-try!", date: "3 weeks ago" }
+    {
+      id: 1,
+      name: "Sarah Ahmed",
+      rating: 5,
+      comment: "The best Butter Chicken I've had in Ajman! The atmosphere is incredibly elegant and perfect for family dinners.",
+      date: "2 weeks ago"
+    },
+    {
+      id: 2,
+      name: "Michael Chen",
+      rating: 5,
+      comment: "Outstanding service. The Tandoori platter was cooked to perfection. Highly recommend the Saffron Biryani as well!",
+      date: "1 month ago"
+    },
+    {
+      id: 3,
+      name: "Fatima Al-Zahra",
+      rating: 4,
+      comment: "Beautiful interior and very authentic flavors. The Dal Makhani is a must-try. We will definitely be coming back.",
+      date: "3 days ago"
+    }
   ];
 
   const addToCart = (product) => {
@@ -105,16 +107,13 @@ export default function App() {
       orderText += `• ${item.title} x${item.qty} = AED ${item.price * item.qty}\n`;
     });
     orderText += `\n*Total Amount: AED ${cartTotal}*\n\nPlease confirm my order.`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderText)}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(orderText)}`, '_blank');
   };
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
-    const { name, phone, date, guests } = formData;
-    const message = `*${RESTAURANT_NAME} - Table Reservation*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Date:* ${date}\n*Guests:* ${guests}\n\nPlease confirm my booking at Souk Al Marfa branch.`;
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    const message = `*${RESTAURANT_NAME} - Booking*\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Date:* ${formData.date}\n*Guests:* ${formData.guests}`;
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const scrollToSection = (id) => {
@@ -126,55 +125,49 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 font-sans text-neutral-800 selection:bg-red-600 selection:text-white text-[15px]">
+    <div className="min-h-screen bg-[#faf9f6] font-serif text-[#1a2e26] selection:bg-[#c49a6c] selection:text-white">
       
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-sm">
+      <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-lg border-b border-[#e5e1da] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => scrollToSection('home')}>
-              <div className="text-xl sm:text-2xl font-black tracking-tighter text-red-700 flex flex-col uppercase">
-                <span>{RESTAURANT_NAME}</span>
-                <span className="text-[10px] font-medium tracking-[0.1em] text-neutral-500 uppercase text-center">Souk Al Marfa · Dubai</span>
+          <div className="flex justify-between items-center h-24">
+            <div className="flex-shrink-0 flex items-center cursor-pointer gap-3" onClick={() => scrollToSection('home')}>
+              <div className="w-12 h-12 bg-[#1a2e26] rounded-full flex items-center justify-center text-[#c49a6c]">
+                <Leaf size={24} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold tracking-tight text-[#1a2e26] leading-none uppercase">{RESTAURANT_NAME}</span>
+                <span className="text-[10px] font-medium tracking-[0.2em] text-[#c49a6c] uppercase mt-1">Authentic Spice Kitchen</span>
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center space-x-6">
-              {['Home', 'About', 'Menu', 'Gallery', 'Reviews', 'Contact'].map((item) => (
-                <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-neutral-600 hover:text-red-700 font-medium transition-colors">
+            <div className="hidden lg:flex items-center space-x-10">
+              {['Home', 'About', 'Menu', 'Location'].map((item) => (
+                <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-sm font-medium uppercase tracking-widest text-[#1a2e26] hover:text-[#c49a6c] transition-colors">
                   {item}
                 </button>
               ))}
-              <div className="h-6 w-[1px] bg-neutral-200"></div>
+              <div className="h-6 w-[1px] bg-[#e5e1da]"></div>
               
-              <div className="flex items-center gap-3 mr-2">
-                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="text-neutral-400 hover:text-blue-600 transition-colors">
-                  <Facebook size={20} />
-                </a>
-                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-neutral-400 hover:text-pink-600 transition-colors">
-                  <Instagram size={20} />
-                </a>
-              </div>
-
-              <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-neutral-700 hover:text-red-700 transition-colors">
-                <ShoppingCart size={24} />
+              <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-[#1a2e26] hover:text-[#c49a6c] transition-colors">
+                <ShoppingCart size={22} />
                 {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-white">
+                  <span className="absolute -top-1 -right-1 bg-[#c49a6c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-white">
                     {cart.reduce((a, b) => a + b.qty, 0)}
                   </span>
                 )}
               </button>
-              <button onClick={() => scrollToSection('booking')} className="bg-red-700 text-white px-6 py-2.5 rounded-full font-medium hover:bg-red-800 transition-colors shadow-lg">
-                Book a Table
+              <button onClick={() => scrollToSection('booking')} className="bg-[#1a2e26] text-[#c49a6c] px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-[#2a4539] transition-all shadow-xl">
+                Reservation
               </button>
             </div>
 
             <div className="lg:hidden flex items-center space-x-4">
-               <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-neutral-700">
+               <button onClick={() => setIsCartOpen(true)} className="relative p-2">
                 <ShoppingCart size={24} />
-                {cart.length > 0 && <span className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-1.5 rounded-full">{cart.reduce((a, b) => a + b.qty, 0)}</span>}
+                {cart.length > 0 && <span className="absolute top-0 right-0 bg-[#c49a6c] text-white text-[10px] px-1.5 rounded-full">{cart.reduce((a, b) => a + b.qty, 0)}</span>}
               </button>
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-neutral-600">
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-[#1a2e26]">
                 {isMobileMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
               </button>
             </div>
@@ -184,40 +177,37 @@ export default function App() {
 
       {/* Cart Drawer */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-[100] overflow-hidden">
+        <div className="fixed inset-0 z-[100]">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
-          <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transform transition-transform animate-slide-in">
-            <div className="p-6 border-b flex justify-between items-center bg-neutral-50">
-              <h2 className="text-xl font-bold flex items-center gap-2"><ShoppingCart className="text-red-700" /> Your Order</h2>
-              <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-neutral-200 rounded-full"><X /></button>
+          <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transform animate-slide-in">
+            <div className="p-8 border-b flex justify-between items-center bg-[#1a2e26] text-white">
+              <h2 className="text-xl font-serif font-bold flex items-center gap-2"><ShoppingCart className="text-[#c49a6c]" /> Your Selection</h2>
+              <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors"><X /></button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-8 space-y-8">
               {cart.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="w-20 h-20 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4 text-neutral-400">
-                    <ShoppingCart size={40} />
-                  </div>
-                  <p className="text-neutral-500 font-medium">Your cart is empty.</p>
-                  <button onClick={() => { setIsCartOpen(false); scrollToSection('menu'); }} className="mt-4 text-red-700 font-bold underline">Order Food Now</button>
+                <div className="text-center py-20 opacity-50">
+                  <ShoppingCart size={48} className="mx-auto mb-4" />
+                  <p className="font-serif italic">Your cart is empty.</p>
                 </div>
               ) : (
                 cart.map(item => (
                   <div key={item.id} className="flex gap-4">
-                    <img src={item.img} alt={item.title} className="w-20 h-20 rounded-xl object-cover" />
+                    <img src={item.img} alt={item.title} className="w-24 h-24 rounded-lg object-cover shadow-md" />
                     <div className="flex-1">
-                      <div className="flex justify-between font-bold text-neutral-900">
-                        <h3 className="text-sm">{item.title}</h3>
-                        <span>AED {item.price * item.qty}</span>
+                      <div className="flex justify-between font-bold text-[#1a2e26]">
+                        <h3 className="text-sm font-serif">{item.title}</h3>
+                        <span className="text-[#c49a6c]">AED {item.price * item.qty}</span>
                       </div>
-                      <p className="text-xs text-neutral-400 mb-3">{item.category}</p>
+                      <p className="text-[10px] uppercase tracking-widest text-neutral-400 mb-4">{item.category}</p>
                       <div className="flex items-center gap-4">
-                        <div className="flex items-center border border-neutral-200 rounded-lg overflow-hidden">
-                          <button onClick={() => updateQty(item.id, -1)} className="px-2 py-1 hover:bg-neutral-100"><Minus size={14}/></button>
-                          <span className="px-3 py-1 font-bold text-sm border-x border-neutral-200">{item.qty}</span>
-                          <button onClick={() => updateQty(item.id, 1)} className="px-2 py-1 hover:bg-neutral-100"><Plus size={14}/></button>
+                        <div className="flex items-center border border-[#e5e1da] rounded-full overflow-hidden">
+                          <button onClick={() => updateQty(item.id, -1)} className="px-3 py-1 hover:bg-[#faf9f6]"><Minus size={12}/></button>
+                          <span className="px-3 py-1 font-bold text-xs">{item.qty}</span>
+                          <button onClick={() => updateQty(item.id, 1)} className="px-3 py-1 hover:bg-[#faf9f6]"><Plus size={12}/></button>
                         </div>
-                        <button onClick={() => updateQty(item.id, -item.qty)} className="text-red-600 hover:text-red-800"><Trash2 size={18}/></button>
+                        <button onClick={() => updateQty(item.id, -item.qty)} className="text-red-800 hover:text-red-600 transition-colors"><Trash2 size={16}/></button>
                       </div>
                     </div>
                   </div>
@@ -226,13 +216,13 @@ export default function App() {
             </div>
 
             {cart.length > 0 && (
-              <div className="p-6 bg-neutral-50 border-t">
-                <div className="flex justify-between items-center mb-6 text-xl font-bold">
-                  <span>Subtotal</span>
-                  <span className="text-red-700 font-black">AED {cartTotal}</span>
+              <div className="p-8 bg-[#faf9f6] border-t border-[#e5e1da]">
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-neutral-500 uppercase tracking-widest text-xs">Subtotal</span>
+                  <span className="text-2xl font-bold text-[#1a2e26]">AED {cartTotal}</span>
                 </div>
-                <button onClick={handleOrderSubmit} className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-green-700 transition-all shadow-xl flex items-center justify-center gap-2">
-                  Order via WhatsApp
+                <button onClick={handleOrderSubmit} className="w-full bg-[#1a2e26] text-[#c49a6c] py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-[#2a4539] transition-all shadow-xl">
+                  Proceed to WhatsApp
                 </button>
               </div>
             )}
@@ -241,68 +231,68 @@ export default function App() {
       )}
 
       {/* Hero Section */}
-      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
+      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2000&auto=format&fit=crop" 
-            alt="Ploys Zaab Authentic Cuisine" 
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2000&auto=format&fit=crop" 
+            alt="The Spice Tree Interior" 
             className="w-full h-full object-cover" 
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-neutral-900/95"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e26]/90 to-transparent"></div>
         </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl animate-fade-in">
-          <div className="mb-6 inline-block bg-red-700/20 backdrop-blur-sm border border-red-700/30 px-4 py-1.5 rounded-full text-red-400 text-sm font-bold uppercase tracking-widest">
-            Experience the Zaab Lifestyle
-          </div>
-          <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter uppercase leading-[0.9]">
-            {RESTAURANT_NAME}
-          </h1>
-          <p className="text-lg md:text-2xl text-neutral-300 mb-10 italic font-light max-w-2xl mx-auto leading-relaxed">
-            Authentic spices, vibrant flavors, and true hospitality at the heart of Souk Al Marfa.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-5">
-            <button onClick={() => scrollToSection('menu')} className="bg-red-700 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-red-600 hover:scale-105 transition-all shadow-2xl">
-              Explore Menu
-            </button>
-            <button onClick={() => scrollToSection('booking')} className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-full text-lg font-bold hover:bg-white/20 transition-all">
-              Reservation
-            </button>
-          </div>
-          
-          <div className="mt-12 flex justify-center gap-6">
-             <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
-               <Instagram size={20} /> <span className="text-xs font-bold uppercase tracking-widest">Instagram</span>
-             </a>
-             <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
-               <Facebook size={20} /> <span className="text-xs font-bold uppercase tracking-widest">Facebook</span>
-             </a>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl text-left">
+            <div className="mb-6 inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-[#c49a6c] text-xs font-bold uppercase tracking-[0.3em]">
+              <Leaf size={14} /> Culinary Excellence in Ajman
+            </div>
+            <h1 className="text-6xl md:text-8xl font-bold text-white mb-8 tracking-tighter leading-tight font-serif">
+              Rooted in <span className="text-[#c49a6c] italic">Flavor</span>
+            </h1>
+            <p className="text-lg md:text-xl text-neutral-300 mb-10 italic max-w-lg leading-relaxed font-serif">
+              A journey through traditional spices reimagined with modern culinary artistry.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-5">
+              <button onClick={() => scrollToSection('menu')} className="bg-[#c49a6c] text-[#1a2e26] px-10 py-5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white transition-all shadow-2xl">
+                Discover Menu
+              </button>
+              <button onClick={() => scrollToSection('booking')} className="bg-transparent text-white border border-white/30 px-10 py-5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                <CalendarDays size={16} /> Book a Table
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-24 bg-white">
+      <section id="about" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
              <div className="relative">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="Ploys Zaab Kitchen" className="rounded-3xl shadow-2xl h-[500px] w-full object-cover" />
-                <div className="absolute -bottom-6 -right-6 bg-red-700 text-white p-8 rounded-2xl hidden md:block text-center shadow-2xl">
-                   <p className="text-4xl font-bold">SPICY</p>
-                   <p className="text-sm opacity-80 uppercase tracking-widest">True Zaab Flavor</p>
+                <div className="aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl relative z-10">
+                   <img src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=1200&auto=format&fit=crop" alt="Spice Spices" className="w-full h-full object-cover" />
+                </div>
+                <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-[#faf9f6] rounded-[40px] -z-0 border border-[#e5e1da] hidden md:block"></div>
+                <div className="absolute -top-10 -left-10 bg-[#c49a6c] text-[#1a2e26] p-10 rounded-[40px] hidden md:block text-center shadow-xl">
+                   <p className="text-5xl font-bold font-serif">1st</p>
+                   <p className="text-[10px] font-bold uppercase tracking-widest mt-2">Floor - Sheikh Khalifa St</p>
                 </div>
              </div>
              <div>
-                <h4 className="text-red-700 font-bold uppercase tracking-widest text-sm mb-4">Our Story</h4>
-                <h2 className="text-4xl font-bold mb-6">Thai-Indo Fusion at Souk Al Marfa</h2>
-                <p className="text-neutral-600 text-lg mb-6 leading-relaxed">Located in the vibrant Souk Al Marfa, {RESTAURANT_NAME} brings you an explosion of "Zaab" flavors—a perfect blend of spicy, sour, and savory dishes that define Southeast Asian soul food.</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-                  <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                    <div className="h-10 w-10 bg-red-100 text-red-700 rounded-full flex items-center justify-center"><Utensils size={20}/></div>
-                    <span className="font-bold text-neutral-700">Fresh Ingredients</span>
+                <h4 className="text-[#c49a6c] font-bold uppercase tracking-[0.4em] text-xs mb-6">The Legacy</h4>
+                <h2 className="text-5xl font-bold mb-8 font-serif leading-tight">Elevated Dining on <br/> Sheikh Khalifa St</h2>
+                <p className="text-[#4a5a54] text-lg mb-8 leading-relaxed font-serif italic">
+                  At The Spice Tree, we believe every meal should tell a story. From the hand-ground spices to the traditional slow-cooking methods, our kitchen is a sanctuary for authentic flavors.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-12">
+                  <div className="space-y-4">
+                    <div className="h-14 w-14 bg-[#faf9f6] text-[#c49a6c] rounded-2xl flex items-center justify-center border border-[#e5e1da]"><Utensils size={24}/></div>
+                    <h5 className="font-bold uppercase tracking-widest text-sm">Gourmet Selection</h5>
+                    <p className="text-neutral-500 text-sm font-serif">Finest ingredients sourced globally to create local masterpieces.</p>
                   </div>
-                  <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                    <div className="h-10 w-10 bg-red-100 text-red-700 rounded-full flex items-center justify-center"><Clock size={20}/></div>
-                    <span className="font-bold text-neutral-700">Waterfront Dining</span>
+                  <div className="space-y-4">
+                    <div className="h-14 w-14 bg-[#faf9f6] text-[#c49a6c] rounded-2xl flex items-center justify-center border border-[#e5e1da]"><Clock size={24}/></div>
+                    <h5 className="font-bold uppercase tracking-widest text-sm">Fine Atmosphere</h5>
+                    <p className="text-neutral-500 text-sm font-serif">Elegant interiors designed for memorable family gatherings.</p>
                   </div>
                 </div>
              </div>
@@ -311,31 +301,31 @@ export default function App() {
       </section>
 
       {/* Menu Section */}
-      <section id="menu" className="py-24 bg-neutral-100">
+      <section id="menu" className="py-32 bg-[#faf9f6]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">The Zaab Menu</h2>
-            <p className="text-neutral-500">Hand-picked favorites for a flavorful journey</p>
+          <div className="text-center mb-20">
+            <h4 className="text-[#c49a6c] font-bold uppercase tracking-[0.4em] text-xs mb-4">Our Kitchen</h4>
+            <h2 className="text-5xl font-bold font-serif">Chef's Recommendations</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {menuItems.map((item) => (
-              <div key={item.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col h-full border border-neutral-200/50">
-                <div className="relative overflow-hidden h-64">
-                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute top-4 right-4 bg-red-600/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider">{item.category}</div>
+              <div key={item.id} className="bg-white rounded-[32px] overflow-hidden shadow-md hover:shadow-2xl transition-all group flex flex-col h-full border border-[#e5e1da]/50">
+                <div className="relative overflow-hidden h-72">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute top-6 left-6 bg-[#1a2e26]/90 backdrop-blur px-4 py-1.5 rounded-full text-[10px] font-bold text-[#c49a6c] uppercase tracking-[0.2em]">{item.category}</div>
                 </div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-neutral-900 leading-tight">{item.title}</h3>
-                    <span className="text-red-700 font-black whitespace-nowrap ml-2">AED {item.price}</span>
+                <div className="p-8 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold text-[#1a2e26] font-serif">{item.title}</h3>
+                    <span className="text-lg font-bold text-[#c49a6c] ml-4">AED {item.price}</span>
                   </div>
-                  <p className="text-neutral-500 text-sm mb-6 line-clamp-2">The signature Ploys Zaab taste that everyone in Souk Al Marfa is talking about.</p>
+                  <p className="text-neutral-500 text-sm mb-8 font-serif italic line-clamp-2">Exquisite spices blended perfectly to deliver an authentic taste of tradition.</p>
                   <button 
                     onClick={() => addToCart(item)}
-                    className="mt-auto w-full border-2 border-red-700 text-red-700 py-3 rounded-xl font-bold hover:bg-red-700 hover:text-white transition-all flex items-center justify-center gap-2"
+                    className="mt-auto w-full bg-[#faf9f6] text-[#1a2e26] py-4 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-[#1a2e26] hover:text-[#c49a6c] transition-all border border-[#e5e1da]"
                   >
-                    <Plus size={18} /> Add to Cart
+                    Add to Selection
                   </button>
                 </div>
               </div>
@@ -344,268 +334,281 @@ export default function App() {
         </div>
       </section>
 
-      {/* Social Media Highlight */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-            <div className="max-w-xl">
-               <h4 className="text-red-700 font-bold uppercase tracking-widest text-sm mb-4 flex items-center gap-2">
-                 <Share2 size={16}/> Join the Community
-               </h4>
-               <h2 className="text-4xl font-bold text-neutral-900 tracking-tight">Stay Updated on @ployszaab_uae</h2>
-               <p className="text-neutral-600 mt-4 italic">Tag us in your stories to get featured!</p>
-            </div>
-            <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="bg-neutral-900 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 hover:bg-red-700 transition-all">
-               <Instagram size={20} /> @ployszaab_uae
-            </a>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=400&auto=format&fit=crop",
-              "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=400&auto=format&fit=crop",
-              "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=400&auto=format&fit=crop",
-              "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop"
-            ].map((url, i) => (
-              <a key={i} href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="relative aspect-square group overflow-hidden rounded-2xl">
-                <img src={url} alt="Ploys Zaab feed" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-red-700/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                   <Instagram className="text-white" size={32} />
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Reviews Section */}
-      <section id="reviews" className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-neutral-900"></div>
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h4 className="text-red-500 font-bold uppercase tracking-widest text-sm mb-2">Guest Testimonials</h4>
-            <h2 className="text-4xl font-bold text-white">Why They Love {RESTAURANT_NAME}</h2>
+      <section className="py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div className="text-left">
+              <h4 className="text-[#c49a6c] font-bold uppercase tracking-[0.4em] text-xs mb-4">Testimonials</h4>
+              <h2 className="text-5xl font-bold font-serif leading-tight">Guest Experiences</h2>
+            </div>
+            <div className="flex items-center gap-2 text-[#c49a6c]">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="#c49a6c" />)}
+              </div>
+              <span className="text-sm font-bold uppercase tracking-widest text-[#1a2e26]">4.9 Average Rating</span>
+            </div>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {reviews.map((rev) => (
-              <div key={rev.id} className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl hover:bg-white/10 transition-all group">
-                <div className="flex gap-1 text-red-500 mb-6">
-                  {[...Array(rev.rating)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
+            {reviews.map((review) => (
+              <div key={review.id} className="bg-[#faf9f6] p-10 rounded-[40px] border border-[#e5e1da] flex flex-col h-full hover:bg-white hover:shadow-xl transition-all group">
+                <Quote className="text-[#c49a6c] mb-6 opacity-40 group-hover:opacity-100 transition-opacity" size={40} />
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      size={14} 
+                      fill={i < review.rating ? "#c49a6c" : "transparent"} 
+                      className={i < review.rating ? "text-[#c49a6c]" : "text-[#e5e1da]"}
+                    />
+                  ))}
                 </div>
-                <p className="text-neutral-300 text-lg mb-8 italic leading-relaxed">"{rev.comment}"</p>
-                <div className="flex justify-between items-center border-t border-white/10 pt-6">
-                  <div>
-                    <h5 className="font-bold text-white text-base">{rev.name}</h5>
-                    <p className="text-neutral-500 text-xs mt-1">{rev.date}</p>
-                  </div>
-                  <div className="text-red-500 opacity-30 group-hover:opacity-100 transition-opacity">
-                    <Quote size={32} />
-                  </div>
+                <p className="text-[#1a2e26] font-serif italic text-lg leading-relaxed mb-8 flex-1">"{review.comment}"</p>
+                <div className="pt-6 border-t border-[#e5e1da]">
+                  <p className="font-bold uppercase tracking-widest text-xs">{review.name}</p>
+                  <p className="text-[10px] text-neutral-400 uppercase tracking-widest mt-1">{review.date}</p>
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section id="gallery" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-             <h2 className="text-4xl font-bold text-neutral-900 mb-4 tracking-tight">Vibes of {RESTAURANT_NAME}</h2>
-             <p className="text-neutral-600">Fresh dishes and cozy atmosphere at Souk Al Marfa</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
-            <div className="md:col-span-2 md:row-span-2 rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" alt="Ploys Zaab Signature" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800&auto=format&fit=crop" alt="Thai Spices" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" alt="Waterfront View" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-            </div>
-            <div className="md:col-span-2 rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1625398407796-82650a8c135f?q=80&w=1200&auto=format&fit=crop" alt="Spicy Food Dubai" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-            </div>
           </div>
         </div>
       </section>
 
       {/* Booking Form */}
-      <section id="booking" className="py-24 bg-neutral-900 text-white">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-           <div className="mb-4 text-red-500 flex justify-center"><Utensils size={40} /></div>
-           <h2 className="text-4xl font-bold mb-6">Reserve Your Table</h2>
-           <p className="text-neutral-400 mb-12">Dine with us at Souk Al Marfa branch. Quick confirmation via WhatsApp.</p>
-           <form onSubmit={handleBookingSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
-              <div className="w-full">
-                <input 
-                  type="text" placeholder="Your Name" required 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white placeholder:text-neutral-600"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                />
+      <section id="booking" className="py-32 bg-[#1a2e26] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-full opacity-5 pointer-events-none">
+           <Leaf size={400} />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
+           <div className="text-center mb-16">
+              <h2 className="text-5xl font-bold mb-6 font-serif text-white underline decoration-[#c49a6c] decoration-1 underline-offset-8">Table Reservation</h2>
+              <p className="text-[#c49a6c]/80 text-sm uppercase tracking-[0.3em]">Experience the art of spices</p>
+           </div>
+           <form onSubmit={handleBookingSubmit} className="bg-white/5 backdrop-blur-md p-10 md:p-16 rounded-[40px] border border-white/10 shadow-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#c49a6c]">Guest Name</label>
+                    <input 
+                      type="text" placeholder="John Doe" required 
+                      className="w-full bg-transparent border-b border-white/20 py-3 outline-none focus:border-[#c49a6c] transition-all text-white placeholder:text-white/20 font-serif"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#c49a6c]">Phone Number</label>
+                    <input 
+                      type="tel" placeholder="+971 -- --- ----" required 
+                      className="w-full bg-transparent border-b border-white/20 py-3 outline-none focus:border-[#c49a6c] transition-all text-white placeholder:text-white/20 font-serif"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#c49a6c]">Date of Visit</label>
+                    <input 
+                      type="date" required 
+                      className="w-full bg-transparent border-b border-white/20 py-3 outline-none focus:border-[#c49a6c] transition-all text-white [&::-webkit-calendar-picker-indicator]:invert font-serif"
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-[#c49a6c]">Number of Guests</label>
+                    <select 
+                      className="w-full bg-transparent border-b border-white/20 py-3 outline-none focus:border-[#c49a6c] transition-all text-white [&>option]:text-black font-serif"
+                      value={formData.guests}
+                      onChange={(e) => setFormData({...formData, guests: e.target.value})}
+                    >
+                      <option value="1 Person">1 Person</option>
+                      <option value="2 People">2 People</option>
+                      <option value="3 People">3 People</option>
+                      <option value="4+ People">4 or more</option>
+                    </select>
+                  </div>
+                  <button className="md:col-span-2 mt-8 bg-[#c49a6c] text-[#1a2e26] py-5 rounded-full font-bold text-xs uppercase tracking-[0.3em] hover:bg-white transition-all shadow-xl shadow-black/20 flex items-center justify-center gap-3">
+                    <Mail size={16} /> Request Confirmation
+                  </button>
               </div>
-              <div className="w-full">
-                <input 
-                  type="tel" placeholder="Phone Number" required 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white placeholder:text-neutral-600"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                />
-              </div>
-              <div className="w-full">
-                <input 
-                  type="date" required 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white [&::-webkit-calendar-picker-indicator]:invert"
-                  value={formData.date}
-                  onChange={(e) => setFormData({...formData, date: e.target.value})}
-                />
-              </div>
-              <div className="w-full">
-                <select 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white [&>option]:text-black"
-                  value={formData.guests}
-                  onChange={(e) => setFormData({...formData, guests: e.target.value})}
-                >
-                  <option value="1 Guest">1 Guest</option>
-                  <option value="2 Guests">2 Guests</option>
-                  <option value="3 Guests">3 Guests</option>
-                  <option value="4+ Guests">4 or more</option>
-                </select>
-              </div>
-              <button className="sm:col-span-2 bg-red-700 py-4 rounded-xl font-bold text-lg hover:bg-red-600 transition-all shadow-xl shadow-red-900/40 uppercase tracking-widest flex items-center justify-center gap-2 text-white">
-                <Mail size={20} /> Request Reservation
-              </button>
            </form>
         </div>
       </section>
 
-      {/* Map */}
-      <section id="location" className="w-full h-[400px] bg-neutral-200">
-        <iframe 
-          title="Restaurant Location"
-          src={MAP_EMBED_URL}
-          width="100%" 
-          height="100%" 
-          style={{ border: 0 }} 
-          allowFullScreen="" 
-          loading="lazy" 
-          className="grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
-        ></iframe>
-      </section>
-
-      {/* Footer */}
-      <footer id="contact" className="bg-[#0a0a0a] text-white pt-20 pb-10 border-t border-neutral-800/50">
+      {/* Location Section */}
+      <section id="location" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-            
-            <div className="space-y-6">
-              <div className="text-2xl font-black tracking-tighter text-white flex flex-col uppercase">
-                <span>{RESTAURANT_NAME}</span>
-                <span className="text-[10px] font-medium tracking-[0.2em] text-neutral-500 uppercase">Souk Al Marfa · Dubai</span>
-              </div>
-              <p className="text-neutral-400 leading-relaxed text-sm font-light">
-                Discover the best "Zaab" flavors at Souk Al Marfa. A fusion of tradition and spice in every bite.
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-1 space-y-10">
+              <h2 className="text-4xl font-bold font-serif leading-tight">Find Us in the <br/> Heart of Ajman</h2>
               
-              <div className="flex flex-wrap gap-4 pt-2">
-                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-blue-600 transition-all">
-                  <Facebook size={18} />
-                </a>
-                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-600 transition-all">
-                  <Instagram size={18} />
-                </a>
-                <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-black hover:ring-2 hover:ring-cyan-400 transition-all">
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>
-                </a>
-                <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-red-600 transition-all">
-                  <Youtube size={18} />
-                </a>
+              <div className="space-y-8">
+                <div className="flex gap-5">
+                  <div className="h-12 w-12 bg-[#faf9f6] text-[#c49a6c] rounded-full flex items-center justify-center border border-[#e5e1da] shrink-0"><MapPin size={20}/></div>
+                  <div>
+                    <h5 className="font-bold text-xs uppercase tracking-widest text-[#1a2e26]">Our Address</h5>
+                    <p className="text-neutral-500 text-sm mt-2 leading-relaxed font-serif italic">{ADDRESS}</p>
+                    <a href={MAPS_URL} target="_blank" rel="noreferrer" className="text-[#c49a6c] text-[10px] font-bold uppercase tracking-widest mt-4 flex items-center gap-1 hover:gap-2 transition-all">
+                      Open in Maps <Navigation size={10} />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex gap-5">
+                  <div className="h-12 w-12 bg-[#faf9f6] text-[#c49a6c] rounded-full flex items-center justify-center border border-[#e5e1da] shrink-0"><Phone size={20}/></div>
+                  <div>
+                    <h5 className="font-bold text-xs uppercase tracking-widest text-[#1a2e26]">Call or WhatsApp</h5>
+                    <p className="text-neutral-500 text-sm mt-2 font-bold tracking-[0.2em]">{PHONE_NUMBER}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-5">
+                  <div className="h-12 w-12 bg-[#faf9f6] text-[#c49a6c] rounded-full flex items-center justify-center border border-[#e5e1da] shrink-0"><Clock size={20}/></div>
+                  <div>
+                    <h5 className="font-bold text-xs uppercase tracking-widest text-[#1a2e26]">Opening Hours</h5>
+                    <p className="text-neutral-500 text-sm mt-2 font-serif italic">Mon - Sun: 12:00 PM - 12:00 AM</p>
+                  </div>
+                </div>
               </div>
             </div>
 
+            <div className="lg:col-span-2 h-[500px] rounded-[40px] overflow-hidden shadow-2xl border border-[#e5e1da]">
+               <iframe 
+                title="Restaurant Location"
+                src={MAP_EMBED_URL}
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                className="grayscale opacity-90 contrast-125"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Redesign */}
+      <footer className="bg-[#1a2e26] text-white pt-24 pb-12 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#c49a6c]/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#c49a6c]/5 rounded-full blur-3xl -ml-48 -mb-48"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+            {/* Brand Section */}
+            <div className="space-y-8">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <Leaf className="text-[#c49a6c]" size={32} />
+                  <span className="text-2xl font-bold tracking-tighter uppercase font-serif">{RESTAURANT_NAME}</span>
+                </div>
+                <p className="text-neutral-500 text-sm font-serif italic leading-relaxed max-w-xs">
+                  Celebrating the rich heritage of Asian cuisine with hand-picked spices and modern elegance in the heart of Ajman.
+                </p>
+              </div>
+              <div className="flex gap-4">
+                {[Instagram, Facebook, Youtube, Share2].map((Icon, i) => (
+                  <button key={i} className="h-10 w-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-[#c49a6c] hover:border-[#c49a6c] transition-all">
+                    <Icon size={18} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Links */}
             <div>
-              <h3 className="text-lg font-bold mb-8 relative inline-block uppercase tracking-wider">
-                Explore
-                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-red-700 rounded-full"></span>
-              </h3>
+              <h5 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#c49a6c] mb-8">Navigation</h5>
               <ul className="space-y-4">
-                {['Home', 'About', 'Menu', 'Gallery', 'Reviews', 'Contact'].map((item) => (
-                  <li key={item}>
+                {['Home', 'About', 'Menu', 'Location', 'Reservation'].map((link) => (
+                  <li key={link}>
                     <button 
-                      onClick={() => scrollToSection(item.toLowerCase())}
-                      className="text-neutral-400 hover:text-white hover:translate-x-2 transition-all duration-300 flex items-center gap-2"
+                      onClick={() => scrollToSection(link.toLowerCase())}
+                      className="text-white/60 hover:text-white transition-colors font-serif text-sm flex items-center group"
                     >
-                      <ChevronRight size={14} className="text-red-700" /> {item}
+                      <ChevronRight size={14} className="opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all mr-2 text-[#c49a6c]" />
+                      {link}
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="lg:col-span-2">
-              <h3 className="text-lg font-bold mb-8 relative inline-block uppercase tracking-wider">
-                Visit Us
-                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-red-700 rounded-full"></span>
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="flex gap-4">
-                  <div className="p-3 bg-neutral-900 rounded-xl text-red-500 shadow-inner h-fit"><MapPin size={18} /></div>
-                  <div>
-                    <p className="font-bold text-neutral-200 uppercase tracking-tighter text-xs">Branch Address</p>
-                    <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="text-neutral-400 mt-1 text-sm leading-relaxed hover:text-red-500 transition-colors block">
-                      {ADDRESS}
-                    </a>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="p-3 bg-neutral-900 rounded-xl text-red-500 shadow-inner h-fit"><Phone size={18} /></div>
-                  <div>
-                    <p className="font-bold text-neutral-200 uppercase tracking-tighter text-xs">Order / Support</p>
-                    <p className="text-neutral-400 mt-1 text-sm font-bold tracking-widest">{PHONE_NUMBER}</p>
-                  </div>
-                </div>
+            {/* Contact Details */}
+            <div>
+              <h5 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#c49a6c] mb-8">Get In Touch</h5>
+              <ul className="space-y-6">
+                <li className="flex gap-4 group cursor-pointer" onClick={() => window.open(MAPS_URL)}>
+                  <MapPin className="text-[#c49a6c] shrink-0" size={18} />
+                  <span className="text-white/60 text-sm font-serif group-hover:text-white transition-colors">{ADDRESS}</span>
+                </li>
+                <li className="flex gap-4">
+                  <Phone className="text-[#c49a6c] shrink-0" size={18} />
+                  <span className="text-white/60 text-sm font-serif">{PHONE_NUMBER}</span>
+                </li>
+                <li className="flex gap-4">
+                  <Mail className="text-[#c49a6c] shrink-0" size={18} />
+                  <span className="text-white/60 text-sm font-serif">hello@thespicetree.ae</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <h5 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#c49a6c] mb-8">Newsletter</h5>
+              <p className="text-white/60 text-sm font-serif italic mb-6">Subscribe to receive exclusive offers and event invites.</p>
+              <div className="relative">
+                <input 
+                  type="email" 
+                  placeholder="Your Email Address" 
+                  className="w-full bg-white/5 border border-white/10 rounded-full py-4 px-6 outline-none focus:border-[#c49a6c] transition-all text-sm font-serif italic"
+                />
+                <button className="absolute right-2 top-2 h-10 w-10 bg-[#c49a6c] text-[#1a2e26] rounded-full flex items-center justify-center hover:bg-white transition-colors">
+                  <ArrowRight size={18} />
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="pt-10 border-t border-neutral-900 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-neutral-500 text-xs text-center md:text-left">
-              © {new Date().getFullYear()} <span className="text-neutral-300 font-bold uppercase">{RESTAURANT_NAME}</span>. All Rights Reserved.
-            </p>
-            <div className="flex items-center gap-4">
-               <button onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}`, '_blank')} className="text-neutral-400 hover:text-green-500 transition-colors text-xs uppercase tracking-widest font-bold">
-                  Connect via WhatsApp
-               </button>
+          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex flex-col items-center md:items-start">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/30">
+                &copy; {new Date().getFullYear()} {RESTAURANT_NAME} Fine Dining.
+              </p>
+              <p className="text-[9px] uppercase tracking-[0.2em] text-[#c49a6c]/50 mt-1 font-sans">
+                Crafted for Excellence • Ajman, UAE
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-8">
+              <button className="text-[10px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-colors">Privacy Policy</button>
+              <button className="text-[10px] uppercase tracking-[0.2em] text-white/30 hover:text-white transition-colors">Terms of Service</button>
+              <button 
+                onClick={() => scrollToSection('home')}
+                className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center text-[#c49a6c] hover:bg-white hover:text-[#1a2e26] transition-all group"
+              >
+                <ChevronRight size={20} className="-rotate-90 group-hover:-translate-y-1 transition-transform" />
+              </button>
             </div>
           </div>
         </div>
       </footer>
 
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] bg-neutral-900 md:hidden p-8 flex flex-col items-center justify-center space-y-8 animate-fade-in text-center">
-           <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-8 right-8 text-white"><X size={32} /></button>
-           {['Home', 'About', 'Menu', 'Gallery', 'Reviews', 'Contact'].map((item) => (
-              <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-3xl font-bold text-white uppercase tracking-tighter hover:text-red-500 transition-colors">
+        <div className="fixed inset-0 z-[60] bg-[#1a2e26] md:hidden p-8 flex flex-col items-center justify-center space-y-10 animate-fade-in">
+           <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-8 right-8 text-[#c49a6c]"><X size={32} /></button>
+           {['Home', 'About', 'Menu', 'Location'].map((item) => (
+              <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-4xl font-serif font-bold text-white hover:text-[#c49a6c] transition-colors">
                 {item}
               </button>
             ))}
-            <div className="flex gap-6 py-4">
-                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="text-white hover:text-blue-500"><Facebook size={32} /></a>
-                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-white hover:text-pink-500"><Instagram size={32} /></a>
-            </div>
-            <button onClick={() => scrollToSection('booking')} className="bg-red-700 text-white px-10 py-4 rounded-full text-xl font-bold uppercase tracking-widest shadow-xl">Reserve Now</button>
+            <button onClick={() => scrollToSection('booking')} className="bg-[#c49a6c] text-[#1a2e26] px-12 py-5 rounded-full text-xs font-bold uppercase tracking-widest shadow-2xl">Book Now</button>
         </div>
       )}
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        .animate-slide-in { animation: slideIn 0.3s ease-out forwards; }
-        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-slide-in { animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       `}} />
     </div>
