@@ -19,7 +19,8 @@ import {
   Minus,
   Mail,
   Send,
-  Youtube
+  Youtube,
+  Share2
 } from 'lucide-react';
 
 export default function App() {
@@ -35,32 +36,45 @@ export default function App() {
   });
 
   // RESTAURANT DETAILS
-  const RESTAURANT_NAME = "Thai Corner";
-  const PHONE_NUMBER = "+971 56 136 0122";
-  const WHATSAPP_NUMBER = "971561360122"; 
-  const ADDRESS = "78R6+7QX, Dubai, UAE";
-  const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=78R6%2B7QX+Dubai+UAE";
-  const MAP_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.23233486392!2d55.3045236!3d25.2796122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43506161943f%3A0x6b772c9e782627e9!2s78R6%2B7QX%2C%20Dubai!5e0!3m2!1sen!2sae!4v1710000000000!5m2!1sen!2sae";
+  const RESTAURANT_NAME = "RUMAH INDONESIA";
+  const PHONE_NUMBER = "+971 58 612 5100";
+  const WHATSAPP_NUMBER = "971586125100"; 
+  const ADDRESS = "78Q6+VQ4, Dubai, UAE";
+  const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=78Q6%2BVQ4+Dubai+UAE";
+  const MAP_EMBED_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.2!2d55.30!3d25.27!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43506161943f%3A0x6b772c9e782627e9!2s78Q6%2BVQ4%2C%20Dubai!5e0!3m2!1sen!2sae!4v1710000000000!5m2!1sen!2sae";
 
   const SOCIAL_LINKS = {
-    facebook: "https://facebook.com/thaicorner.dubai",
-    instagram: "https://instagram.com/thaicorner_uae",
-    youtube: "https://youtube.com/@thaicorner"
+    facebook: "https://facebook.com/rumahindonesia.dubai",
+    instagram: "https://instagram.com/rumahindonesia_uae",
+    youtube: "https://youtube.com/@rumahindonesia",
+    tiktok: "https://tiktok.com/@rumahindonesia"
   };
 
   const menuItems = [
-    { id: 1, title: "Special Pad Thai", price: 25, category: "Main", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800&auto=format&fit=crop" },
-    { id: 2, title: "Thai Green Curry", price: 30, category: "Main", img: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?q=80&w=800&auto=format&fit=crop" },
-    { id: 3, title: "Tom Yum Soup", price: 22, category: "Soup", img: "https://images.unsplash.com/photo-1548943487-a2e4e43b4853?q=80&w=800&auto=format&fit=crop" },
-    { id: 4, title: "Thai Grilled Chicken", price: 35, category: "Grill", img: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=800&auto=format&fit=crop" },
-    { id: 5, title: "Som Tum (Papaya Salad)", price: 18, category: "Salad", img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=800&auto=format&fit=crop" },
-    { id: 6, title: "Mango Sticky Rice", price: 15, category: "Dessert", img: "https://image2url.com/r2/default/images/1773551991183-e610304a-e277-47b4-a0a1-735c194564c0.jpg" }
+    { 
+      id: 1, 
+      title: "Special Fried Rice (Nasi Goreng)", 
+      price: 35, 
+      category: "Main", 
+      img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop" 
+    },
+    { 
+      id: 2, 
+      title: "Kalasan Fried Chicken", 
+      price: 38, 
+      category: "Main", 
+      img: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=800&auto=format&fit=crop" 
+    },
+    { id: 3, title: "Chicken Satay (Sate Ayam)", price: 28, category: "Grill", img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop" },
+    { id: 4, title: "Gado Gado Salad", price: 25, category: "Salad", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop" },
+    { id: 5, title: "Soto Betawi (Beef Soup)", price: 32, category: "Soup", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=800&auto=format&fit=crop" },
+    { id: 6, title: "Mango Sticky Rice", price: 15, category: "Dessert", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=800&auto=format&fit=crop" }
   ];
 
   const reviews = [
-    { id: 1, name: "Arjun Sharma", rating: 5, comment: "The Pad Thai is exceptional. Best authentic taste in Dubai!", date: "2 days ago" },
-    { id: 2, name: "Maria D.", rating: 5, comment: "Fast delivery and food was piping hot. Must try the Green Curry!", date: "1 week ago" },
-    { id: 3, name: "Ali Ahmed", rating: 4, comment: "Great service and reasonable rates. Feels like eating in Bangkok.", date: "2 weeks ago" }
+    { id: 1, name: "Farhan K.", rating: 5, comment: "Authentic Indonesian food in Dubai! The Fried Chicken tastes exactly like home-style cooking.", date: "1 day ago" },
+    { id: 2, name: "Siti Aminah", rating: 5, comment: "Just like the flavors back in Jakarta. The service is also excellent.", date: "5 days ago" },
+    { id: 3, name: "Robert W.", rating: 4, comment: "Perfect quantity and spice levels. I will definitely be coming back again.", date: "2 weeks ago" }
   ];
 
   const addToCart = (product) => {
@@ -112,22 +126,22 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 font-sans text-neutral-800 selection:bg-red-600 selection:text-white text-[15px]">
+    <div className="min-h-screen bg-neutral-50 font-sans text-neutral-800 selection:bg-orange-600 selection:text-white text-[15px]">
       
       {/* Navigation */}
       <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-neutral-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => scrollToSection('home')}>
-              <div className="text-xl sm:text-2xl font-bold tracking-tighter text-red-700 flex flex-col uppercase">
+              <div className="text-xl sm:text-2xl font-bold tracking-tighter text-orange-700 flex flex-col uppercase">
                 <span>{RESTAURANT_NAME}</span>
-                <span className="text-[10px] font-medium tracking-[0.1em] text-neutral-500 uppercase text-center">Authentic Thai Taste</span>
+                <span className="text-[10px] font-medium tracking-[0.1em] text-neutral-500 uppercase text-center">Authentic Indonesian Taste</span>
               </div>
             </div>
 
             <div className="hidden lg:flex items-center space-x-6">
               {['Home', 'About', 'Menu', 'Gallery', 'Reviews', 'Contact'].map((item) => (
-                <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-neutral-600 hover:text-red-700 font-medium transition-colors">
+                <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-neutral-600 hover:text-orange-700 font-medium transition-colors">
                   {item}
                 </button>
               ))}
@@ -142,15 +156,15 @@ export default function App() {
                 </a>
               </div>
 
-              <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-neutral-700 hover:text-red-700 transition-colors">
+              <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-neutral-700 hover:text-orange-700 transition-colors">
                 <ShoppingCart size={24} />
                 {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-white">
+                  <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full ring-2 ring-white">
                     {cart.reduce((a, b) => a + b.qty, 0)}
                   </span>
                 )}
               </button>
-              <button onClick={() => scrollToSection('booking')} className="bg-red-700 text-white px-6 py-2.5 rounded-full font-medium hover:bg-red-800 transition-colors shadow-lg">
+              <button onClick={() => scrollToSection('booking')} className="bg-orange-700 text-white px-6 py-2.5 rounded-full font-medium hover:bg-orange-800 transition-colors shadow-lg">
                 Book a Table
               </button>
             </div>
@@ -158,7 +172,7 @@ export default function App() {
             <div className="lg:hidden flex items-center space-x-4">
                <button onClick={() => setIsCartOpen(true)} className="relative p-2 text-neutral-700">
                 <ShoppingCart size={24} />
-                {cart.length > 0 && <span className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-1.5 rounded-full">{cart.reduce((a, b) => a + b.qty, 0)}</span>}
+                {cart.length > 0 && <span className="absolute top-0 right-0 bg-orange-600 text-white text-[10px] px-1.5 rounded-full">{cart.reduce((a, b) => a + b.qty, 0)}</span>}
               </button>
               <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-neutral-600">
                 {isMobileMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
@@ -174,7 +188,7 @@ export default function App() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}></div>
           <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transform transition-transform animate-slide-in">
             <div className="p-6 border-b flex justify-between items-center bg-neutral-50">
-              <h2 className="text-xl font-bold flex items-center gap-2"><ShoppingCart className="text-red-700" /> Your Order</h2>
+              <h2 className="text-xl font-bold flex items-center gap-2"><ShoppingCart className="text-orange-700" /> Your Order</h2>
               <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-neutral-200 rounded-full"><X /></button>
             </div>
             
@@ -185,7 +199,7 @@ export default function App() {
                     <ShoppingCart size={40} />
                   </div>
                   <p className="text-neutral-500 font-medium">Your cart is empty.</p>
-                  <button onClick={() => { setIsCartOpen(false); scrollToSection('menu'); }} className="mt-4 text-red-700 font-bold underline">Order Food Now</button>
+                  <button onClick={() => { setIsCartOpen(false); scrollToSection('menu'); }} className="mt-4 text-orange-700 font-bold underline">Order Food Now</button>
                 </div>
               ) : (
                 cart.map(item => (
@@ -215,7 +229,7 @@ export default function App() {
               <div className="p-6 bg-neutral-50 border-t">
                 <div className="flex justify-between items-center mb-6 text-xl font-bold">
                   <span>Subtotal</span>
-                  <span className="text-red-700 font-black">AED {cartTotal}</span>
+                  <span className="text-orange-700 font-black">AED {cartTotal}</span>
                 </div>
                 <button onClick={handleOrderSubmit} className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-green-700 transition-all shadow-xl flex items-center justify-center gap-2">
                   Order via WhatsApp
@@ -230,33 +244,40 @@ export default function App() {
       <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=2000&auto=format&fit=crop" 
-            alt="Thai Cuisine Background" 
+            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2000&auto=format&fit=crop" 
+            alt="Authentic Indonesian Cuisine" 
             className="w-full h-full object-cover" 
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-neutral-900/95"></div>
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl animate-fade-in">
-          <div className="mb-6 inline-block bg-red-700/20 backdrop-blur-sm border border-red-700/30 px-4 py-1.5 rounded-full text-red-400 text-sm font-bold uppercase tracking-widest">
-            Taste the Magic of Thailand
+          <div className="mb-6 inline-block bg-orange-700/20 backdrop-blur-sm border border-orange-700/30 px-4 py-1.5 rounded-full text-orange-400 text-sm font-bold uppercase tracking-widest">
+            A Journey of Indonesian Flavors
           </div>
           <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter uppercase leading-[0.9]">
             {RESTAURANT_NAME}
           </h1>
           <p className="text-lg md:text-2xl text-neutral-300 mb-10 italic font-light max-w-2xl mx-auto leading-relaxed">
-            Experience the true essence of authentic Thai flavors and tradition in every bite.
+            Experience authentic Indonesian hospitality and tradition in every single bite.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-5">
-            <button onClick={() => scrollToSection('menu')} className="bg-red-700 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-red-600 hover:scale-105 transition-all shadow-2xl">
+            <button onClick={() => scrollToSection('menu')} className="bg-orange-700 text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-orange-600 hover:scale-105 transition-all shadow-2xl">
               View Menu
             </button>
             <button onClick={() => scrollToSection('booking')} className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-full text-lg font-bold hover:bg-white/20 transition-all">
               Book a Table
             </button>
           </div>
-        </div>
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/30 animate-bounce">
-          <Clock size={32} />
+          
+          {/* Quick Hero Socials */}
+          <div className="mt-12 flex justify-center gap-6">
+             <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
+               <Instagram size={20} /> <span className="text-xs font-bold uppercase tracking-widest">Instagram</span>
+             </a>
+             <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
+               <Facebook size={20} /> <span className="text-xs font-bold uppercase tracking-widest">Facebook</span>
+             </a>
+          </div>
         </div>
       </section>
 
@@ -265,24 +286,24 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
              <div className="relative">
-                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop" alt="Thai Kitchen" className="rounded-3xl shadow-2xl h-[500px] w-full object-cover" />
-                <div className="absolute -bottom-6 -right-6 bg-red-700 text-white p-8 rounded-2xl hidden md:block text-center shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="Indonesian Kitchen" className="rounded-3xl shadow-2xl h-[500px] w-full object-cover" />
+                <div className="absolute -bottom-6 -right-6 bg-orange-700 text-white p-8 rounded-2xl hidden md:block text-center shadow-2xl">
                    <p className="text-4xl font-bold">100%</p>
-                   <p className="text-sm opacity-80 uppercase tracking-widest">Fresh & Authentic</p>
+                   <p className="text-sm opacity-80 uppercase tracking-widest">Authentic & Halal</p>
                 </div>
              </div>
              <div>
-                <h4 className="text-red-700 font-bold uppercase tracking-widest text-sm mb-4">Quality & Tradition</h4>
-                <h2 className="text-4xl font-bold mb-6">The Finest Thai Taste in Dubai</h2>
-                <p className="text-neutral-600 text-lg mb-6 leading-relaxed">Thai Corner is your favorite destination for authentic street-style Thai food. We use traditional spices and fresh ingredients to serve the community in Dubai.</p>
+                <h4 className="text-orange-700 font-bold uppercase tracking-widest text-sm mb-4">Unity in Diversity</h4>
+                <h2 className="text-4xl font-bold mb-6">The Heart of Indonesia in Dubai</h2>
+                <p className="text-neutral-600 text-lg mb-6 leading-relaxed">{RESTAURANT_NAME} is your ultimate destination for home-style Indonesian dining. From the streets of Jakarta to the mountains of Bali, we bring you the diverse flavors of the archipelago.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                   <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                    <div className="h-10 w-10 bg-red-100 text-red-700 rounded-full flex items-center justify-center"><Utensils size={20}/></div>
-                    <span className="font-bold text-neutral-700">Imported Spices</span>
+                    <div className="h-10 w-10 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center"><Utensils size={20}/></div>
+                    <span className="font-bold text-neutral-700">Native Spices</span>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-neutral-50 rounded-2xl border border-neutral-100">
-                    <div className="h-10 w-10 bg-red-100 text-red-700 rounded-full flex items-center justify-center"><Clock size={20}/></div>
-                    <span className="font-bold text-neutral-700">Fast Delivery</span>
+                    <div className="h-10 w-10 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center"><Clock size={20}/></div>
+                    <span className="font-bold text-neutral-700">Daily Fresh</span>
                   </div>
                 </div>
              </div>
@@ -294,8 +315,8 @@ export default function App() {
       <section id="menu" className="py-24 bg-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Thai Specialties</h2>
-            <p className="text-neutral-500">Authentic recipes prepared fresh daily</p>
+            <h2 className="text-4xl font-bold mb-4">Our Signature Dishes</h2>
+            <p className="text-neutral-500">Traditional Indonesian recipes prepared with love</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -303,17 +324,17 @@ export default function App() {
               <div key={item.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col h-full border border-neutral-200/50">
                 <div className="relative overflow-hidden h-64">
                   <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute top-4 right-4 bg-red-600/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider">{item.category}</div>
+                  <div className="absolute top-4 right-4 bg-orange-600/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider">{item.category}</div>
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-lg font-bold text-neutral-900 leading-tight">{item.title}</h3>
-                    <span className="text-red-700 font-black whitespace-nowrap ml-2">AED {item.price}</span>
+                    <span className="text-orange-700 font-black whitespace-nowrap ml-2">AED {item.price}</span>
                   </div>
-                  <p className="text-neutral-500 text-sm mb-6 line-clamp-2">Taste the balance of sweet, sour, salty, and spicy.</p>
+                  <p className="text-neutral-500 text-sm mb-6 line-clamp-2">Authentic taste that takes you straight to the islands of Indonesia.</p>
                   <button 
                     onClick={() => addToCart(item)}
-                    className="mt-auto w-full border-2 border-red-700 text-red-700 py-3 rounded-xl font-bold hover:bg-red-700 hover:text-white transition-all flex items-center justify-center gap-2"
+                    className="mt-auto w-full border-2 border-orange-700 text-orange-700 py-3 rounded-xl font-bold hover:bg-orange-700 hover:text-white transition-all flex items-center justify-center gap-2"
                   >
                     <Plus size={18} /> Add to Cart
                   </button>
@@ -324,25 +345,60 @@ export default function App() {
         </div>
       </section>
 
+      {/* Social Media Highlight Section */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div className="max-w-xl">
+               <h4 className="text-orange-700 font-bold uppercase tracking-widest text-sm mb-4 flex items-center gap-2">
+                 <Share2 size={16}/> Connect With Us
+               </h4>
+               <h2 className="text-4xl font-bold text-neutral-900 tracking-tight">Follow Our Journey on Social Media</h2>
+               <p className="text-neutral-600 mt-4 italic">Check out our latest dishes, behind-the-scenes moments, and exclusive offers.</p>
+            </div>
+            <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="bg-neutral-900 text-white px-8 py-3 rounded-full font-bold flex items-center gap-3 hover:bg-orange-700 transition-all">
+               <Instagram size={20} /> @rumahindonesia_uae
+            </a>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Mock Social Feed Items */}
+            {[
+              "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=400&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=400&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=400&auto=format&fit=crop",
+              "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop"
+            ].map((url, i) => (
+              <a key={i} href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="relative aspect-square group overflow-hidden rounded-2xl">
+                <img src={url} alt="Social feed" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-orange-700/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <Instagram className="text-white" size={32} />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Reviews Section */}
       <section id="reviews" className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=2000&auto=format&fit=crop" 
-            alt="Background" 
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2000&auto=format&fit=crop" 
+            alt="Review Background" 
             className="w-full h-full object-cover opacity-10" 
           />
           <div className="absolute inset-0 bg-neutral-900"></div>
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h4 className="text-red-500 font-bold uppercase tracking-widest text-sm mb-2">Customer Feedback</h4>
+            <h4 className="text-orange-500 font-bold uppercase tracking-widest text-sm mb-2">Customer Feedback</h4>
             <h2 className="text-4xl font-bold text-white">What Our Guests Say</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {reviews.map((rev) => (
               <div key={rev.id} className="bg-white/5 backdrop-blur-md border border-white/10 p-8 rounded-3xl hover:bg-white/10 transition-all group">
-                <div className="flex gap-1 text-red-500 mb-6">
+                <div className="flex gap-1 text-orange-500 mb-6">
                   {[...Array(rev.rating)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
                 </div>
                 <p className="text-neutral-300 text-lg mb-8 italic leading-relaxed">"{rev.comment}"</p>
@@ -351,7 +407,7 @@ export default function App() {
                     <h5 className="font-bold text-white text-base">{rev.name}</h5>
                     <p className="text-neutral-500 text-xs mt-1">{rev.date}</p>
                   </div>
-                  <div className="text-red-500 opacity-30 group-hover:opacity-100 transition-opacity">
+                  <div className="text-orange-500 opacity-30 group-hover:opacity-100 transition-opacity">
                     <Quote size={32} />
                   </div>
                 </div>
@@ -365,21 +421,24 @@ export default function App() {
       <section id="gallery" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-             <h2 className="text-4xl font-bold text-neutral-900 mb-4 tracking-tight">Our Gallery</h2>
-             <p className="text-neutral-600">A glimpse of {RESTAURANT_NAME}</p>
+             <h2 className="text-4xl font-bold text-neutral-900 mb-4 tracking-tight">Glimpse of Indonesia</h2>
+             <p className="text-neutral-600">A look into the experience at {RESTAURANT_NAME}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
             <div className="md:col-span-2 md:row-span-2 rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=1200&auto=format&fit=crop" alt="Pad Thai" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img src="https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" alt="Indonesian Special Food" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
             </div>
+            
             <div className="rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1548943487-a2e4e43b4853?q=80&w=800&auto=format&fit=crop" alt="Tom Yum" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800&auto=format&fit=crop" alt="Native Spices" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
             </div>
+            
             <div className="rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop" alt="Thai Dining" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img src="https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" alt="Restaurant Interior" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
             </div>
+            
             <div className="md:col-span-2 rounded-2xl overflow-hidden shadow-lg group">
-              <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?q=80&w=1200&auto=format&fit=crop" alt="Green Curry" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img src="https://images.unsplash.com/photo-1625398407796-82650a8c135f?q=80&w=1200&auto=format&fit=crop" alt="Famous Nasi Goreng" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
             </div>
           </div>
         </div>
@@ -388,14 +447,14 @@ export default function App() {
       {/* Booking Form */}
       <section id="booking" className="py-24 bg-neutral-900 text-white">
         <div className="max-w-3xl mx-auto px-4 text-center">
-           <div className="mb-4 text-red-500 flex justify-center"><Utensils size={40} /></div>
-           <h2 className="text-4xl font-bold mb-6">Reservation</h2>
-           <p className="text-neutral-400 mb-12">Book a table and we will confirm it via WhatsApp.</p>
+           <div className="mb-4 text-orange-500 flex justify-center"><Utensils size={40} /></div>
+           <h2 className="text-4xl font-bold mb-6">Make a Reservation</h2>
+           <p className="text-neutral-400 mb-12">Book your table at {RESTAURANT_NAME}, we will confirm your reservation via WhatsApp.</p>
            <form onSubmit={handleBookingSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
               <div className="w-full">
                 <input 
                   type="text" placeholder="Your Name" required 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white placeholder:text-neutral-600"
+                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-orange-500 transition-all text-white placeholder:text-neutral-600"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                 />
@@ -403,7 +462,7 @@ export default function App() {
               <div className="w-full">
                 <input 
                   type="tel" placeholder="Phone Number" required 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white placeholder:text-neutral-600"
+                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-orange-500 transition-all text-white placeholder:text-neutral-600"
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 />
@@ -411,25 +470,25 @@ export default function App() {
               <div className="w-full">
                 <input 
                   type="date" required 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white [&::-webkit-calendar-picker-indicator]:invert"
+                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-orange-500 transition-all text-white [&::-webkit-calendar-picker-indicator]:invert"
                   value={formData.date}
                   onChange={(e) => setFormData({...formData, date: e.target.value})}
                 />
               </div>
               <div className="w-full">
                 <select 
-                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-red-500 transition-all text-white [&>option]:text-black"
+                  className="w-full bg-white/5 border border-white/10 p-4 rounded-xl outline-none focus:border-orange-500 transition-all text-white [&>option]:text-black"
                   value={formData.guests}
                   onChange={(e) => setFormData({...formData, guests: e.target.value})}
                 >
-                  <option value="1 Person">1 Person</option>
-                  <option value="2 People">2 People</option>
-                  <option value="3 People">3 People</option>
-                  <option value="4+ People">4+ People</option>
+                  <option value="1 Guest">1 Guest</option>
+                  <option value="2 Guests">2 Guests</option>
+                  <option value="3 Guests">3 Guests</option>
+                  <option value="4+ Guests">4 or more</option>
                 </select>
               </div>
-              <button className="sm:col-span-2 bg-red-700 py-4 rounded-xl font-bold text-lg hover:bg-red-600 transition-all shadow-xl shadow-red-900/40 uppercase tracking-widest flex items-center justify-center gap-2 text-white">
-                <Mail size={20} /> Reserve Table
+              <button className="sm:col-span-2 bg-orange-700 py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-all shadow-xl shadow-orange-900/40 uppercase tracking-widest flex items-center justify-center gap-2 text-white">
+                <Mail size={20} /> Reserve Table Now
               </button>
            </form>
         </div>
@@ -458,21 +517,24 @@ export default function App() {
             <div className="space-y-6">
               <div className="text-2xl font-bold tracking-tighter text-white flex flex-col uppercase">
                 <span>{RESTAURANT_NAME}</span>
-                <span className="text-[10px] font-medium tracking-[0.2em] text-neutral-500 uppercase">Kitchen & Restaurant</span>
+                <span className="text-[10px] font-medium tracking-[0.2em] text-neutral-500 uppercase">Indonesian Authentic Kitchen</span>
               </div>
               <p className="text-neutral-400 leading-relaxed text-sm font-light">
-                Authentic Thai flavours served fresh in Dubai. Experience the true taste of Thailand.
+                Bringing the ancient heritage and flavors of Indonesia to Dubai. Every spice tells a story of an island.
               </p>
               
-              <div className="flex gap-4 pt-2">
+              <div className="flex flex-wrap gap-4 pt-2">
                 <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-blue-600 transition-all">
-                  <Facebook size={20} />
+                  <Facebook size={18} />
                 </a>
-                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-pink-600 transition-all">
-                  <Instagram size={20} />
+                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-600 transition-all">
+                  <Instagram size={18} />
+                </a>
+                <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-black hover:ring-2 hover:ring-cyan-400 transition-all">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>
                 </a>
                 <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noreferrer" className="w-10 h-10 bg-neutral-900 flex items-center justify-center rounded-full text-white hover:bg-red-600 transition-all">
-                  <Youtube size={20} />
+                  <Youtube size={18} />
                 </a>
               </div>
             </div>
@@ -480,7 +542,7 @@ export default function App() {
             <div>
               <h3 className="text-lg font-bold mb-8 relative inline-block uppercase tracking-wider">
                 Quick Links
-                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-red-700 rounded-full"></span>
+                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-orange-700 rounded-full"></span>
               </h3>
               <ul className="space-y-4">
                 {['Home', 'About', 'Menu', 'Gallery', 'Reviews', 'Contact'].map((item) => (
@@ -489,7 +551,7 @@ export default function App() {
                       onClick={() => scrollToSection(item.toLowerCase())}
                       className="text-neutral-400 hover:text-white hover:translate-x-2 transition-all duration-300 flex items-center gap-2"
                     >
-                      <ChevronRight size={14} className="text-red-700" /> {item}
+                      <ChevronRight size={14} className="text-orange-700" /> {item}
                     </button>
                   </li>
                 ))}
@@ -498,21 +560,21 @@ export default function App() {
 
             <div className="lg:col-span-2">
               <h3 className="text-lg font-bold mb-8 relative inline-block uppercase tracking-wider">
-                Contact Information
-                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-red-700 rounded-full"></span>
+                Our Location
+                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-orange-700 rounded-full"></span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="flex gap-4">
-                  <div className="p-3 bg-neutral-900 rounded-xl text-red-500 shadow-inner h-fit"><MapPin size={18} /></div>
+                  <div className="p-3 bg-neutral-900 rounded-xl text-orange-500 shadow-inner h-fit"><MapPin size={18} /></div>
                   <div>
                     <p className="font-bold text-neutral-200 uppercase tracking-tighter text-xs">Address (Dubai)</p>
-                    <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="text-neutral-400 mt-1 text-sm leading-relaxed hover:text-red-500 transition-colors block">
+                    <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="text-neutral-400 mt-1 text-sm leading-relaxed hover:text-orange-500 transition-colors block">
                       {ADDRESS}
                     </a>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="p-3 bg-neutral-900 rounded-xl text-red-500 shadow-inner h-fit"><Phone size={18} /></div>
+                  <div className="p-3 bg-neutral-900 rounded-xl text-orange-500 shadow-inner h-fit"><Phone size={18} /></div>
                   <div>
                     <p className="font-bold text-neutral-200 uppercase tracking-tighter text-xs">Call / WhatsApp</p>
                     <p className="text-neutral-400 mt-1 text-sm font-bold tracking-widest">{PHONE_NUMBER}</p>
@@ -539,7 +601,7 @@ export default function App() {
         <div className="fixed inset-0 z-[60] bg-neutral-900 md:hidden p-8 flex flex-col items-center justify-center space-y-8 animate-fade-in text-center">
            <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-8 right-8 text-white"><X size={32} /></button>
            {['Home', 'About', 'Menu', 'Gallery', 'Reviews', 'Contact'].map((item) => (
-              <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-3xl font-bold text-white uppercase tracking-tighter hover:text-red-500 transition-colors">
+              <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-3xl font-bold text-white uppercase tracking-tighter hover:text-orange-500 transition-colors">
                 {item}
               </button>
             ))}
@@ -551,9 +613,12 @@ export default function App() {
                 <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noreferrer" className="text-white hover:text-pink-500">
                   <Instagram size={32} />
                 </a>
+                <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noreferrer" className="text-white hover:text-cyan-400">
+                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>
+                </a>
             </div>
 
-            <button onClick={() => scrollToSection('booking')} className="bg-red-700 text-white px-10 py-4 rounded-full text-xl font-bold uppercase tracking-widest shadow-xl shadow-red-900/40">Book Now</button>
+            <button onClick={() => scrollToSection('booking')} className="bg-orange-700 text-white px-10 py-4 rounded-full text-xl font-bold uppercase tracking-widest shadow-xl shadow-orange-900/40">Book Now</button>
         </div>
       )}
 
