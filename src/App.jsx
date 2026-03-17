@@ -394,10 +394,7 @@ export default function App() {
                   </select>
                   <ChevronDown className="absolute right-0 bottom-7 text-white/20" size={16} />
                 </div>
-                <div className="relative group">
-                  <label className="absolute -top-6 left-0 text-[9px] tracking-[0.3em] font-bold text-[#c5a059] uppercase opacity-60">Preferred Date</label>
-                  <input required name="date" type="date" className="w-full bg-transparent border-b border-white/20 py-4 text-white font-cinzel tracking-widest focus:outline-none focus:border-[#c5a059] uppercase" />
-                </div>
+                
               </div>
 
               <motion.button 
@@ -406,7 +403,7 @@ export default function App() {
                 disabled={isSubmitting} 
                 className="w-full relative group overflow-hidden bg-[#c5a059] text-black py-8 rounded-2xl shadow-xl shadow-[#c5a059]/10"
               >
-                <span className="relative z-10 text-[11px] font-black uppercase tracking-[1em] pl-4">Confirm Private Booking</span>
+                <span className="relative z-10 text-[11px] font-black uppercase tracking-[1em] pl-4">Confirm Booking</span>
               </motion.button>
             </form>
           </motion.div>
