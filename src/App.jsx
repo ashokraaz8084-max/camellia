@@ -1,108 +1,101 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu as MenuIcon, X, MapPin, Phone, Clock, ChevronRight, 
-  Star, Quote, Instagram, Facebook, MessageCircle, Flame, Shield
+  Star, Quote, Instagram, Facebook, MessageCircle, Droplet, Anchor
 } from 'lucide-react';
 
-// --- STYLES INJECTION (Styles yahan lagaye gaye hain) ---
+// --- STYLES INJECTION ---
 const customStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
 
   :root {
-    --gold: #D4AF37; /* Shahi Sona */
-    --gold-light: #F3E5AB;
-    --saffron: #E65100; /* Gehra Shahi Bhagwa */
-    --saffron-light: #FF9800;
-    --dark: #050505; /* Gehra Kala */
-    --brown: #24140E; /* Qile Jaisa Bhura */
-    --ivory: #FDFBF7; /* Halka Cream */
+    --bg-dark: #02040A; /* Midnight Black */
+    --blue-royal: #061124; /* Deep Royal Blue Base */
+    --blue-accent: #0F326E; /* Bright Royal Blue */
+    --blue-glow: #1A56B5; /* Ocean Depth Glow */
+    --silver: #C2CEDA; /* Silver Accents */
+    --white-soft: #F0F4F8; /* Soft White */
   }
 
   body {
-    background-color: var(--dark);
-    color: var(--ivory);
-    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--white-soft);
+    font-family: 'Montserrat', sans-serif;
     overflow-x: hidden;
     scroll-behavior: smooth;
   }
 
-  /* Custom Scrollbar (Apna Scrollbar) */
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--dark);
+    background: var(--bg-dark);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--brown);
+    background: var(--blue-accent);
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--saffron);
+    background: var(--silver);
   }
 
-  .font-royal {
-    font-family: 'Cinzel', serif;
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
   }
 
-  /* Royal Textures & Overlays (Shahi Textures) */
-  .bg-fort {
-    background-color: var(--dark);
-    background-image: url("https://www.transparenttextures.com/patterns/dark-matter.png"); 
-    background-blend-mode: multiply;
+  /* Ocean Depth Overlays */
+  .bg-ocean-depth {
+    background: radial-gradient(circle at 50% 0%, var(--blue-royal) 0%, var(--bg-dark) 80%);
   }
 
-  .bg-gradient-royal {
-    background: radial-gradient(circle at 50% 50%, var(--brown) 0%, var(--dark) 100%);
-  }
-
-  /* Animations (Harkatein) */
+  /* Animations */
   @keyframes kenburns {
     0% { transform: scale(1); }
-    100% { transform: scale(1.15); }
+    100% { transform: scale(1.12); }
   }
   .animate-kenburns {
-    animation: kenburns 35s ease-in-out infinite alternate;
+    animation: kenburns 40s ease-in-out infinite alternate;
   }
 
-  @keyframes embers-drift {
+  @keyframes wave-drift {
     0% { transform: translateY(0) scale(1) opacity(0); }
-    50% { transform: translateY(-30px) scale(1.2) opacity(0.6); }
-    100% { transform: translateY(-60px) scale(0.8) opacity(0); }
+    50% { transform: translateY(-20px) scale(1.1) opacity(0.3); }
+    100% { transform: translateY(-40px) scale(0.9) opacity(0); }
   }
-  .animate-ember {
-    animation: embers-drift 6s ease-in infinite;
+  .animate-wave {
+    animation: wave-drift 8s ease-in-out infinite;
   }
 
   /* Glassmorphism & Luxury Utilities */
   .glass {
-    background: rgba(5, 5, 5, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    background: rgba(2, 4, 10, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(194, 206, 218, 0.05);
   }
 
   .glass-card {
-    background: linear-gradient(145deg, rgba(36, 20, 14, 0.6) 0%, rgba(5, 5, 5, 0.95) 100%);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    background: linear-gradient(145deg, rgba(15, 50, 110, 0.15) 0%, rgba(2, 4, 10, 0.8) 100%);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(194, 206, 218, 0.1);
     box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.9);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .glass-card:hover {
-    border-color: rgba(230, 81, 0, 0.6); /* Hover par Bhagwa chamak */
-    box-shadow: 0 15px 50px 0 rgba(230, 81, 0, 0.2);
-    transform: translateY(-5px);
+    border-color: rgba(26, 86, 181, 0.4); /* Blue glow on hover */
+    box-shadow: 0 20px 50px 0 rgba(26, 86, 181, 0.15);
+    transform: translateY(-8px);
   }
 
-  .gold-gradient-text {
-    background: linear-gradient(to right, #D4AF37, #FDFBF7, #E65100, #D4AF37);
+  .silver-gradient-text {
+    background: linear-gradient(to right, #ffffff, #C2CEDA, #8598AA, #C2CEDA, #ffffff);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     background-size: 200% auto;
-    animation: shine 7s linear infinite;
+    animation: shine 8s linear infinite;
   }
 
   @keyframes shine {
@@ -110,19 +103,20 @@ const customStyles = `
   }
 
   .text-glow {
-    text-shadow: 0 0 30px rgba(230, 81, 0, 0.6);
+    text-shadow: 0 0 40px rgba(26, 86, 181, 0.5);
   }
 
+  /* Deep Blue Dark Map */
   .map-dark {
-    filter: invert(100%) hue-rotate(180deg) brightness(80%) contrast(130%) sepia(40%) hue-rotate(-15deg);
+    filter: invert(100%) hue-rotate(210deg) brightness(85%) contrast(120%) sepia(30%);
   }
 
-  .fire-glow {
-    background: radial-gradient(circle, rgba(230,81,0,0.15) 0%, rgba(0,0,0,0) 70%);
+  .ocean-glow {
+    background: radial-gradient(circle, rgba(26,86,181,0.08) 0%, rgba(0,0,0,0) 60%);
   }
 `;
 
-// --- CUSTOM COMPONENTS (Apne Components) ---
+// --- CUSTOM COMPONENTS ---
 
 const RevealOnScroll = ({ children, delay = 0, direction = 'up', duration = 1000 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -136,7 +130,7 @@ const RevealOnScroll = ({ children, delay = 0, direction = 'up', duration = 1000
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
     if (ref.current) observer.observe(ref.current);
     return () => { if (ref.current) observer.unobserve(ref.current); };
@@ -168,12 +162,12 @@ const RevealOnScroll = ({ children, delay = 0, direction = 'up', duration = 1000
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [activeMenuTab, setActiveMenuTab] = useState('Shahi Pakwan');
+  const [activeMenuTab, setActiveMenuTab] = useState('Seafood');
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [lightboxImg, setLightboxImg] = useState(null);
 
-  // Form State (Form ka Data)
+  // Form State
   const [formData, setFormData] = useState({
     name: '', phone: '', guests: '2', date: '', time: ''
   });
@@ -205,8 +199,8 @@ export default function App() {
     setIsSubmitting(true);
     
     setTimeout(() => {
-      const phone = "971525265001";
-      const message = `*Shahi Reservation - Maratha Darbar* 🛡️\n\n*Naam:* ${formData.name}\n*Sampark:* ${formData.phone}\n*Mehmaan:* ${formData.guests}\n*Tareekh:* ${formData.date}\n*Samay:* ${formData.time}\n\nEk shandaar Maratha dining anubhav ka intezaar hai.`;
+      const phone = "971586785717";
+      const message = `*Exclusive Reservation - The Blue Carte* 🌊\n\n*Name:* ${formData.name}\n*Contact:* ${formData.phone}\n*Guests:* ${formData.guests}\n*Date:* ${formData.date}\n*Time:* ${formData.time}\n\nI would like to request a table for a premium dining experience.`;
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
       window.open(url, "_blank");
       setIsSubmitting(false);
@@ -215,29 +209,28 @@ export default function App() {
     }, 1200);
   };
 
-  // --- MENU DATA (Images replaced with provided URLs) ---
+  // --- MENU DATA ---
   const menuData = {
-    "Shahi Pakwan": [
-      { name: 'Kolhapuri Tambda Rassa', desc: 'Ek mashhoor aur teekha laal mutton rassa, jismein haath se peese gaye paramparik Kolhapuri masale hain. Yoddhao ki asli dawat.', price: 'AED 95', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' },
-      { name: 'Peshwai Mutton Sukka', desc: 'Dheemi aanch par bhuna hua naram mutton, kaali mirch, nariyal aur shahi kesar ke sath.', price: 'AED 110', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' },
-      { name: 'Shahi Pandhra Rassa', desc: 'Nariyal ke doodh, kaju paste aur khade masalon mein paka hua ek shaandaar safed mutton stew.', price: 'AED 95', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' }
+    "Starters": [
+      { name: 'Bluefin Tuna Tartare', desc: 'Avocado emulsion, black truffle ponzu, and sterling caviar on a delicate squid ink crisp.', price: 'AED 165', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' },
+      { name: 'Wagyu Beef Carpaccio', desc: 'Grade A5 Wagyu, shaved white truffle, aged parmesan, and cold-pressed olive oil.', price: 'AED 185', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' },
+      { name: 'Oysters on the Half Shell', desc: 'Fine de Claire oysters, champagne mignonette, and fresh lemon pearls.', price: 'AED 220', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' }
     ],
-    "Shuruvaat": [
-      { name: 'Kothimbir Vadi Gold', desc: 'Kurkure hara dhaniya aur besan ke pakode, jismein 24K khane wale sone ka warq hai, pudina chutney ke sath.', price: 'AED 45', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' },
-      { name: 'Konkani Solkadhi Shots', desc: 'Nariyal ke doodh aur kokum ka ek taazgi bhara appetizer, bhune jeere ke tadke ke sath.', price: 'AED 35', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' },
-      { name: 'Surmai Rawa Fry', desc: 'Rawa aur coastal masalon mein lipti hui premium Kingfish, sunhari hone tak tali hui.', price: 'AED 85', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' }
+    "Seafood": [
+      { name: 'Deep Ocean Lobster', desc: 'Gently poached Atlantic lobster tail resting in a rich vanilla butter bisque with wild asparagus.', price: 'AED 340', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' },
+      { name: 'Pan-Seared Chilean Sea Bass', desc: 'Served over saffron risotto, wilted samphire, and a delicate white wine foam.', price: 'AED 280', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' }
     ],
-    "Tandoor": [
-      { name: 'Shivneri Tandoori Raan', desc: 'Dark rum aur shahi Maratha masalon mein raat bhar marinated lamb shanks, mitti ke tandoor mein dheemi aanch par paki hui.', price: 'AED 185', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' },
-      { name: 'Murgh Rajwada Tikka', desc: 'Kesar, dahi aur qile ke gupt masalon mein bana hua smoked chicken tikka.', price: 'AED 75', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' }
+    "Main Course": [
+      { name: 'The Blue Carte Filet Mignon', desc: '250g Black Angus beef, pommes purée, roasted bone marrow, finished with a rich bordelaise jus.', price: 'AED 310', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' },
+      { name: 'Truffle & Gold Risotto', desc: 'Acquerello rice, wild forest mushrooms, 24-month Parmigiano-Reggiano, and 24K gold leaf.', price: 'AED 240', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' }
     ],
-    "Rotiyaan": [
-      { name: 'Jowar Bhakri', desc: 'Paramparik jowar ki roti, hathon se banakar khuli aanch par bhuni hui.', price: 'AED 15', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' },
-      { name: 'Ghadichi Poli', desc: 'Naram, partedaar gehu ki roti jispar shuddh A2 Desi Ghee lagaya gaya hai.', price: 'AED 20', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' }
+    "Desserts": [
+      { name: 'Ocean Pearl Sphere', desc: 'White chocolate dome hiding a core of Tahitian vanilla mousse and passionfruit coulis.', price: 'AED 110', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' },
+      { name: 'Midnight Lava Cake', desc: 'Dark Valrhona chocolate, sea salt caramel center, served with clotted cream ice cream.', price: 'AED 95', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' }
     ],
-    "Meetha": [
-      { name: 'Shahi Puran Poli', desc: 'Meethi daal se bhari roti jise garam-garam shuddh ghee aur elaichi ke sath parosa jata hai.', price: 'AED 55', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' },
-      { name: 'Ukadiche Modak', desc: 'Bhaap mein pake chawal ke aate ke modak, jisme taza nariyal, gur aur jaiphal bhara hota hai.', price: 'AED 65', img: 'https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg' }
+    "Beverages": [
+      { name: 'The Abyssal Blue Signature', desc: 'A theatrical dry-ice presentation featuring blue curacao, elderflower, and edible silver dust.', price: 'AED 85', img: 'https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg' },
+      { name: 'Smoked Oak Old Fashioned', desc: 'Premium aged bourbon, Madagascar vanilla bitters, smoked tableside with oak wood.', price: 'AED 95', img: 'https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg' }
     ]
   };
 
@@ -252,17 +245,20 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] bg-fort">
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#02040A] bg-ocean-depth">
         <div className="relative flex items-center justify-center mb-10">
-           <Shield className="text-[#E65100] w-14 h-14 animate-pulse opacity-0 animate-[fadeIn_1s_ease-out_0.5s_forwards]" />
-           <div className="absolute w-36 h-36 bg-[#E65100]/20 rounded-full blur-2xl animate-pulse"></div>
+           <div className="absolute w-40 h-40 border-t border-b border-[#1A56B5] rounded-full animate-[spin_4s_linear_infinite] opacity-50"></div>
+           <div className="absolute w-32 h-32 border-r border-l border-[#C2CEDA] rounded-full animate-[spin_3s_linear_infinite_reverse] opacity-30"></div>
+           <div className="absolute w-24 h-24 bg-[#0F326E]/40 rounded-full blur-xl animate-pulse"></div>
         </div>
         <div className="text-center relative z-10">
-          <h1 className="font-royal text-4xl md:text-6xl text-[#D4AF37] tracking-[0.25em] mb-4 opacity-0 animate-[fadeIn_1s_ease-out_1s_forwards]">MARATHA DARBAR</h1>
-          <div className="h-[1px] w-0 bg-gradient-to-r from-transparent via-[#E65100] to-transparent mx-auto animate-[expand_1.5s_ease-out_1.5s_forwards]"></div>
-          <p className="uppercase tracking-[0.5em] text-xs mt-5 text-[#FDFBF7]/60 opacity-0 animate-[fadeIn_1s_ease-out_2s_forwards]">Shahi Dining • Dubai</p>
+          <h1 className="font-playfair text-3xl md:text-5xl text-[#ffffff] tracking-[0.3em] mb-4 opacity-0 animate-[fadeIn_1s_ease-out_1s_forwards] font-light">
+            THE BLUE CARTE
+          </h1>
+          <div className="h-[1px] w-0 bg-gradient-to-r from-transparent via-[#1A56B5] to-transparent mx-auto animate-[expand_1.5s_ease-out_1.5s_forwards]"></div>
+          <p className="uppercase tracking-[0.5em] text-[0.65rem] mt-5 text-[#C2CEDA]/70 opacity-0 animate-[fadeIn_1s_ease-out_2s_forwards]">Fine Dining • Dubai</p>
           <style>{`
-            @keyframes expand { to { w-full; max-width: 250px; width: 250px; } }
+            @keyframes expand { to { w-full; max-width: 200px; width: 200px; } }
             @keyframes fadeIn { to { opacity: 1; } }
           `}</style>
         </div>
@@ -271,161 +267,150 @@ export default function App() {
   }
 
   return (
-    <div className="relative bg-[#050505] bg-fort min-h-screen text-[#FDFBF7] selection:bg-[#E65100] selection:text-white">
+    <div className="relative bg-[#02040A] min-h-screen text-[#F0F4F8] selection:bg-[#1A56B5] selection:text-white">
       
-      {/* Navigation (Menu Bar) */}
-      <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'glass py-4' : 'bg-transparent py-6'}`}>
-        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'glass py-5' : 'bg-transparent py-8'}`}>
+        <div className="container mx-auto px-6 md:px-14 flex justify-between items-center">
           <div className="flex flex-col">
-            <a href="#" className="font-royal text-2xl tracking-[0.2em] text-[#D4AF37] font-bold leading-none">
-              MARATHA DARBAR
+            <a href="#" className="font-playfair text-xl md:text-2xl tracking-[0.25em] text-white font-light leading-none">
+              THE BLUE CARTE
             </a>
-            <span className="font-royal text-[0.65rem] tracking-[0.5em] text-[#FDFBF7]/60 mt-1 uppercase">Dubai</span>
           </div>
           
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center space-x-12">
             {[
-              { id: 'heritage', label: 'Virasat' },
-              { id: 'signatures', label: 'Shahi Dawat' },
+              { id: 'story', label: 'Our Story' },
+              { id: 'signatures', label: 'Chef Specials' },
               { id: 'menu', label: 'Menu' },
-              { id: 'gallery', label: 'Tasveerein' }
+              { id: 'gallery', label: 'Atmosphere' }
             ].map((item) => (
-              <a key={item.id} href={`#${item.id}`} className="text-xs uppercase tracking-[0.2em] text-[#FDFBF7]/80 hover:text-[#E65100] transition-all duration-300 relative group font-medium">
+              <a key={item.id} href={`#${item.id}`} className="text-xs uppercase tracking-[0.2em] text-[#C2CEDA] hover:text-white transition-all duration-300 relative group font-light">
                 {item.label}
-                <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#E65100] transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-2 left-1/2 w-0 h-[1px] bg-[#1A56B5] transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
               </a>
             ))}
-            <a href="#book" className="px-8 py-3 bg-[#D4AF37]/10 border border-[#D4AF37] text-[#D4AF37] text-xs uppercase tracking-widest hover:bg-[#D4AF37] hover:text-[#050505] transition-all duration-500 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] font-bold">
-              Table Book Karein
+            <a href="#book" className="px-8 py-3 bg-transparent border border-[#C2CEDA]/40 text-[#C2CEDA] text-xs uppercase tracking-widest hover:bg-[#1A56B5] hover:border-[#1A56B5] hover:text-white transition-all duration-500 shadow-[0_0_15px_rgba(26,86,181,0)] hover:shadow-[0_0_25px_rgba(26,86,181,0.4)] font-medium">
+              Reserve a Table
             </a>
           </div>
 
           {/* Mobile Nav Toggle */}
-          <button className="lg:hidden text-[#D4AF37]" onClick={() => setIsNavOpen(!isNavOpen)}>
-            {isNavOpen ? <X size={28} /> : <MenuIcon size={28} />}
+          <button className="lg:hidden text-[#C2CEDA]" onClick={() => setIsNavOpen(!isNavOpen)}>
+            {isNavOpen ? <X size={28} strokeWidth={1} /> : <MenuIcon size={28} strokeWidth={1} />}
           </button>
         </div>
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 z-40 bg-gradient-to-b from-[#050505] to-[#24140E] flex flex-col items-center justify-center space-y-8 transition-all duration-500 ${isNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+      <div className={`fixed inset-0 z-40 bg-gradient-to-b from-[#02040A] to-[#061124] flex flex-col items-center justify-center space-y-10 transition-all duration-700 ${isNavOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
         {[
-          { id: 'heritage', label: 'Virasat' },
-          { id: 'signatures', label: 'Shahi Dawat' },
+          { id: 'story', label: 'Our Story' },
+          { id: 'signatures', label: 'Chef Specials' },
           { id: 'menu', label: 'Menu' },
-          { id: 'gallery', label: 'Tasveerein' }
+          { id: 'gallery', label: 'Atmosphere' }
         ].map((item) => (
-          <a key={item.id} href={`#${item.id}`} onClick={() => setIsNavOpen(false)} className="font-royal text-3xl text-[#FDFBF7] hover:text-[#E65100] transition-colors">
+          <a key={item.id} href={`#${item.id}`} onClick={() => setIsNavOpen(false)} className="font-playfair text-3xl text-white hover:text-[#1A56B5] transition-colors font-light">
             {item.label}
           </a>
         ))}
-        <a href="#book" onClick={() => setIsNavOpen(false)} className="mt-8 px-10 py-4 bg-[#D4AF37] text-[#050505] font-bold tracking-widest uppercase text-sm font-royal">
-          Table Book Karein
+        <a href="#book" onClick={() => setIsNavOpen(false)} className="mt-8 px-12 py-4 bg-[#1A56B5] text-white font-medium tracking-[0.2em] uppercase text-xs">
+          Reserve a Table
         </a>
       </div>
 
       {/* 1. Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-        {/* Cinematic Background (Image Replaced) */}
+        {/* Cinematic Background */}
         <div className="absolute inset-0 z-0">
           <img 
             src="https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg" 
-            alt="Royal Cooking Flames" 
-            className="w-full h-full object-cover animate-kenburns opacity-40"
+            alt="Fine Dining Experience" 
+            className="w-full h-full object-cover animate-kenburns opacity-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#24140E]/70 to-[#050505]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#02040A]/90 via-[#061124]/60 to-[#02040A]"></div>
           
-          {/* Subtle Flame / Embers Effect */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} 
-                   className="absolute bottom-0 w-2 h-2 bg-[#E65100] rounded-full blur-[2px] animate-ember"
-                   style={{ left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 5}s`, animationDuration: `${4 + Math.random() * 4}s` }}>
-              </div>
-            ))}
-             <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[#E65100]/10 rounded-full blur-[150px]"></div>
+          {/* Soft Blue Glow Effect */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none mix-blend-screen">
+             <div className="absolute top-1/4 right-1/4 w-[40rem] h-[40rem] bg-[#0F326E]/20 rounded-full blur-[120px]"></div>
+             <div className="absolute bottom-1/4 left-1/4 w-[30rem] h-[30rem] bg-[#1A56B5]/10 rounded-full blur-[150px] animate-wave"></div>
           </div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center mt-16">
           <RevealOnScroll delay={100}>
-            <div className="flex items-center justify-center space-x-4 mb-6">
-              <span className="w-16 h-[1px] bg-[#D4AF37]"></span>
-              <p className="uppercase tracking-[0.4em] text-[#D4AF37] text-xs md:text-sm font-semibold">Meena Bazaar, Dubai</p>
-              <span className="w-16 h-[1px] bg-[#D4AF37]"></span>
-            </div>
+            <p className="uppercase tracking-[0.5em] text-[#C2CEDA] text-[0.65rem] md:text-xs font-medium mb-6">Dubai, United Arab Emirates</p>
           </RevealOnScroll>
           <RevealOnScroll delay={300}>
-            <h1 className="font-royal text-5xl md:text-7xl lg:text-[6rem] text-white mb-6 leading-[1.1] drop-shadow-2xl">
-              Maratha Samrajya Ke Shahi <br/>
-              <span className="gold-gradient-text text-glow italic">Swad Ka Anubhav Karein</span>
+            <h1 className="font-playfair text-5xl md:text-7xl lg:text-[6.5rem] text-white mb-6 leading-[1.1] font-light">
+              A New Standard of <br/>
+              <span className="silver-gradient-text text-glow italic font-medium">Fine Dining</span>
             </h1>
           </RevealOnScroll>
           <RevealOnScroll delay={500}>
-            <p className="text-[#FDFBF7]/80 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed">
-              Ek aisi duniya mein qadam rakhein jahan shaurya aur shaan ka anokha sangam hai. Hum Maharashtra ke shahi qilon ka pakwan Dubai ki behtareen luxury ke sath pesh karte hain.
+            <p className="text-[#C2CEDA]/80 text-base md:text-lg font-light max-w-2xl mx-auto mb-14 leading-relaxed">
+              Immerse yourself in a world where the enigmatic depth of the ocean meets unparalleled culinary sophistication and exclusivity.
             </p>
           </RevealOnScroll>
           <RevealOnScroll delay={700}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <a href="#book" className="px-12 py-4 bg-gradient-to-r from-[#D4AF37] to-[#E65100] text-[#050505] text-xs uppercase tracking-[0.2em] font-bold hover:scale-105 transition-all duration-500 shadow-[0_0_20px_rgba(230,81,0,0.4)]">
-                Table Book Karein
+              <a href="#book" className="px-12 py-4 bg-[#1A56B5] text-white text-xs uppercase tracking-[0.2em] font-medium hover:bg-white hover:text-[#02040A] transition-all duration-500 shadow-[0_0_20px_rgba(26,86,181,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                Reserve Your Table
               </a>
-              <a href="#menu" className="px-12 py-4 border border-[#D4AF37]/50 text-[#D4AF37] text-xs uppercase tracking-[0.2em] font-bold hover:border-[#E65100] hover:text-[#E65100] hover:bg-[#E65100]/10 glass transition-all duration-500">
-                Menu Dekhein
+              <a href="#menu" className="px-12 py-4 border border-[#C2CEDA]/30 text-white text-xs uppercase tracking-[0.2em] font-medium hover:border-white glass transition-all duration-500">
+                Explore Menu
               </a>
             </div>
           </RevealOnScroll>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 animate-float">
-          <div className="w-[1px] h-20 bg-gradient-to-b from-[#E65100] to-transparent mx-auto"></div>
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 animate-pulse">
+          <div className="w-[1px] h-16 bg-gradient-to-b from-[#C2CEDA] to-transparent mx-auto opacity-50"></div>
         </div>
       </section>
 
       {/* 2. About / Story Section */}
-      <section id="heritage" className="py-24 md:py-32 relative bg-gradient-royal">
-        <div className="container mx-auto px-6 md:px-12">
+      <section id="story" className="py-24 md:py-32 relative bg-ocean-depth">
+        <div className="container mx-auto px-6 md:px-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
             <RevealOnScroll direction="right">
               <div className="relative group">
-                <div className="absolute -inset-4 border border-[#D4AF37]/30 translate-x-4 translate-y-4 rounded-sm transition-transform duration-700 group-hover:translate-x-2 group-hover:translate-y-2"></div>
-                {/* Image Replaced */}
+                <div className="absolute -inset-1 border border-[#1A56B5]/20 translate-x-4 translate-y-4 transition-transform duration-700 group-hover:translate-x-2 group-hover:translate-y-2"></div>
                 <img 
                   src="https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg" 
-                  alt="Royal Heritage Spices" 
-                  className="relative z-10 w-full h-[650px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000 rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.9)]"
+                  alt="Elegant Ambience" 
+                  className="relative z-10 w-full h-[700px] object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-1000 shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
                 />
-                <div className="absolute bottom-12 -left-10 bg-[#050505] p-8 border-l-4 border-[#E65100] z-20 shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
-                  <p className="font-royal text-3xl md:text-4xl text-[#D4AF37] mb-2">Virasat</p>
-                  <p className="text-xs uppercase tracking-widest text-[#FDFBF7]/70">Qilon Aur Dawaton Ki Kahani</p>
+                <div className="absolute bottom-12 -right-8 bg-[#02040A]/90 backdrop-blur-md p-10 border border-[#C2CEDA]/10 z-20 shadow-2xl hidden md:block">
+                  <p className="font-playfair text-4xl text-white mb-2">Exclusivity</p>
+                  <p className="text-[0.65rem] uppercase tracking-[0.3em] text-[#C2CEDA]/70">Redefined</p>
                 </div>
               </div>
             </RevealOnScroll>
             
             <RevealOnScroll direction="left" delay={200}>
-              <div className="max-w-xl pl-0 md:pl-6">
-                <h3 className="uppercase tracking-[0.4em] text-[#E65100] text-xs mb-4 flex items-center font-semibold">
-                  <span className="w-8 h-[1px] bg-[#E65100] mr-4"></span> Parampara Zinda Hai
+              <div className="max-w-xl pl-0 md:pl-8">
+                <h3 className="uppercase tracking-[0.3em] text-[#C2CEDA] text-[0.65rem] mb-6 flex items-center font-medium">
+                  <span className="w-10 h-[1px] bg-[#1A56B5] mr-4"></span> Our Philosophy
                 </h3>
-                <h2 className="font-royal text-4xl md:text-5xl lg:text-6xl mb-8 leading-[1.1] text-white">
-                  Taqat, Garv, Aur <br/><span className="italic text-[#D4AF37] text-glow">Parampara</span>
+                <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl mb-10 leading-[1.2] text-white font-light">
+                  An Ode to the <br/><span className="italic text-[#C2CEDA]">Deep Ocean</span>
                 </h2>
-                <p className="text-[#FDFBF7]/70 leading-relaxed font-light mb-6 text-base md:text-lg">
-                  Maratha Samrajya apni bahaduri aur shaan ke liye jana jata tha. Unke shandar qilon ki rasoiyan bhi isse alag nahi thi—rajaon aur yoddhao ke layaq mazboot aur masaledar dawat banai jati thi.
+                <p className="text-[#C2CEDA]/70 leading-relaxed font-light mb-6 text-sm md:text-base">
+                  The Blue Carte was born from a desire to combine the tranquil, mysterious allure of the ocean with the precision of European fine dining. Every detail, from the ambient midnight lighting to the silver-accented plating, is designed to transport you.
                 </p>
-                <p className="text-[#FDFBF7]/70 leading-relaxed font-light mb-10 text-base md:text-lg">
-                  Maratha Darbar mein, hum inhi purani aur shahi recipes ko phir se zinda karte hain. Kolhapur ke teekhe Tambda Rassa se lekar Puran Poli ki mithas tak, har dish Maharashtra ke shandar itihas ki ek jhalak hai, jo Dubai ki modern luxury ke sath pesh ki jati hai.
+                <p className="text-[#C2CEDA]/70 leading-relaxed font-light mb-12 text-sm md:text-base">
+                  Our ingredients are globally sourced with an uncompromising demand for excellence. We cater to the discerning palate, offering an intimate, highly exclusive sanctuary away from the vibrant rush of Dubai.
                 </p>
-                <div className="flex items-center space-x-6 border-t border-[#D4AF37]/20 pt-8">
-                  <div className="w-16 h-16 rounded-full border border-[#E65100]/50 flex items-center justify-center bg-[#E65100]/10">
-                    <Shield className="text-[#E65100] w-7 h-7" />
+                <div className="flex items-center space-x-6 border-t border-[#C2CEDA]/10 pt-10">
+                  <div className="w-16 h-16 rounded-full border border-[#1A56B5]/30 flex items-center justify-center">
+                    <span className="font-playfair italic text-xl text-white">BC</span>
                   </div>
                   <div>
-                    <p className="text-sm tracking-[0.1em] uppercase text-[#D4AF37] font-bold">Shuddh Maharashtrian</p>
-                    <p className="text-xs tracking-widest text-[#FDFBF7]/50 mt-1">Pak Kala Ki Virasat</p>
+                    <p className="text-xs tracking-[0.2em] uppercase text-white font-medium">Master Culinary Arts</p>
+                    <p className="text-[0.65rem] tracking-widest text-[#C2CEDA]/50 mt-1">Est. Dubai</p>
                   </div>
                 </div>
               </div>
@@ -435,30 +420,30 @@ export default function App() {
       </section>
 
       {/* 3. Signature Dishes Highlight */}
-      <section id="signatures" className="py-24 md:py-32 relative border-y border-[#D4AF37]/10 bg-[#050505]">
-        <div className="fire-glow absolute inset-0 opacity-30 pointer-events-none"></div>
-        <div className="container mx-auto px-6 md:px-12 text-center relative z-10">
+      <section id="signatures" className="py-24 md:py-32 relative border-y border-[#C2CEDA]/5 bg-[#02040A]">
+        <div className="ocean-glow absolute inset-0 opacity-40 pointer-events-none"></div>
+        <div className="container mx-auto px-6 md:px-14 text-center relative z-10">
           <RevealOnScroll>
-            <h3 className="uppercase tracking-[0.4em] text-[#E65100] text-xs mb-4 font-semibold">Shahi Khazana</h3>
-            <h2 className="font-royal text-4xl md:text-5xl lg:text-6xl mb-6 text-white">Khas Pakwan</h2>
-            <div className="w-24 h-[1px] bg-[#D4AF37] mx-auto mb-16"></div>
+            <h3 className="uppercase tracking-[0.3em] text-[#C2CEDA] text-[0.65rem] mb-4 font-medium">The Chef's Canvas</h3>
+            <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl mb-6 text-white font-light">Signature Selection</h2>
+            <div className="w-16 h-[1px] bg-[#1A56B5] mx-auto mb-20"></div>
           </RevealOnScroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {[
-              { title: "Kolhapuri Tambda Rassa", desc: "Ek mashhoor aur teekha laal mutton rassa, jismein haath se peese gaye masale hain. Yoddhao ka asli khana.", img: "https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg" },
-              { title: "Shahi Pandhra Rassa", desc: "Nariyal ke doodh aur khade masalon mein paka hua ek shaandaar safed mutton stew.", img: "https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg" },
-              { title: "Peshwai Mutton Sukka", desc: "Dheemi aanch par bhuna hua naram mutton, kaali mirch aur shahi kesar ke sath.", img: "https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg" }
+              { title: "Bluefin Tuna Tartare", desc: "Avocado emulsion, black truffle ponzu, and sterling caviar on a delicate squid ink crisp.", img: "https://image2url.com/r2/default/images/1773770086296-8ec9a49a-fca7-4a5c-8929-66200cba760e.jpg" },
+              { title: "Deep Ocean Lobster", desc: "Gently poached Atlantic lobster tail resting in a rich vanilla butter bisque with wild asparagus.", img: "https://image2url.com/r2/default/images/1773770014780-126cca91-0011-4b23-86c7-26c1e6c7c1b6.jpg" },
+              { title: "The Blue Carte Filet", desc: "250g Black Angus beef, pommes purée, roasted bone marrow, finished with a rich bordelaise jus.", img: "https://image2url.com/r2/default/images/1773770053567-e878c456-1837-4987-8b4a-f582d464c8d2.jpg" }
             ].map((dish, idx) => (
               <RevealOnScroll key={idx} delay={idx * 200}>
-                <div className="glass-card h-full flex flex-col group overflow-hidden rounded-t-full p-2 border border-[#D4AF37]/20">
-                  <div className="w-full h-64 rounded-t-full overflow-hidden relative">
-                     <div className="absolute inset-0 bg-[#050505]/40 group-hover:bg-transparent transition-all z-10"></div>
-                     <img src={dish.img} alt={dish.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000" />
+                <div className="glass-card h-full flex flex-col group overflow-hidden p-3 border border-[#C2CEDA]/10 rounded-sm">
+                  <div className="w-full h-72 overflow-hidden relative rounded-sm">
+                     <div className="absolute inset-0 bg-[#0F326E]/20 group-hover:bg-transparent transition-all duration-700 z-10 mix-blend-overlay"></div>
+                     <img src={dish.img} alt={dish.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 grayscale-[10%]" />
                   </div>
-                  <div className="p-8 text-center">
-                    <h4 className="font-royal text-2xl text-[#D4AF37] mb-4 group-hover:text-[#E65100] transition-colors">{dish.title}</h4>
-                    <p className="text-[#FDFBF7]/60 font-light leading-relaxed text-sm">{dish.desc}</p>
+                  <div className="p-8 text-center flex-grow flex flex-col justify-center">
+                    <h4 className="font-playfair text-2xl text-white mb-4 group-hover:text-[#C2CEDA] transition-colors font-light">{dish.title}</h4>
+                    <p className="text-[#C2CEDA]/60 font-light leading-relaxed text-sm">{dish.desc}</p>
                   </div>
                 </div>
               </RevealOnScroll>
@@ -468,27 +453,27 @@ export default function App() {
       </section>
 
       {/* 4. Full Menu Section */}
-      <section id="menu" className="py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#050505] via-[#24140E] to-[#050505]">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#E65100] rounded-full blur-[250px] opacity-[0.05]"></div>
+      <section id="menu" className="py-24 md:py-32 relative overflow-hidden bg-gradient-to-b from-[#02040A] via-[#061124] to-[#02040A]">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#0F326E] rounded-full blur-[250px] opacity-[0.08] pointer-events-none"></div>
         
-        <div className="container mx-auto px-6 md:px-12 relative z-10">
+        <div className="container mx-auto px-6 md:px-14 relative z-10">
           <div className="text-center mb-16">
             <RevealOnScroll>
-              <h3 className="uppercase tracking-[0.4em] text-[#D4AF37] text-xs mb-4 font-semibold">Swad Ki Duniya</h3>
-              <h2 className="font-royal text-4xl md:text-5xl lg:text-6xl mb-6 text-white">Shahi Menu</h2>
-              <div className="w-24 h-[1px] bg-[#D4AF37] mx-auto"></div>
+              <h3 className="uppercase tracking-[0.3em] text-[#C2CEDA] text-[0.65rem] mb-4 font-medium">A Symphony of Taste</h3>
+              <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl mb-6 text-white font-light">The Menu</h2>
+              <div className="w-16 h-[1px] bg-[#1A56B5] mx-auto"></div>
             </RevealOnScroll>
           </div>
 
           {/* Menu Categories */}
           <RevealOnScroll delay={200}>
-            <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-20">
+            <div className="flex flex-wrap justify-center gap-8 md:gap-14 mb-24">
               {Object.keys(menuData).map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveMenuTab(category)}
-                  className={`text-xs md:text-sm uppercase tracking-[0.15em] pb-3 transition-all duration-300 border-b-2 font-semibold ${
-                    activeMenuTab === category ? 'border-[#E65100] text-[#E65100]' : 'border-transparent text-[#FDFBF7]/40 hover:text-[#FDFBF7]'
+                  className={`text-[0.65rem] md:text-xs uppercase tracking-[0.25em] pb-3 transition-all duration-500 border-b relative font-medium ${
+                    activeMenuTab === category ? 'border-[#1A56B5] text-white' : 'border-transparent text-[#C2CEDA]/50 hover:text-[#C2CEDA]'
                   }`}
                 >
                   {category}
@@ -498,64 +483,63 @@ export default function App() {
           </RevealOnScroll>
 
           {/* Menu Items Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-16 max-w-6xl mx-auto">
             {menuData[activeMenuTab].map((item, index) => (
               <RevealOnScroll key={index} delay={index * 150}>
-                <div className="group flex flex-col sm:flex-row gap-8 items-center sm:items-start p-6 rounded-lg hover:bg-white/[0.02] border border-transparent hover:border-[#D4AF37]/15 transition-all duration-500 cursor-pointer">
-                  <div className="w-full sm:w-40 h-40 shrink-0 overflow-hidden rounded-md relative border border-[#D4AF37]/30 shadow-lg">
-                    <div className="absolute inset-0 bg-[#050505]/40 group-hover:bg-transparent transition-all z-10"></div>
-                    <img 
-                      src={item.img} 
-                      alt={item.name} 
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000"
-                    />
+                <div className="group flex flex-col gap-4 border-b border-[#C2CEDA]/10 pb-6 hover:border-[#1A56B5]/50 transition-colors duration-500 cursor-pointer">
+                  <div className="flex justify-between items-baseline">
+                    <h4 className="font-playfair text-xl md:text-2xl text-white group-hover:text-[#C2CEDA] transition-colors font-light">{item.name}</h4>
+                    <span className="text-white font-medium tracking-widest text-sm border-b border-[#1A56B5] pb-1">{item.price}</span>
                   </div>
-                  <div className="flex-1 w-full text-center sm:text-left mt-2 sm:mt-0">
-                    <div className="flex flex-col sm:flex-row justify-between items-baseline mb-4 border-b border-[#D4AF37]/20 pb-3">
-                      <h4 className="font-royal text-2xl text-white group-hover:text-[#E65100] transition-colors">{item.name}</h4>
-                      <span className="text-[#D4AF37] font-bold tracking-widest mt-2 sm:mt-0 text-lg">{item.price}</span>
-                    </div>
-                    <p className="text-[#FDFBF7]/60 font-light text-sm md:text-base leading-relaxed">{item.desc}</p>
-                  </div>
+                  <p className="text-[#C2CEDA]/60 font-light text-sm leading-relaxed max-w-md">{item.desc}</p>
                 </div>
               </RevealOnScroll>
             ))}
+          </div>
+          
+          <div className="mt-24 text-center">
+             <RevealOnScroll>
+               <a href="#book" className="inline-flex items-center text-[#C2CEDA] text-xs uppercase tracking-[0.2em] hover:text-white transition-colors group font-light">
+                 <span className="border-b border-transparent group-hover:border-white pb-1 transition-all">Download Full Wine List</span>
+                 <ChevronRight className="ml-2 w-4 h-4 transform group-hover:translate-x-2 transition-transform"/>
+               </a>
+             </RevealOnScroll>
           </div>
         </div>
       </section>
 
       {/* 5. Royal Gallery Section */}
-      <section id="gallery" className="py-24 bg-[#050505]">
-        <div className="container mx-auto px-6 md:px-12">
+      <section id="gallery" className="py-24 md:py-32 bg-[#02040A]">
+        <div className="container mx-auto px-6 md:px-14">
            <RevealOnScroll>
-            <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-[#C2CEDA]/10 pb-10">
               <div>
-                <h3 className="uppercase tracking-[0.4em] text-[#E65100] text-xs mb-4 font-semibold">Khoobsurat Nazare</h3>
-                <h2 className="font-royal text-4xl md:text-5xl lg:text-6xl text-white">Darbar Ka Mahaul</h2>
+                <h3 className="uppercase tracking-[0.3em] text-[#C2CEDA] text-[0.65rem] mb-4 font-medium">Visual Aesthetics</h3>
+                <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl text-white font-light">The Atmosphere</h2>
               </div>
-              <p className="text-[#FDFBF7]/60 max-w-sm font-light mt-6 md:mt-0 text-base">
-                Hamare premium setup ka anubhav karein, jo Maratha qilon ki shaan aur elegant shahi dining ko darshata hai.
+              <p className="text-[#C2CEDA]/60 max-w-sm font-light mt-6 md:mt-0 text-sm md:text-base">
+                Discover the minimal elegance, dark oceanic tones, and flawless presentation that define The Blue Carte experience.
               </p>
             </div>
            </RevealOnScroll>
 
            {/* Masonry-style Grid */}
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[350px]">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[400px]">
              {galleryImages.map((src, idx) => (
                <RevealOnScroll key={idx} delay={idx * 150}>
                  <div 
-                  className={`relative w-full h-full overflow-hidden group cursor-pointer border border-[#D4AF37]/10 ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''} ${idx === 3 ? 'md:col-span-2' : ''}`}
+                  className={`relative w-full h-full overflow-hidden group cursor-pointer ${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''} ${idx === 3 ? 'md:col-span-2' : ''}`}
                   onClick={() => setLightboxImg(src)}
                  >
-                   <div className="absolute inset-0 bg-[#050505]/60 group-hover:bg-[#24140E]/20 transition-colors duration-700 z-10"></div>
+                   <div className="absolute inset-0 bg-[#02040A]/40 group-hover:bg-[#061124]/10 transition-colors duration-700 z-10 mix-blend-overlay"></div>
                    <img 
                      src={src} 
                      alt="Gallery" 
-                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1.5s]"
+                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[2s] grayscale-[15%]"
                      loading="lazy"
                    />
                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20">
-                     <span className="bg-[#050505]/90 backdrop-blur-md text-[#D4AF37] px-10 py-4 uppercase tracking-[0.2em] text-xs border border-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.2)] font-bold">Bada Karein</span>
+                     <span className="bg-[#02040A]/80 backdrop-blur-md text-white px-8 py-3 uppercase tracking-[0.2em] text-[0.65rem] border border-[#C2CEDA]/20 shadow-[0_0_20px_rgba(26,86,181,0.2)] font-light">View Details</span>
                    </div>
                  </div>
                </RevealOnScroll>
@@ -566,43 +550,44 @@ export default function App() {
 
       {/* Lightbox */}
       {lightboxImg && (
-        <div className="fixed inset-0 z-[100] bg-[#050505]/95 backdrop-blur-2xl flex items-center justify-center p-4" onClick={() => setLightboxImg(null)}>
-          <button className="absolute top-10 right-10 text-white/50 hover:text-[#E65100] transition-colors" onClick={() => setLightboxImg(null)}>
+        <div className="fixed inset-0 z-[100] bg-[#02040A]/95 backdrop-blur-2xl flex items-center justify-center p-4" onClick={() => setLightboxImg(null)}>
+          <button className="absolute top-10 right-10 text-white/50 hover:text-white transition-colors" onClick={() => setLightboxImg(null)}>
             <X size={44} strokeWidth={1}/>
           </button>
-          <img src={lightboxImg} alt="Enlarged" className="max-w-full max-h-[90vh] object-contain shadow-2xl border border-[#D4AF37]/30" />
+          <img src={lightboxImg} alt="Enlarged" className="max-w-full max-h-[90vh] object-contain shadow-2xl border border-[#1A56B5]/20" />
         </div>
       )}
 
       {/* 6. Testimonials */}
-      <section id="testimonials" className="py-24 md:py-32 relative border-y border-[#D4AF37]/10 bg-gradient-to-t from-[#24140E] to-transparent">
-         <div className="container mx-auto px-6 md:px-12 text-center">
+      <section id="testimonials" className="py-24 md:py-32 relative border-t border-[#C2CEDA]/5 bg-ocean-depth">
+         <div className="container mx-auto px-6 md:px-14 text-center">
             <RevealOnScroll>
-              <Quote className="w-14 h-14 text-[#E65100]/40 mx-auto mb-8" />
-              <h2 className="font-royal text-4xl md:text-5xl text-white mb-20">Mehmaano Ki Raay</h2>
+              <div className="flex justify-center mb-8">
+                 <div className="w-12 h-12 rounded-full border border-[#1A56B5]/40 flex items-center justify-center">
+                   <Quote className="w-4 h-4 text-[#C2CEDA]/60" />
+                 </div>
+              </div>
+              <h2 className="font-playfair text-4xl md:text-5xl text-white mb-24 font-light">Eminent Reviews</h2>
             </RevealOnScroll>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {[
-                { name: "Aditya S.", role: "Culinary Editor", text: "Tambda Rassa ne mujhe seedhe Kolhapur ke shahi darbar mein pahuncha diya. Dubai mein is swad ka koi muqabla nahi. Ek $10,000 ka anubhav." },
-                { name: "Fatima A.", role: "Global Gourmand", text: "Har mayne mein shandaar. Shivneri Tandoori Raan sach mein dheemi aanch par paki ek masterpiece thi. Qile jaisa mahaul is luxury bhojan ko aur bhi khas banata hai." },
-                { name: "Kunal M.", role: "Food Critic", text: "Virasat ke swad ko Michelin-level ki khoobsurti ke sath pesh kiya gaya hai. Maratha Darbar sirf ek restaurant nahi, balki itihas ka ek shahi safar hai." }
+                { name: "Alexander V.", role: "Michelin Guide Reviewer", text: "A breathtaking descent into culinary perfection. The Wagyu Carpaccio is a revelation, and the ambiance is unmatched in Dubai's fine dining scene." },
+                { name: "Eleanor C.", role: "Global Gourmand", text: "The Blue Carte feels like an exclusive secret. The ocean-inspired aesthetic paired with flawless European execution makes this a $10,000 masterpiece." },
+                { name: "Julian H.", role: "Lifestyle Curator", text: "From the dramatic presentation of The Abyssal Blue cocktail to the melt-in-mouth Filet Mignon, every second here is absolute luxury." }
               ].map((review, idx) => (
                 <RevealOnScroll key={idx} delay={idx * 200}>
-                  <div className="glass-card p-12 text-left h-full flex flex-col justify-between hover:-translate-y-3 transition-transform duration-500">
+                  <div className="glass-card p-12 text-left h-full flex flex-col justify-between hover:-translate-y-3 transition-transform duration-700 rounded-sm">
                     <div>
-                      <div className="flex text-[#E65100] mb-8 space-x-1">
-                        {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
+                      <div className="flex text-[#1A56B5] mb-8 space-x-1">
+                        {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
                       </div>
-                      <p className="text-[#FDFBF7]/70 font-light leading-loose mb-10 text-lg">"{review.text}"</p>
+                      <p className="text-[#C2CEDA]/80 font-light leading-loose mb-10 text-sm">"{review.text}"</p>
                     </div>
-                    <div className="border-t border-[#D4AF37]/20 pt-6 flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-[#E65100]/10 border border-[#E65100]/30 flex items-center justify-center mr-4">
-                        <span className="text-[#D4AF37] font-royal font-bold">{review.name.charAt(0)}</span>
-                      </div>
+                    <div className="border-t border-[#C2CEDA]/10 pt-8 flex items-center">
                       <div>
-                        <h4 className="font-royal text-xl text-white font-bold">{review.name}</h4>
-                        <p className="text-[#E65100] text-[0.65rem] uppercase tracking-[0.2em] mt-1 font-semibold">{review.role}</p>
+                        <h4 className="font-playfair text-lg text-white font-light">{review.name}</h4>
+                        <p className="text-[#C2CEDA]/50 text-[0.6rem] uppercase tracking-[0.2em] mt-2 font-medium">{review.role}</p>
                       </div>
                     </div>
                   </div>
@@ -613,50 +598,50 @@ export default function App() {
       </section>
 
       {/* 8 & 7. Booking & Map Section */}
-      <section id="book" className="py-0 flex flex-col md:flex-row bg-[#050505]">
+      <section id="book" className="py-0 flex flex-col md:flex-row bg-[#02040A] border-t border-[#C2CEDA]/5">
         
         {/* Reservation Form */}
-        <div className="w-full md:w-1/2 p-8 md:p-24 flex items-center justify-center relative bg-gradient-to-r from-[#24140E] to-transparent">
+        <div className="w-full md:w-1/2 p-8 md:p-24 flex items-center justify-center relative bg-[#061124]/30">
           <div className="w-full max-w-lg relative z-10">
             <RevealOnScroll>
-              <h3 className="uppercase tracking-[0.4em] text-[#E65100] text-xs mb-4 font-semibold">Booking</h3>
-              <h2 className="font-royal text-4xl md:text-5xl lg:text-6xl mb-8 text-white">Apna Darbar Book Karein</h2>
-              <p className="text-[#FDFBF7]/50 font-light mb-12 text-sm leading-relaxed">Shahi table par apni jagah pakki karein. Exclusive private dining ke liye, kripya hamare WhatsApp concierge ka istemal karein.</p>
+              <h3 className="uppercase tracking-[0.3em] text-[#C2CEDA] text-[0.65rem] mb-4 font-medium">Reservations</h3>
+              <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl mb-8 text-white font-light">Secure Your Table</h2>
+              <p className="text-[#C2CEDA]/50 font-light mb-14 text-sm leading-relaxed">Due to our exclusive capacity, reservations are highly recommended. For private dining inquiries, utilize our direct concierge.</p>
             </RevealOnScroll>
 
             <RevealOnScroll delay={200}>
-              <form onSubmit={handleBookTable} className="space-y-10">
+              <form onSubmit={handleBookTable} className="space-y-12">
                 <div className="group relative">
-                  <input type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Pura Naam" className="w-full bg-transparent border-b border-[#D4AF37]/30 pb-4 text-white focus:outline-none focus:border-[#E65100] transition-colors font-light placeholder-[#FDFBF7]/30 text-lg" />
+                  <input type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Distinguished Guest Name" className="w-full bg-transparent border-b border-[#C2CEDA]/20 pb-4 text-white focus:outline-none focus:border-[#1A56B5] transition-colors font-light placeholder-[#C2CEDA]/30 text-sm" />
                 </div>
                 <div className="group relative">
-                  <input type="tel" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="Phone Number" className="w-full bg-transparent border-b border-[#D4AF37]/30 pb-4 text-white focus:outline-none focus:border-[#E65100] transition-colors font-light placeholder-[#FDFBF7]/30 text-lg" />
+                  <input type="tel" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="Contact Telephone" className="w-full bg-transparent border-b border-[#C2CEDA]/20 pb-4 text-white focus:outline-none focus:border-[#1A56B5] transition-colors font-light placeholder-[#C2CEDA]/30 text-sm" />
                 </div>
                 <div className="grid grid-cols-2 gap-10">
                   <div className="group relative">
-                    <select value={formData.guests} onChange={(e) => setFormData({...formData, guests: e.target.value})} className="w-full bg-transparent border-b border-[#D4AF37]/30 pb-4 text-white focus:outline-none focus:border-[#E65100] transition-colors font-light appearance-none cursor-pointer text-lg">
-                      <option value="1" className="bg-[#050505] text-white">1 Mehmaan</option>
-                      <option value="2" className="bg-[#050505] text-white">2 Mehmaan</option>
-                      <option value="3" className="bg-[#050505] text-white">3 Mehmaan</option>
-                      <option value="4" className="bg-[#050505] text-white">4 Mehmaan</option>
-                      <option value="5" className="bg-[#050505] text-white">5 Mehmaan</option>
-                      <option value="6" className="bg-[#050505] text-white">6+ Mehmaan</option>
+                    <select value={formData.guests} onChange={(e) => setFormData({...formData, guests: e.target.value})} className="w-full bg-transparent border-b border-[#C2CEDA]/20 pb-4 text-white focus:outline-none focus:border-[#1A56B5] transition-colors font-light appearance-none cursor-pointer text-sm">
+                      <option value="1" className="bg-[#02040A] text-white">1 Guest</option>
+                      <option value="2" className="bg-[#02040A] text-white">2 Guests</option>
+                      <option value="3" className="bg-[#02040A] text-white">3 Guests</option>
+                      <option value="4" className="bg-[#02040A] text-white">4 Guests</option>
+                      <option value="5" className="bg-[#02040A] text-white">5 Guests</option>
+                      <option value="6" className="bg-[#02040A] text-white">6+ Guests (Private)</option>
                     </select>
                   </div>
                   <div className="group relative">
-                    <input type="date" required value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} className="w-full bg-transparent border-b border-[#D4AF37]/30 pb-4 text-[#FDFBF7]/80 focus:outline-none focus:border-[#E65100] transition-colors font-light [color-scheme:dark] text-lg" />
+                    <input type="date" required value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} className="w-full bg-transparent border-b border-[#C2CEDA]/20 pb-4 text-[#C2CEDA]/80 focus:outline-none focus:border-[#1A56B5] transition-colors font-light [color-scheme:dark] text-sm" />
                   </div>
                 </div>
                 <div className="group relative">
-                  <input type="time" required value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} className="w-full bg-transparent border-b border-[#D4AF37]/30 pb-4 text-[#FDFBF7]/80 focus:outline-none focus:border-[#E65100] transition-colors font-light [color-scheme:dark] text-lg" />
+                  <input type="time" required value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} className="w-full bg-transparent border-b border-[#C2CEDA]/20 pb-4 text-[#C2CEDA]/80 focus:outline-none focus:border-[#1A56B5] transition-colors font-light [color-scheme:dark] text-sm" />
                 </div>
                 <button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full mt-12 py-6 bg-gradient-to-r from-[#D4AF37] to-[#E65100] text-[#050505] uppercase tracking-[0.2em] font-bold hover:from-[#FDFBF7] hover:to-[#FDFBF7] transition-all duration-500 disabled:opacity-70 flex justify-center items-center group shadow-[0_0_20px_rgba(230,81,0,0.3)] hover:shadow-[0_0_30px_rgba(230,81,0,0.6)]"
+                  className="w-full mt-16 py-5 bg-[#1A56B5] text-white uppercase tracking-[0.2em] font-medium hover:bg-white hover:text-[#02040A] transition-all duration-500 disabled:opacity-70 flex justify-center items-center group shadow-[0_0_20px_rgba(26,86,181,0.3)] text-xs"
                 >
-                  {isSubmitting ? 'Table Confirm Ho Raha Hai...' : 'Table Confirm Karein'}
-                  {!isSubmitting && <ChevronRight className="ml-3 w-5 h-5 transform group-hover:translate-x-2 transition-transform"/>}
+                  {isSubmitting ? 'Finalizing Details...' : 'Confirm Reservation'}
+                  {!isSubmitting && <ChevronRight className="ml-3 w-4 h-4 transform group-hover:translate-x-2 transition-transform"/>}
                 </button>
               </form>
             </RevealOnScroll>
@@ -664,81 +649,76 @@ export default function App() {
         </div>
 
         {/* 7. Google Map Integration */}
-        <div className="w-full md:w-1/2 h-[600px] md:h-auto relative grayscale-[60%] hover:grayscale-0 transition-all duration-1000 border-l border-[#D4AF37]/10">
-           {/* Exact Location: Meena Bazaar area */}
+        <div className="w-full md:w-1/2 h-[600px] md:h-auto relative grayscale-[40%] hover:grayscale-0 transition-all duration-1000 border-l border-[#C2CEDA]/5">
+           {/* Exact Location: Dubai (Centered generally for high-end aesthetic) */}
            <iframe 
-             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14434.908070929283!2d55.281898150000005!3d25.253818300000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f4337bc1df43d%3A0xc6c76db3642ba5!2sBur%20Dubai%20-%20Dubai!5e0!3m2!1sen!2sae!4v1710000000000!5m2!1sen!2sae" 
+             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115456.96417757966!2d55.19503461718501!3d25.267888768370123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43496ad9c645%3A0xbde66e5084295162!2sDubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus" 
              className="w-full h-full border-0 map-dark" 
              allowFullScreen="" 
              loading="lazy" 
              referrerPolicy="no-referrer-when-downgrade"
-             title="Maratha Darbar Location"
+             title="The Blue Carte Location"
            ></iframe>
-           <div className="absolute inset-0 bg-[#050505]/40 pointer-events-none"></div>
+           <div className="absolute inset-0 bg-[#02040A]/40 pointer-events-none mix-blend-overlay"></div>
         </div>
 
       </section>
 
       {/* 10. Footer */}
-      <footer className="bg-[#030303] pt-24 pb-12 border-t border-[#D4AF37]/20 relative overflow-hidden bg-fort">
-        {/* Decorative corner accents */}
-        <div className="absolute top-0 left-0 w-40 h-40 border-t-2 border-l-2 border-[#D4AF37]/15 opacity-50 rounded-tl-3xl"></div>
-        <div className="absolute top-0 right-0 w-40 h-40 border-t-2 border-r-2 border-[#D4AF37]/15 opacity-50 rounded-tr-3xl"></div>
-
-        <div className="container mx-auto px-6 md:px-12 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16 mb-20">
+      <footer className="bg-[#010205] pt-24 pb-12 border-t border-[#C2CEDA]/10 relative overflow-hidden">
+        
+        <div className="container mx-auto px-6 md:px-14 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16 mb-24">
             <div className="md:col-span-1">
-              <h2 className="font-royal text-3xl text-[#D4AF37] tracking-[0.15em] mb-2 leading-none font-bold">MARATHA DARBAR</h2>
-              <p className="font-royal text-sm text-[#FDFBF7]/70 tracking-[0.4em] mb-8 uppercase">Dubai</p>
-              <p className="text-[#FDFBF7]/50 font-light text-sm leading-relaxed mb-8">
-                Maratha Samrajya ke shaktishali aur virasat se bhare pakwanon ko Dubai ke sabse shandar dining experience mein badalna.
+              <h2 className="font-playfair text-2xl text-white tracking-[0.2em] mb-4 leading-none font-light">THE BLUE CARTE</h2>
+              <p className="text-[#C2CEDA]/40 font-light text-xs leading-relaxed mb-8 pr-4">
+                Redefining the essence of ocean-inspired luxury and modern European fine dining in the heart of Dubai.
               </p>
-              <div className="flex space-x-6 text-[#D4AF37]">
-                <a href="#" className="hover:text-white transition-colors hover:scale-110 transform duration-300"><Instagram size={22} /></a>
-                <a href="#" className="hover:text-white transition-colors hover:scale-110 transform duration-300"><Facebook size={22} /></a>
+              <div className="flex space-x-6 text-[#C2CEDA]/70">
+                <a href="#" className="hover:text-white transition-colors hover:scale-110 transform duration-300"><Instagram size={18} strokeWidth={1.5} /></a>
+                <a href="#" className="hover:text-white transition-colors hover:scale-110 transform duration-300"><Facebook size={18} strokeWidth={1.5} /></a>
               </div>
             </div>
             
             <div>
-              <h4 className="text-white uppercase tracking-[0.2em] text-xs mb-8 font-semibold">Sampark Aur Pata</h4>
-              <ul className="space-y-6 text-[#FDFBF7]/60 font-light text-sm">
-                <li className="flex items-center"><Phone size={18} className="mr-4 text-[#E65100]"/> +971 52 526 5001</li>
+              <h4 className="text-white uppercase tracking-[0.2em] text-[0.65rem] mb-8 font-medium">Contact & Location</h4>
+              <ul className="space-y-6 text-[#C2CEDA]/60 font-light text-xs">
+                <li className="flex items-center"><Phone size={14} className="mr-4 text-[#1A56B5]"/> +971 58 678 5717</li>
                 <li className="flex items-start">
-                  <MapPin size={18} className="mr-4 mt-1 shrink-0 text-[#E65100]"/> 
-                  Meena Bazaar,<br/>Bur Dubai, Dubai,<br/>United Arab Emirates
+                  <MapPin size={14} className="mr-4 mt-1 shrink-0 text-[#1A56B5]"/> 
+                  Financial Center Road,<br/>Dubai,<br/>United Arab Emirates
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white uppercase tracking-[0.2em] text-xs mb-8 font-semibold">Shahi Samay</h4>
-              <ul className="space-y-6 text-[#FDFBF7]/60 font-light text-sm">
-                <li className="flex items-start"><Clock size={18} className="mr-4 mt-1 shrink-0 text-[#E65100]"/> 
+              <h4 className="text-white uppercase tracking-[0.2em] text-[0.65rem] mb-8 font-medium">Dining Hours</h4>
+              <ul className="space-y-6 text-[#C2CEDA]/60 font-light text-xs">
+                <li className="flex items-start"><Clock size={14} className="mr-4 mt-1 shrink-0 text-[#1A56B5]"/> 
                   <div>
-                    <span className="block text-white mb-1">Dopahar Ka Khana</span>
-                    12:30 PM - 03:30 PM<br/><br/>
-                    <span className="block text-white mb-1">Raat Ka Khana</span>
-                    07:00 PM - 12:00 AM
+                    <span className="block text-white mb-2">Dinner Service</span>
+                    Monday - Sunday<br/>
+                    19:00 - 23:30
                   </div>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white uppercase tracking-[0.2em] text-xs mb-8 font-semibold">Shahi Farmaan</h4>
-              <p className="text-[#FDFBF7]/60 font-light text-sm mb-6 leading-relaxed">Private dawat aur khas khabron ke liye hamari list mein shamil hon.</p>
-              <div className="flex border-b border-[#D4AF37]/40 pb-3 group">
-                <input type="email" placeholder="Email Pata" className="bg-transparent w-full focus:outline-none text-sm font-light text-white placeholder-[#FDFBF7]/30" />
-                <button className="text-[#E65100] group-hover:text-white transition-colors"><ChevronRight size={22}/></button>
+              <h4 className="text-white uppercase tracking-[0.2em] text-[0.65rem] mb-8 font-medium">The Society</h4>
+              <p className="text-[#C2CEDA]/60 font-light text-xs mb-6 leading-relaxed">Subscribe for private event access and seasonal tasting menu reveals.</p>
+              <div className="flex border-b border-[#C2CEDA]/20 pb-3 group">
+                <input type="email" placeholder="Email Address" className="bg-transparent w-full focus:outline-none text-xs font-light text-white placeholder-[#C2CEDA]/30" />
+                <button className="text-[#1A56B5] group-hover:text-white transition-colors"><ChevronRight size={18} strokeWidth={1.5}/></button>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-[#D4AF37]/10 pt-10 flex flex-col md:flex-row justify-between items-center text-xs text-[#FDFBF7]/40 tracking-[0.15em] uppercase font-medium">
-            <p>&copy; {new Date().getFullYear()} Maratha Darbar Restaurant. All rights reserved.</p>
+          <div className="border-t border-[#C2CEDA]/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[0.65rem] text-[#C2CEDA]/30 tracking-[0.15em] uppercase font-light">
+            <p>&copy; {new Date().getFullYear()} The Blue Carte. All rights reserved.</p>
             <div className="flex space-x-8 mt-6 md:mt-0">
-              <a href="#" className="hover:text-[#E65100] transition-colors">Privacy</a>
-              <a href="#" className="hover:text-[#E65100] transition-colors">Terms</a>
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>
@@ -746,14 +726,14 @@ export default function App() {
 
       {/* 9. Floating WhatsApp Button */}
       <a 
-        href="https://wa.me/971525265001?text=Namaste%20Maratha%20Darbar%2C%20mujhe%20ek%20shahi%20dining%20anubhav%20ke%20liye%20table%20book%20karna%20hai." 
+        href="https://wa.me/971586785717?text=Hello%20The%20Blue%20Carte%2C%20I%20would%20like%20to%20reserve%20a%20table%20for%20a%20fine%20dining%20experience." 
         target="_blank" 
         rel="noopener noreferrer"
-        className="fixed bottom-10 right-10 z-[90] bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_25px_rgba(37,211,102,0.4)] hover:scale-110 transition-transform duration-300 animate-bounce group"
+        className="fixed bottom-10 right-10 z-[90] bg-transparent border border-[#C2CEDA]/30 text-white p-4 rounded-full shadow-[0_0_20px_rgba(26,86,181,0.3)] hover:scale-110 hover:bg-[#1A56B5] hover:border-[#1A56B5] transition-all duration-500 glass group flex items-center justify-center"
       >
-        <MessageCircle size={32} />
-        <span className="absolute right-full mr-6 top-1/2 -translate-y-1/2 bg-[#050505]/95 backdrop-blur-xl border border-[#D4AF37]/30 text-[#FDFBF7] text-xs uppercase tracking-widest whitespace-nowrap px-6 py-3 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-bold">
-          Shahi Concierge
+        <MessageCircle size={24} strokeWidth={1.5} />
+        <span className="absolute right-full mr-6 top-1/2 -translate-y-1/2 bg-[#02040A]/90 backdrop-blur-xl border border-[#C2CEDA]/20 text-[#white] text-[0.65rem] uppercase tracking-widest whitespace-nowrap px-6 py-3 rounded-sm shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none font-light">
+          Private Concierge
         </span>
       </a>
 
