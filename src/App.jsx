@@ -1,556 +1,637 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Menu, X, MapPin, Phone, Clock, Star, 
-  Instagram, Facebook, MessageCircle, ChevronRight, 
-  Flame, Utensils
+  Menu, X, MapPin, Phone, Clock, ChevronRight, 
+  Star, Quote, Instagram, Facebook, Twitter, MessageCircle, Play
 } from 'lucide-react';
 
-// --- CUSTOM HOOKS ---
+// --- CUSTOM CSS & ANIMATIONS ---
+const styles = `
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
-// Hook for scroll animations mimicking Framer Motion
-const useScrollReveal = () => {
+  :root {
+    --gold: #D4AF37;
+    --black: #0A0A0A;
+    --beige: #F5ECE3;
+    --green: #012A1C;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--black);
+    color: white;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .text-gold { color: var(--gold); }
+  .bg-gold { background-color: var(--gold); }
+  .border-gold { border-color: var(--gold); }
+  
+  .bg-beige { background-color: var(--beige); color: var(--black); }
+  .bg-green { background-color: var(--green); color: white; }
+
+  /* Subtle Arabic Geometric Pattern */
+  .arabic-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.03'%3E%3Cpath d='M30 0l14.14 14.14L30 28.28 15.86 14.14 30 0zm0 60l-14.14-14.14L30 31.72l14.14 14.14L30 60zm-30-30l14.14-14.14L28.28 30 14.14 44.14 0 30zm60 0l-14.14 14.14L31.72 30 45.86 15.86 60 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Cinematic Pan Animation */
+  @keyframes panImage {
+    0% { transform: scale(1.05) translate(0, 0); }
+    50% { transform: scale(1.1) translate(-1%, -1%); }
+    100% { transform: scale(1.05) translate(0, 0); }
+  }
+  .animate-pan {
+    animation: panImage 30s infinite ease-in-out;
+  }
+
+  /* Hide Scrollbar but keep functionality */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--black);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+  }
+
+  .glass-nav {
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  }
+
+  .clip-diagonal {
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  }
+`;
+
+// --- SMOOTH REVEAL ANIMATION COMPONENT ---
+const Reveal = ({ children, delay = 0, direction = 'up', className = '' }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('opacity-100', 'translate-y-0');
-            entry.target.classList.remove('opacity-0', 'translate-y-10');
-          }
-        });
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
     );
 
-    const elements = document.querySelectorAll('.reveal-on-scroll');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => elements.forEach((el) => observer.unobserve(el));
-  }, []);
-};
-
-// --- DATA ---
-
-const MENU_CATEGORIES = ['Dim Sum', 'Noodles & Rice', 'Seafood Specials', 'Chef Recommendations'];
-
-const MENU_ITEMS = {
-  'Dim Sum': [
-    { name: 'Crystal Har Gow', desc: 'Translucent steamed dumplings filled with fresh tiger prawns and bamboo shoots', price: 'AED 65', image: 'https://image2url.com/r2/default/images/1773855572515-8311f664-9920-463f-80b2-7410919432d0.jpg' },
-    { name: 'Truffle Chicken Siu Mai', desc: 'Classic chicken and mushroom dumplings infused with black truffle oil', price: 'AED 75', image: 'https://image2url.com/r2/default/images/1773855611849-0dd9ee94-a03e-4919-b2d9-f9e9d0b9eeb1.jpg' },
-    { name: 'Crispy Duck Spring Rolls', desc: 'Shredded roasted peking duck, hoisin sauce, wrapped in a golden crispy pastry', price: 'AED 55', image: 'https://image2url.com/r2/default/images/1773855646363-1b3921bd-151e-4bda-a338-803ae44b926c.jpg' }
-  ],
-  'Noodles & Rice': [
-    { name: 'Wagyu Beef Chow Fun', desc: 'Wok-tossed flat rice noodles, premium sliced wagyu, bean sprouts, dark soy', price: 'AED 125', image: 'https://image2url.com/r2/default/images/1773855721582-25a57dca-2657-4948-9c6e-ddf9f1241aad.jpg' },
-    { name: 'Singapore Style Vermicelli', desc: 'Stir-fried thin rice noodles with prawns, chicken, and a subtle curry flavor', price: 'AED 85', image: 'https://image2url.com/r2/default/images/1773855765776-56e36d5e-3b5e-4c5c-a682-6c960033362b.jpg' },
-    { name: 'Yangzhou Fried Rice', desc: 'Classic wok-fried rice with shrimp, roasted chicken, egg, and scallions', price: 'AED 70', image: 'https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg' }
-  ],
-  'Seafood Specials': [
-    { name: 'Sichuan Chili Prawns', desc: 'Jumbo prawns wok-fried in a fiery Sichuan peppercorn and dried chili sauce', price: 'AED 160', image: 'https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg' },
-    { name: 'Steamed Sea Bass', desc: 'Fresh sea bass fillet steamed with premium light soy sauce, ginger, and scallions', price: 'AED 195', image: 'https://image2url.com/r2/default/images/1773855879123-3c090c06-ff80-4ba5-8fb4-1d494e2686c3.jpg' },
-    { name: 'Black Pepper Lobster', desc: 'Whole Canadian lobster wok-tossed in our signature Sarawak black pepper sauce', price: 'AED 290', image: 'https://image2url.com/r2/default/images/1773855914103-338ffd19-feea-4251-a3c6-2740918527a4.jpg' }
-  ],
-  'Chef Recommendations': [
-    { name: 'Signature Peking Duck', desc: 'Crispy skin roasted duck, carved at the table, served with pancakes and caviar', price: 'AED 320', image: 'https://image2url.com/r2/default/images/1773855646363-1b3921bd-151e-4bda-a338-803ae44b926c.jpg' },
-    { name: 'Kung Pao Chicken', desc: 'Traditional wok-seared chicken breast, roasted peanuts, dry chilies, sweet & sour glaze', price: 'AED 95', image: 'https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg' },
-    { name: 'Mapo Tofu (V)', desc: 'Silken tofu simmered in a rich, spicy, and numbing doubanjiang sauce', price: 'AED 80', image: 'https://image2url.com/r2/default/images/1773855611849-0dd9ee94-a03e-4919-b2d9-f9e9d0b9eeb1.jpg' }
-  ]
-};
-
-const REVIEWS = [
-  { name: "Michael Chen", text: "An absolute masterpiece of Chinese culinary art. The Peking Duck is unparalleled, and the ambiance transports you to a luxury dining room in Shanghai.", rating: 5 },
-  { name: "Fatima Al Maktoum", text: "The perfect blend of modern luxury and authentic Asian flavors. Located right near Sharaf DG, it's my new favorite spot in Bur Dubai.", rating: 5 },
-  { name: "David Thompson", text: "Exceptional service and the Dim Sum is crafted to perfection. A 5-star fine dining experience that truly stands out in Dubai.", rating: 5 }
-];
-
-// --- COMPONENTS ---
-
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
   }, []);
 
-  return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-[#0a0a0a]/90 backdrop-blur-md border-b border-[#D4AF37]/20 py-4' : 'bg-transparent py-6'}`}>
-      <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center">
-        <div className="flex items-center gap-2 group cursor-pointer">
-          <Flame className="text-[#8B0000] w-8 h-8 group-hover:text-[#D4AF37] transition-colors duration-300" />
-          <h1 className="font-serif text-2xl tracking-widest text-white">CHINA <span className="text-[#D4AF37]">TOWN</span></h1>
-        </div>
-
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8 font-sans text-sm tracking-widest text-white/80">
-          <a href="#about" className="hover:text-[#D4AF37] transition-colors">OUR STORY</a>
-          <a href="#menu" className="hover:text-[#D4AF37] transition-colors">MENU</a>
-          <a href="#gallery" className="hover:text-[#D4AF37] transition-colors">GALLERY</a>
-          <a href="#location" className="hover:text-[#D4AF37] transition-colors">LOCATION</a>
-          <a href="#reservation" className="border border-[#8B0000] bg-[#8B0000]/10 text-white px-6 py-2 hover:bg-[#8B0000] transition-all duration-300 shadow-[0_0_15px_rgba(139,0,0,0.3)] hover:shadow-[0_0_25px_rgba(139,0,0,0.6)]">
-            RESERVE
-          </a>
-        </div>
-
-        {/* Mobile Menu Toggle */}
-        <button className="md:hidden text-white hover:text-[#D4AF37] transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X /> : <Menu />}
-        </button>
-      </div>
-
-      {/* Mobile Nav */}
-      <div className={`fixed inset-0 bg-[#050505]/98 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-500 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
-        <button className="absolute top-6 right-6 text-white" onClick={() => setMobileMenuOpen(false)}>
-          <X className="w-8 h-8" />
-        </button>
-        {['About', 'Menu', 'Gallery', 'Location', 'Reservation'].map((item) => (
-          <a 
-            key={item} 
-            href={`#${item.toLowerCase()}`} 
-            className="font-serif text-2xl text-white hover:text-[#8B0000] transition-colors"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            {item}
-          </a>
-        ))}
-      </div>
-    </nav>
-  );
-};
-
-const Hero = () => {
-  return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image / Cinematic Visual */}
-      <div className="absolute inset-0 z-0">
-        {/* Luxury dark red and black cinematic overlays - Darkened for better contrast */}
-        <div className="absolute inset-0 bg-black/60 z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#8B0000]/20 to-[#050505] z-10"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050505_100%)] z-10 opacity-90"></div>
-        <img 
-          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=2000" 
-          alt="Ultra Luxury Chinese Fine Dining" 
-          className="w-full h-full object-cover scale-105 animate-[slowPan_20s_ease-in-out_infinite_alternate] filter contrast-125 saturate-110 brightness-50"
-        />
-      </div>
-
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
-        <span className="font-sans text-[#D4AF37] tracking-[0.3em] uppercase text-sm mb-6 block reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000">
-          Authentic Flavors in the Heart of Dubai
-        </span>
-        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white leading-tight mb-8 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-200 drop-shadow-2xl">
-          Experience the Art of <br/>
-          <span className="italic text-[#8B0000] text-glow">Chinese Fine Dining</span>
-        </h1>
-        <p className="font-sans text-white/70 max-w-2xl mx-auto text-lg mb-10 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-300">
-          A transcendent culinary journey where ancient Asian traditions meet modern luxury, located in the prestigious Al Mussalla Tower.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row gap-6 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-500">
-          <a href="#reservation" className="bg-[#8B0000] text-white px-10 py-4 font-sans tracking-widest text-sm hover:bg-[#A50000] transition-colors duration-300 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(139,0,0,0.4)] hover:shadow-[0_0_30px_rgba(139,0,0,0.6)]">
-            RESERVE TABLE
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </a>
-          <a href="#menu" className="border border-[#D4AF37]/50 text-[#D4AF37] px-10 py-4 font-sans tracking-widest text-sm hover:bg-[#D4AF37]/10 transition-colors duration-300 flex items-center justify-center">
-            EXPLORE MENU
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const About = () => {
-  return (
-    <section id="about" className="py-24 bg-[#050505] relative overflow-hidden">
-      {/* Decorative Lantern Glow Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-[#8B0000]/10 rounded-full blur-[120px]"></div>
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/5 rounded-full blur-[120px]"></div>
-
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          <div className="lg:w-1/2 relative reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000">
-            <div className="relative z-10">
-              <img 
-                src="https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" 
-                alt="Authentic Chinese Cuisine Preparation" 
-                className="w-full h-[600px] object-cover rounded-sm shadow-2xl border border-white/5"
-              />
-            </div>
-            {/* Red & Gold Frame accent */}
-            <div className="absolute -inset-4 border border-[#8B0000]/40 z-0 translate-x-4 translate-y-4 rounded-sm hidden md:block"></div>
-          </div>
-          
-          <div className="lg:w-1/2 lg:pl-10 text-center lg:text-left">
-            <h2 className="font-serif text-4xl md:text-5xl text-white mb-6 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-200">
-              A Legacy of <span className="text-[#8B0000] italic">Authenticity</span>
-            </h2>
-            <div className="w-16 h-[1px] bg-[#D4AF37] mx-auto lg:mx-0 mb-8 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-300"></div>
-            <p className="font-sans text-white/70 leading-relaxed mb-6 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-400">
-              Located at the vibrant heart of Bur Dubai, China Town Restaurant is a sanctuary of premium dining. We bring you the authentic soul of Chinese cuisine, seamlessly weaving age-old recipes from diverse provinces with modern, elegant presentation.
-            </p>
-            <p className="font-sans text-white/70 leading-relaxed mb-10 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-500">
-              Surrounded by dark luxury aesthetics and the subtle glow of traditional lanterns, every dish tells a story. From hand-folded Dim Sum to perfectly roasted Peking Duck, we invite you to experience a culinary masterpiece.
-            </p>
-            
-            <div className="reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-600 flex flex-col items-center lg:items-start">
-               <img 
-                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Signature_of_John_Hancock.svg/1200px-Signature_of_John_Hancock.svg.png" 
-                 alt="Master Chef Signature" 
-                 className="h-12 opacity-40 invert filter brightness-200 sepia hue-rotate-[320deg] saturate-[200%]"
-               />
-               <p className="font-sans text-xs tracking-[0.2em] text-[#D4AF37] mt-4">MASTER CHEF</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const MenuSection = () => {
-  const [activeCategory, setActiveCategory] = useState('Dim Sum');
-
-  return (
-    <section id="menu" className="py-24 bg-[#0a0a0a] relative border-t border-white/5">
-      <div className="container mx-auto px-6 lg:px-12 max-w-6xl">
-        <div className="text-center mb-16 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000">
-          <span className="font-sans text-[#D4AF37] tracking-[0.3em] uppercase text-sm mb-4 block">The Culinary Collection</span>
-          <h2 className="font-serif text-4xl md:text-5xl text-white">Our <span className="italic text-[#8B0000]">Menu</span></h2>
-        </div>
-
-        {/* Categories */}
-        <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-16 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-200">
-          {MENU_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`font-sans tracking-widest text-sm pb-2 transition-all duration-300 border-b-2 ${activeCategory === cat ? 'border-[#8B0000] text-[#D4AF37]' : 'border-transparent text-white/50 hover:text-white hover:border-white/30'}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Menu Items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 min-h-[400px]">
-          {MENU_ITEMS[activeCategory].map((item, index) => (
-            <div 
-              key={index} 
-              className="flex gap-6 group cursor-pointer reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000"
-              style={{ transitionDelay: `${index * 150}ms` }}
-            >
-              <div className="w-24 h-24 overflow-hidden rounded-sm flex-shrink-0 border border-white/10 group-hover:border-[#8B0000] transition-colors duration-500 shadow-lg">
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              </div>
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="flex justify-between items-baseline border-b border-white/10 pb-2 mb-2 group-hover:border-[#8B0000]/50 transition-colors duration-500">
-                  <h3 className="font-serif text-xl text-white group-hover:text-[#D4AF37] transition-colors duration-300">{item.name}</h3>
-                  <span className="font-sans text-[#8B0000] font-bold tracking-widest whitespace-nowrap ml-4">{item.price}</span>
-                </div>
-                <p className="font-sans text-white/50 text-sm leading-relaxed">{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="text-center mt-20 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-500">
-           <a href="#" className="inline-flex items-center gap-2 border border-[#8B0000] text-[#D4AF37] px-8 py-3 font-sans tracking-widest text-sm hover:bg-[#8B0000] hover:text-white transition-all duration-300">
-            <Utensils className="w-4 h-4" /> VIEW FULL MENU
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Gallery = () => {
-  const images = [
-    "https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg", 
-    "https://image2url.com/r2/default/images/1773560294694-77c5082f-4c2c-481e-b483-73e47c55fda5.jpeg", 
-    "https://image2url.com/r2/default/images/1773855721582-25a57dca-2657-4948-9c6e-ddf9f1241aad.jpg", 
-    "https://image2url.com/r2/default/images/1773855765776-56e36d5e-3b5e-4c5c-a682-6c960033362b.jpg", 
-    "https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg", 
-  ];
-
-  return (
-    <section id="gallery" className="py-24 bg-[#050505]">
-      <div className="container mx-auto px-4 lg:px-12">
-        <div className="text-center mb-16 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000">
-          <h2 className="font-serif text-4xl md:text-5xl text-white">The <span className="italic text-[#8B0000]">Atmosphere</span></h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
-          {images.map((src, index) => (
-            <div 
-              key={index} 
-              className={`relative overflow-hidden group reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 border border-white/5 ${index === 1 || index === 2 ? 'md:col-span-2 md:row-span-2' : ''}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10 pointer-events-none"></div>
-              <img 
-                src={src} 
-                alt={`China Town Gallery ${index + 1}`} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Reviews = () => {
-  return (
-    <section className="py-24 bg-[#0a0a0a] border-y border-white/5 relative overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-[200px] bg-[#8B0000]/5 blur-[100px] rounded-full pointer-events-none"></div>
-
-      <div className="container mx-auto px-6 lg:px-12 max-w-6xl relative z-10">
-         <div className="flex justify-center mb-12">
-            <div className="flex gap-2">
-              {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />)}
-            </div>
-         </div>
-         
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {REVIEWS.map((review, idx) => (
-              <div key={idx} className="bg-[#111] border border-white/5 p-10 hover:border-[#8B0000]/50 transition-colors duration-500 reveal-on-scroll opacity-0 translate-y-10 relative group">
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#8B0000] to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-center"></div>
-                <p className="font-serif text-white/80 text-lg italic mb-8 leading-relaxed">"{review.text}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#8B0000]/20 flex items-center justify-center text-[#D4AF37] font-serif font-bold">
-                    {review.name.charAt(0)}
-                  </div>
-                  <h4 className="font-sans text-white/90 tracking-widest text-xs uppercase">{review.name}</h4>
-                </div>
-              </div>
-            ))}
-         </div>
-      </div>
-    </section>
-  );
-};
-
-const Reservation = () => {
-  const [formData, setFormData] = useState({ name: '', phone: '', guests: '2', date: '', time: '' });
-
-  const handleBook = (e) => {
-    e.preventDefault();
-    const message = `*New Reservation Request*%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Guests:* ${formData.guests}%0A*Date:* ${formData.date}%0A*Time:* ${formData.time}%0A%0AHello, I want to reserve a table at China Town Restaurant.`;
-    window.open(`https://wa.me/971585899111?text=${message}`, '_blank');
+  const getTransform = () => {
+    if (isVisible) return 'translate-x-0 translate-y-0 scale-100';
+    switch (direction) {
+      case 'up': return 'translate-y-12';
+      case 'down': return '-translate-y-12';
+      case 'left': return 'translate-x-12';
+      case 'right': return '-translate-x-12';
+      case 'scale': return 'scale-95';
+      default: return 'translate-y-12';
+    }
   };
 
   return (
-    <section id="reservation" className="py-24 bg-[#050505] relative">
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
-          
-          {/* Reservation Form */}
-          <div className="w-full lg:w-1/2 bg-[#0a0a0a] border border-[#8B0000]/30 p-8 md:p-12 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative overflow-hidden reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000">
-            {/* Form Top Accent */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D4AF37] to-[#8B0000]"></div>
-            
-            <h2 className="font-serif text-3xl md:text-4xl text-white mb-2">Reserve a <span className="italic text-[#8B0000]">Table</span></h2>
-            <p className="font-sans text-white/50 text-sm mb-10">Secure your premium dining experience.</p>
-            
-            <form onSubmit={handleBook} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="block font-sans text-xs tracking-widest text-[#D4AF37] mb-3 uppercase">Your Name</label>
-                  <input required type="text" className="w-full bg-transparent border-b border-white/20 pb-2 text-white focus:outline-none focus:border-[#8B0000] transition-colors" placeholder="John Doe" 
-                    onChange={e => setFormData({...formData, name: e.target.value})}/>
-                </div>
-                <div>
-                  <label className="block font-sans text-xs tracking-widest text-[#D4AF37] mb-3 uppercase">Phone Number</label>
-                  <input required type="tel" className="w-full bg-transparent border-b border-white/20 pb-2 text-white focus:outline-none focus:border-[#8B0000] transition-colors" placeholder="+971 5X XXXXXXX" 
-                    onChange={e => setFormData({...formData, phone: e.target.value})}/>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                  <label className="block font-sans text-xs tracking-widest text-[#D4AF37] mb-3 uppercase">Guests</label>
-                  <select className="w-full bg-[#0a0a0a] border-b border-white/20 pb-2 text-white focus:outline-none focus:border-[#8B0000] transition-colors cursor-pointer appearance-none"
-                    onChange={e => setFormData({...formData, guests: e.target.value})}>
-                    {[1,2,3,4,5,6,7,8,"8+"].map(num => <option key={num} value={num}>{num} {num === 1 ? 'Person' : 'People'}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-sans text-xs tracking-widest text-[#D4AF37] mb-3 uppercase">Date</label>
-                  <input required type="date" className="w-full bg-transparent border-b border-white/20 pb-2 text-white focus:outline-none focus:border-[#8B0000] transition-colors style-date"
-                    onChange={e => setFormData({...formData, date: e.target.value})}/>
-                </div>
-                <div>
-                  <label className="block font-sans text-xs tracking-widest text-[#D4AF37] mb-3 uppercase">Time</label>
-                  <input required type="time" className="w-full bg-transparent border-b border-white/20 pb-2 text-white focus:outline-none focus:border-[#8B0000] transition-colors style-time"
-                    onChange={e => setFormData({...formData, time: e.target.value})}/>
-                </div>
-              </div>
-
-              <button type="submit" className="w-full bg-[#8B0000] text-white py-4 mt-6 font-sans tracking-widest text-sm hover:bg-[#A50000] transition-colors duration-300 flex justify-center items-center gap-2 shadow-[0_4px_15px_rgba(139,0,0,0.3)]">
-                BOOK VIA WHATSAPP <MessageCircle className="w-4 h-4" />
-              </button>
-            </form>
-          </div>
-
-          {/* Location Details */}
-          <div id="location" className="w-full lg:w-1/2 reveal-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-200">
-             <div className="h-[300px] w-full border border-white/10 mb-8 relative group overflow-hidden rounded-sm">
-                {/* Styled Map (Dark styled using CSS filter) */}
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors z-10 pointer-events-none duration-500"></div>
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.643665725667!2d55.2938473!3d25.2533038!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f433362a26c71%3A0xcb06f52e3e5718a!2sAl%20Mussalla%20Tower!5e0!3m2!1sen!2sae!4v1715000000000!5m2!1sen!2sae" 
-                  width="100%" height="100%" style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(110%) sepia(20%)' }} allowFullScreen="" loading="lazy">
-                </iframe>
-             </div>
-
-             <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <MapPin className="text-[#8B0000] w-6 h-6 flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-sans text-white uppercase tracking-widest text-sm mb-1">Location</h4>
-                    <p className="font-serif text-white/60 leading-relaxed">Al Mussalla Tower, Central Mall, <br/> Near Sharaf DG Metro Station, Bur Dubai, UAE</p>
-                    <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="inline-block mt-2 text-[#D4AF37] text-xs uppercase tracking-widest border-b border-[#D4AF37] pb-1 hover:text-white transition-colors">Get Directions</a>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Phone className="text-[#8B0000] w-6 h-6 flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-sans text-white uppercase tracking-widest text-sm mb-1">Contact</h4>
-                    <p className="font-serif text-white/60">+971 58 589 9111 <br/> reserve@chinatowndubai.ae</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Clock className="text-[#8B0000] w-6 h-6 flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-sans text-white uppercase tracking-widest text-sm mb-1">Hours</h4>
-                    <p className="font-serif text-white/60">Lunch: 12:00 PM - 3:30 PM <br/> Dinner: 6:30 PM - 11:30 PM</p>
-                  </div>
-                </div>
-             </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer className="bg-[#030303] pt-20 pb-10 border-t border-white/5 relative">
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left mb-16">
-          
-          <div className="flex flex-col items-center md:items-start">
-            <div className="flex items-center gap-2 mb-6">
-              <Flame className="text-[#8B0000] w-8 h-8" />
-              <h2 className="font-serif text-2xl tracking-widest text-white">CHINA <span className="text-[#D4AF37]">TOWN</span></h2>
-            </div>
-            <p className="font-sans text-white/40 text-sm leading-relaxed max-w-xs">
-              This is not just a website — it's a luxury brand experience that turns visitors into paying customers. Elevating Chinese cuisine in the heart of Dubai.
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center md:items-start">
-            <h4 className="font-sans text-white uppercase tracking-widest text-sm mb-6">Quick Links</h4>
-            <div className="space-y-3 flex flex-col font-serif text-white/50">
-              <a href="#about" className="hover:text-[#D4AF37] transition-colors">Our Story</a>
-              <a href="#menu" className="hover:text-[#D4AF37] transition-colors">The Menu</a>
-              <a href="#gallery" className="hover:text-[#D4AF37] transition-colors">Ambiance Gallery</a>
-              <a href="#reservation" className="hover:text-[#D4AF37] transition-colors">Private Dining</a>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center md:items-start">
-            <h4 className="font-sans text-white uppercase tracking-widest text-sm mb-6">Connect</h4>
-            <div className="flex gap-4 mb-6">
-              <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-[#8B0000] hover:bg-[#8B0000]/20 transition-all duration-300"><Instagram className="w-4 h-4" /></a>
-              <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-[#8B0000] hover:bg-[#8B0000]/20 transition-all duration-300"><Facebook className="w-4 h-4" /></a>
-            </div>
-            <p className="font-sans text-white/30 text-xs uppercase tracking-widest">VIP Newsletter</p>
-            <div className="mt-3 flex w-full max-w-xs border-b border-white/20 pb-2 focus-within:border-[#8B0000] transition-colors">
-              <input type="email" placeholder="YOUR EMAIL" className="bg-transparent text-white text-sm focus:outline-none w-full placeholder-white/30" />
-              <button className="text-[#D4AF37] text-sm tracking-widest hover:text-white transition-colors">JOIN</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-center gap-4">
-          <p className="font-sans text-white/30 text-xs tracking-widest">
-            &copy; {new Date().getFullYear()} CHINA TOWN RESTAURANT LLC. ALL RIGHTS RESERVED.
-          </p>
-          <div className="flex gap-6 font-sans text-white/30 text-xs tracking-widest">
-            <a href="#" className="hover:text-white transition-colors">PRIVACY POLICY</a>
-            <a href="#" className="hover:text-white transition-colors">TERMS OF SERVICE</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
-
-const WhatsAppFab = () => {
-  return (
-    <a 
-      href="https://wa.me/971585899111?text=Hello,%20I%20want%20to%20reserve%20a%20table%20at%20China%20Town%20Restaurant" 
-      target="_blank" 
-      rel="noreferrer"
-      className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.5)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] transition-all duration-300 group"
-      aria-label="Book on WhatsApp"
+    <div
+      ref={ref}
+      className={`transition-all duration-1000 ease-out ${className} ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      } ${getTransform()}`}
+      style={{ transitionDelay: `${delay}ms` }}
     >
-      <MessageCircle className="w-7 h-7" />
-      <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-[#050505]/90 backdrop-blur border border-white/10 text-white text-xs px-3 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-sans tracking-widest">
-        Book via WhatsApp
-      </span>
-    </a>
+      {children}
+    </div>
   );
 };
 
-// --- MAIN APP ---
-
+// --- MAIN APP COMPONENT ---
 export default function App() {
-  useScrollReveal();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeMenuCategory, setActiveMenuCategory] = useState('Mezze');
 
+  // --- DATA ---
+  const menuCategories = ['Mezze', 'Grills', 'Seafood', 'Desserts'];
+  const menuData = {
+    Mezze: [
+      { name: 'Hummus Beiruti', desc: 'Chickpea purée, sesame paste, lemon juice, garlic, parsley', price: 'AED 35' },
+      { name: 'Moutabal', desc: 'Smoked eggplant, tahini, pomegranate seeds, olive oil', price: 'AED 38' },
+      { name: 'Warak Enab', desc: 'Vine leaves stuffed with rice, tomatoes, parsley, mint', price: 'AED 42' },
+      { name: 'Crispy Falafel', desc: 'Deep-fried chickpea patties with herbs and spices (6 pcs)', price: 'AED 30' },
+    ],
+    Grills: [
+      { name: 'Mixed Grill Royale', desc: 'Selection of meat skewers, taouk, kebab, lamb chops', price: 'AED 145' },
+      { name: 'Shish Tawook', desc: 'Marinated chicken breast skewers, garlic sauce', price: 'AED 85' },
+      { name: 'Lamb Chops', desc: 'Charcoal-grilled tender lamb chops, seasoned with Lebanese spices', price: 'AED 135' },
+      { name: 'Kebab Halabi', desc: 'Minced lamb, parsley, onion, served with grilled tomato', price: 'AED 95' },
+    ],
+    Seafood: [
+      { name: 'Grilled Sea Bass', desc: 'Whole sea bass, lemon-garlic marination, served with tarator', price: 'AED 160' },
+      { name: 'Jumbo Prawns', desc: 'Charcoal grilled tiger prawns, provincial sauce', price: 'AED 185' },
+      { name: 'Sayadiyeh', desc: 'Spiced fish and rice dish, caramelized onions, toasted pine nuts', price: 'AED 120' },
+    ],
+    Desserts: [
+      { name: 'Cheese Kunafa', desc: 'Warm semolina and cheese pastry, sweet syrup, pistachios', price: 'AED 45' },
+      { name: 'Baklava Assortment', desc: 'Layered phyllo pastry, mixed nuts, honey syrup', price: 'AED 40' },
+      { name: 'Osmaliyah', desc: 'Baked vermicelli, clotted cream, rose water syrup', price: 'AED 42' },
+    ]
+  };
+
+  const galleryImages = [
+    "https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg",
+    "https://image2url.com/r2/default/images/1773560294694-77c5082f-4c2c-481e-b483-73e47c55fda5.jpeg",
+    "https://image2url.com/r2/default/images/1773855572515-8311f664-9920-463f-80b2-7410919432d0.jpg",
+    "https://image2url.com/r2/default/images/1773855611849-0dd9ee94-a03e-4919-b2d9-f9e9d0b9eeb1.jpg",
+    "https://image2url.com/r2/default/images/1773855646363-1b3921bd-151e-4bda-a338-803ae44b926c.jpg",
+    "https://image2url.com/r2/default/images/1773855721582-25a57dca-2657-4948-9c6e-ddf9f1241aad.jpg",
+    "https://image2url.com/r2/default/images/1773855765776-56e36d5e-3b5e-4c5c-a682-6c960033362b.jpg",
+    "https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg",
+    "https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg"
+  ];
+
+  const reviews = [
+    { name: "Sarah Al Maktoum", text: "An absolute masterpiece of Lebanese cuisine. The ambiance is unmatched in Dubai.", rating: 5 },
+    { name: "James Holden", text: "The Mixed Grill Royale was cooked to perfection. Truly a luxury dining experience.", rating: 5 },
+    { name: "Aisha Rahman", text: "From the Hummus Beiruti to the Kunafa, every bite tells a story of authentic heritage.", rating: 5 }
+  ];
+
+  // --- EFFECTS ---
+  useEffect(() => {
+    // Premium Loading Screen
+    const timer = setTimeout(() => setIsLoading(false), 2500);
+    
+    // Scroll tracking for Navbar
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // --- HANDLERS ---
+  const handleReservation = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    const message = `Hello, I want to reserve a table at Lebanese Village Restaurant.%0A%0A*Name:* ${data.name}%0A*Phone:* ${data.phone}%0A*Guests:* ${data.guests}%0A*Date:* ${data.date}%0A*Time:* ${data.time}`;
+    
+    window.open(`https://wa.me/971506243456?text=${message}`, '_blank');
+  };
+
+  const scrollTo = (id) => {
+    setIsMobileMenuOpen(false);
+    const el = document.getElementById(id);
+    if (el) {
+      window.scrollTo({
+        top: el.offsetTop - 80,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // --- RENDER ---
   return (
-    <div className="bg-[#050505] min-h-screen font-sans selection:bg-[#8B0000] selection:text-white">
-      {/* Injecting Fonts and CSS natively in the file to guarantee rendering */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-        
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .font-sans { font-family: 'Lato', sans-serif; }
-        
-        html { scroll-behavior: smooth; }
-        
-        @keyframes slowPan {
-          0% { transform: scale(1.05) translate(0, 0); }
-          100% { transform: scale(1.15) translate(-2%, 2%); }
-        }
-        
-        .text-glow {
-           text-shadow: 0 0 20px rgba(139,0,0,0.8), 0 0 40px rgba(139,0,0,0.4);
-        }
-        
-        input[type="date"]::-webkit-calendar-picker-indicator,
-        input[type="time"]::-webkit-calendar-picker-indicator {
-            filter: invert(1) sepia(100%) saturate(1000%) hue-rotate(350deg);
-            cursor: pointer;
-        }
-      `}} />
+    <>
+      <style>{styles}</style>
 
-      <Navbar />
-      <Hero />
-      <About />
-      <MenuSection />
-      <Gallery />
-      <Reviews />
-      <Reservation />
-      <Footer />
-      <WhatsAppFab />
-    </div>
+      {/* --- LOADING SCREEN --- */}
+      <div className={`fixed inset-0 z-[100] bg-[#0A0A0A] flex flex-col items-center justify-center transition-opacity duration-1000 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <div className="relative w-32 h-32 flex items-center justify-center">
+          <div className="absolute inset-0 border-t-2 border-r-2 border-[#D4AF37] rounded-full animate-spin" style={{ animationDuration: '3s' }}></div>
+          <div className="absolute inset-2 border-b-2 border-l-2 border-[#D4AF37] opacity-50 rounded-full animate-spin animate-reverse" style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
+          <span className="font-serif text-3xl text-[#D4AF37] tracking-widest">LV</span>
+        </div>
+        <div className="mt-8 text-sm tracking-[0.3em] text-white/70 uppercase">Curating Perfection</div>
+      </div>
+
+      {/* --- NAVIGATION --- */}
+      <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'glass-nav py-4' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="text-2xl font-serif text-white flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+            <span className="text-[#D4AF37]">Lebanese</span> Village
+          </div>
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-10 text-sm tracking-widest uppercase">
+            {['About', 'Menu', 'Gallery', 'Location'].map((item) => (
+              <button key={item} onClick={() => scrollTo(item.toLowerCase())} className="text-white hover:text-[#D4AF37] transition-colors relative group">
+                {item}
+                <span className="absolute -bottom-2 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
+              </button>
+            ))}
+            <button onClick={() => scrollTo('reservation')} className="bg-[#D4AF37] text-black px-6 py-2.5 rounded hover:bg-white transition-colors duration-300 font-medium">
+              Reserve
+            </button>
+          </div>
+
+          {/* Mobile Toggle */}
+          <button className="md:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-0 bg-[#0A0A0A] z-40 transition-transform duration-500 ease-in-out md:hidden flex flex-col items-center justify-center gap-8 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        {['About', 'Menu', 'Gallery', 'Location', 'Reservation'].map((item) => (
+          <button 
+            key={item} 
+            onClick={() => scrollTo(item.toLowerCase())}
+            className="text-2xl font-serif text-white hover:text-[#D4AF37] transition-colors"
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+
+      {/* --- HERO SECTION --- */}
+      <header className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Video/Image Simulation */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <img 
+            src="https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" 
+            alt="Lebanese Food Spread" 
+            className="w-full h-full object-cover animate-pan opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#0A0A0A]"></div>
+          <div className="absolute inset-0 arabic-pattern mix-blend-overlay opacity-30"></div>
+        </div>
+
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto mt-20">
+          <Reveal delay={100}>
+            <p className="text-[#D4AF37] tracking-[0.3em] text-sm md:text-base uppercase mb-6 flex items-center justify-center gap-4">
+              <span className="w-12 h-[1px] bg-[#D4AF37]"></span>
+              Fine Dining in the Heart of Dubai
+              <span className="w-12 h-[1px] bg-[#D4AF37]"></span>
+            </p>
+          </Reveal>
+          
+          <Reveal delay={300}>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-tight mb-8">
+              Experience the Taste of <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB]">
+                Authentic Luxury
+              </span>
+            </h1>
+          </Reveal>
+          
+          <Reveal delay={500}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+              <button 
+                onClick={() => scrollTo('reservation')}
+                className="w-full sm:w-auto px-10 py-4 bg-[#D4AF37] text-black hover:bg-white transition-all duration-300 font-medium tracking-wider uppercase text-sm border border-[#D4AF37]"
+              >
+                Reserve Table
+              </button>
+              <button 
+                onClick={() => scrollTo('menu')}
+                className="w-full sm:w-auto px-10 py-4 bg-transparent text-white border border-white/30 hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all duration-300 font-medium tracking-wider uppercase text-sm flex items-center justify-center gap-2"
+              >
+                Explore Menu
+                <Play size={14} className="fill-current" />
+              </button>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce">
+          <span className="text-[10px] tracking-widest text-white/50 uppercase mb-2">Scroll</span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-white/50 to-transparent"></div>
+        </div>
+      </header>
+
+      {/* --- ABOUT SECTION --- */}
+      <section id="about" className="py-24 md:py-32 bg-[#F5ECE3] text-[#0A0A0A] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Image Side */}
+            <Reveal direction="left" className="relative">
+              <div className="aspect-[4/5] relative overflow-hidden rounded-sm">
+                <img 
+                  src="https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" 
+                  alt="Restaurant Interior" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000"
+                />
+              </div>
+              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-[#012A1C] p-8 hidden md:flex flex-col justify-center text-white">
+                <span className="text-4xl font-serif text-[#D4AF37] mb-2">25+</span>
+                <span className="text-sm tracking-wider uppercase">Years of Culinary Excellence</span>
+              </div>
+            </Reveal>
+
+            {/* Text Side */}
+            <Reveal direction="right">
+              <h2 className="text-[#D4AF37] tracking-[0.2em] text-sm uppercase mb-4 font-semibold">Our Heritage</h2>
+              <h3 className="text-4xl md:text-5xl font-serif text-[#012A1C] leading-tight mb-8">
+                A Journey of Flavors from Beirut to Dubai
+              </h3>
+              <p className="text-gray-600 mb-6 leading-relaxed text-lg">
+                Nestled in the prestigious Al Mankhool Rd, Lebanese Village is more than a restaurant; it is a celebration of culture, family, and the art of fine dining.
+              </p>
+              <p className="text-gray-600 mb-10 leading-relaxed text-lg">
+                Our recipes have been passed down through generations, combining the finest sourced ingredients with time-honored cooking traditions. We invite you to experience hospitality as it was meant to be—warm, generous, and unforgettable.
+              </p>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Signature_of_John_Hancock.svg" alt="Chef Signature" className="h-12 opacity-40 filter grayscale contrast-200" />
+              <p className="mt-2 font-serif italic text-[#012A1C]">Chef Antoine</p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* --- MENU SECTION --- */}
+      <section id="menu" className="py-24 md:py-32 bg-[#0A0A0A] relative">
+        <div className="absolute inset-0 arabic-pattern opacity-10 pointer-events-none"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-16">
+            <Reveal delay={100}>
+              <h2 className="text-[#D4AF37] tracking-[0.2em] text-sm uppercase mb-4">Culinary Masterpieces</h2>
+              <h3 className="text-4xl md:text-5xl font-serif text-white">The Menu</h3>
+            </Reveal>
+          </div>
+
+          {/* Category Tabs */}
+          <Reveal delay={200} className="flex flex-wrap justify-center gap-4 md:gap-8 mb-16">
+            {menuCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveMenuCategory(category)}
+                className={`text-sm md:text-base tracking-widest uppercase pb-2 transition-all duration-300 border-b-2 ${
+                  activeMenuCategory === category 
+                    ? 'border-[#D4AF37] text-[#D4AF37]' 
+                    : 'border-transparent text-white/50 hover:text-white'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </Reveal>
+
+          {/* Menu Items Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+            {menuData[activeMenuCategory].map((item, index) => (
+              <Reveal key={item.name} delay={index * 100} direction="up">
+                <div className="group cursor-pointer">
+                  <div className="flex justify-between items-baseline border-b border-white/10 pb-4 mb-3 group-hover:border-[#D4AF37]/50 transition-colors duration-300">
+                    <h4 className="text-xl font-serif text-white group-hover:text-[#D4AF37] transition-colors">{item.name}</h4>
+                    <span className="text-[#D4AF37] font-medium tracking-wider pl-4 whitespace-nowrap">{item.price}</span>
+                  </div>
+                  <p className="text-white/60 text-sm leading-relaxed pr-8">{item.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          
+          <div className="text-center mt-20">
+            <Reveal delay={300}>
+              <a href="#reservation" className="inline-flex items-center gap-3 text-[#D4AF37] hover:text-white transition-colors duration-300 tracking-widest uppercase text-sm border-b border-[#D4AF37] pb-1">
+                Download Full Menu <ChevronRight size={16} />
+              </a>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* --- GALLERY SECTION --- */}
+      <section id="gallery" className="py-24 bg-[#F5ECE3]">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <Reveal className="text-center mb-16">
+            <h2 className="text-[#012A1C] tracking-[0.2em] text-sm uppercase mb-4 font-semibold">Atmosphere</h2>
+            <h3 className="text-4xl md:text-5xl font-serif text-[#012A1C]">A Glimpse of Luxury</h3>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {galleryImages.map((src, index) => (
+              <Reveal key={index} delay={index * 100} direction="scale" className="group overflow-hidden relative aspect-square">
+                <img 
+                  src={src} 
+                  alt={`Gallery Image ${index + 1}`} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full border border-white/50 flex items-center justify-center text-white transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    <span className="font-serif italic text-lg">LV</span>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- REVIEWS SECTION --- */}
+      <section className="py-24 bg-[#012A1C] text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://image2url.com/r2/default/images/1773855879123-3c090c06-ff80-4ba5-8fb4-1d494e2686c3.jpg')] opacity-5 bg-cover bg-fixed bg-center"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <Reveal className="text-center mb-16">
+            <h2 className="text-[#D4AF37] tracking-[0.2em] text-sm uppercase mb-4">Testimonials</h2>
+            <h3 className="text-4xl font-serif text-white">Guest Experiences</h3>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {reviews.map((review, index) => (
+              <Reveal key={index} delay={index * 200} direction="up" className="bg-white/5 backdrop-blur-sm p-8 border border-white/10 hover:border-[#D4AF37]/30 transition-colors duration-300">
+                <Quote className="text-[#D4AF37] mb-6 opacity-50" size={40} />
+                <p className="text-lg leading-relaxed text-white/90 font-serif italic mb-6">"{review.text}"</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium tracking-wide uppercase text-sm">{review.name}</h4>
+                  </div>
+                  <div className="flex gap-1 text-[#D4AF37]">
+                    {[...Array(review.rating)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- RESERVATION & LOCATION SECTION --- */}
+      <section id="reservation" className="bg-[#0A0A0A] py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            
+            {/* Reservation Form */}
+            <Reveal direction="left">
+              <div className="bg-[#111] p-10 md:p-14 border border-white/10">
+                <h3 className="text-3xl font-serif text-white mb-2">Reserve Your Table</h3>
+                <p className="text-white/50 mb-10 text-sm">Secure your premium dining experience via WhatsApp.</p>
+                
+                <form onSubmit={handleReservation} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs tracking-widest uppercase text-white/70 mb-2">Full Name</label>
+                      <input required name="name" type="text" className="w-full bg-transparent border-b border-white/20 pb-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="John Doe" />
+                    </div>
+                    <div>
+                      <label className="block text-xs tracking-widest uppercase text-white/70 mb-2">Phone Number</label>
+                      <input required name="phone" type="tel" className="w-full bg-transparent border-b border-white/20 pb-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="+971 50 000 0000" />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-xs tracking-widest uppercase text-white/70 mb-2">Guests</label>
+                      <select required name="guests" className="w-full bg-transparent border-b border-white/20 pb-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none">
+                        {[1,2,3,4,5,6,7,8].map(num => <option key={num} value={num} className="bg-[#111]">{num} Person{num > 1 ? 's' : ''}</option>)}
+                        <option value="9+" className="bg-[#111]">9+ Persons</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs tracking-widest uppercase text-white/70 mb-2">Date</label>
+                      <input required name="date" type="date" className="w-full bg-transparent border-b border-white/20 pb-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors [color-scheme:dark]" />
+                    </div>
+                    <div>
+                      <label className="block text-xs tracking-widest uppercase text-white/70 mb-2">Time</label>
+                      <input required name="time" type="time" className="w-full bg-transparent border-b border-white/20 pb-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors [color-scheme:dark]" />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="w-full mt-8 bg-[#D4AF37] text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-white transition-colors duration-300 flex items-center justify-center gap-2">
+                    Book via WhatsApp <MessageCircle size={18} />
+                  </button>
+                </form>
+              </div>
+            </Reveal>
+
+            {/* Location & Map */}
+            <Reveal direction="right" id="location" className="flex flex-col justify-between">
+              <div className="mb-10">
+                <h3 className="text-3xl font-serif text-white mb-8">Location & Hours</h3>
+                
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <MapPin className="text-[#D4AF37] shrink-0 mt-1" />
+                    <div>
+                      <h4 className="text-white font-medium mb-1 tracking-wider uppercase text-sm">Address</h4>
+                      <p className="text-white/60 text-sm leading-relaxed">Lebanese Village Restaurant<br/>Al Mankhool Rd - Dubai<br/>United Arab Emirates</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <Phone className="text-[#D4AF37] shrink-0 mt-1" />
+                    <div>
+                      <h4 className="text-white font-medium mb-1 tracking-wider uppercase text-sm">Contact</h4>
+                      <p className="text-white/60 text-sm">+971 50 624 3456</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <Clock className="text-[#D4AF37] shrink-0 mt-1" />
+                    <div>
+                      <h4 className="text-white font-medium mb-1 tracking-wider uppercase text-sm">Opening Hours</h4>
+                      <p className="text-white/60 text-sm">Daily: 12:00 PM – 2:00 AM</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Styled Map Placeholder (Using a dark map image for reliable luxury aesthetic) */}
+              <div className="relative h-64 w-full bg-[#111] overflow-hidden group">
+                <img 
+                  src="https://image2url.com/r2/default/images/1773855914103-338ffd19-feea-4251-a3c6-2740918527a4.jpg" 
+                  alt="Map Location" 
+                  className="w-full h-full object-cover opacity-40 grayscale group-hover:scale-105 transition-transform duration-1000"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] to-transparent"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <a href="https://maps.google.com/?q=Al+Mankhool+Rd+Dubai" target="_blank" rel="noreferrer" className="bg-[#D4AF37] text-black px-6 py-3 rounded-full text-xs font-semibold tracking-widest uppercase shadow-xl hover:scale-105 transition-transform flex items-center gap-2">
+                    <MapPin size={14} /> Get Directions
+                  </a>
+                </div>
+              </div>
+            </Reveal>
+
+          </div>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <footer className="bg-[#050505] pt-20 pb-10 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            
+            <div className="col-span-1 md:col-span-2">
+              <div className="text-3xl font-serif text-white mb-6">
+                <span className="text-[#D4AF37]">Lebanese</span> Village
+              </div>
+              <p className="text-white/50 text-sm leading-relaxed max-w-sm">
+                Redefining the art of Middle Eastern cuisine. Experience the perfect harmony of tradition, culture, and modern elegance in the heart of Dubai.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-white font-medium mb-6 tracking-widest uppercase text-sm">Links</h4>
+              <ul className="space-y-4 text-white/50 text-sm">
+                <li><a href="#about" className="hover:text-[#D4AF37] transition-colors">Our Story</a></li>
+                <li><a href="#menu" className="hover:text-[#D4AF37] transition-colors">The Menu</a></li>
+                <li><a href="#gallery" className="hover:text-[#D4AF37] transition-colors">Gallery</a></li>
+                <li><a href="#reservation" className="hover:text-[#D4AF37] transition-colors">Reservations</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-medium mb-6 tracking-widest uppercase text-sm">Follow Us</h4>
+              <div className="flex gap-4">
+                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-all"><Instagram size={18} /></a>
+                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-all"><Facebook size={18} /></a>
+                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-[#D4AF37] hover:border-[#D4AF37] transition-all"><Twitter size={18} /></a>
+              </div>
+            </div>
+
+          </div>
+          
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-white/40 tracking-wider">
+            <p>&copy; {new Date().getFullYear()} Lebanese Village Restaurant. All rights reserved.</p>
+            <div className="flex gap-4 mt-4 md:mt-0">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* --- FLOATING WHATSAPP BUTTON --- */}
+      <a 
+        href="https://wa.me/971506243456?text=Hello,%20I%20want%20to%20reserve%20a%20table%20at%20Lebanese%20Village%20Restaurant" 
+        target="_blank" 
+        rel="noreferrer"
+        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 hover:shadow-[#25D366]/50 transition-all duration-300 group flex items-center gap-0 overflow-hidden"
+        aria-label="Chat on WhatsApp"
+      >
+        <MessageCircle size={28} />
+        <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out font-medium tracking-wide text-sm pl-0 group-hover:pl-3">
+          Book Table
+        </span>
+      </a>
+
+    </>
   );
 }
