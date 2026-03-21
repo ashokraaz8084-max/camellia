@@ -1,665 +1,945 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
-  Menu, X, MapPin, Phone, Clock, ChevronRight, 
-  Star, Quote, Instagram, Facebook, Twitter, MessageCircle, Play, Navigation
+  Phone, 
+  MapPin, 
+  Clock, 
+  Instagram, 
+  Facebook, 
+  Twitter, 
+  Star, 
+  ChevronRight,
+  Menu as MenuIcon,
+  X,
+  MessageCircle,
+  CheckCircle
 } from 'lucide-react';
 
-// --- KOSTOM CSS AN ANIMESHON DEM ---
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@300;400;500;600&display=swap');
+// --- CONFIGURATION & DATA ---
 
-  :root {
-    --gold: #D4AF37;
-    --gold-light: #F3E5AB;
-    --black: #050505;
-    --surface: #121212;
-  }
+const RESTAURANT = {
+  name: "Njoom Al Aaelah",
+  subtitle: "Kitchen & Restaurant",
+  location: "78MP+223 - Al Rasheed Rd, Dubai, UAE",
+  phone: "+971 50 787 8576",
+  whatsapp: "971507878576",
+  email: "reservations@njoomalaaelah.com",
+  openHours: "Daily: 12:00 PM - 2:00 AM"
+};
 
-  body {
-    font-family: 'Manrope', sans-serif;
-    background-color: var(--black);
-    color: white;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-  }
+// Simulated Headless CMS Data Hook (Sanity/Strapi ready)
+const MENU = {
+  starters: [
+    { name: 'Arabic Mezze Platter', description: 'A selection of traditional dips, salads, and warm pita.', price: 'AED 45', image: 'https://image2url.com/r2/default/images/1774100305816-29efa7b5-6abb-4a41-9070-44a140e6b2b8.jpg' },
+    { name: 'Hummus with Bread', description: 'Silky smooth chickpea dip with olive oil and pine nuts.', price: 'AED 30', image: 'https://image2url.com/r2/default/images/1774100340329-62aec995-716c-4e55-a385-8d7f6338948a.jpg' },
+    { name: 'Wagyu Beef Carpaccio', description: 'Thinly sliced premium beef with truffle oil and parmesan.', price: 'AED 85', image: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Crispy Calamari', description: 'Lightly dusted calamari rings with saffron aioli.', price: 'AED 55', image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=400' },
+  ],
+  mains: [
+    { name: 'Grilled Lamb Chops', description: 'Prime lamb chops marinated in rosemary and garlic, char-grilled.', price: 'AED 120', image: 'https://image2url.com/r2/default/images/1774100382814-5ed1908d-83f7-4055-a2d9-d2279031205d.jpg' },
+    { name: 'Seafood Platter', description: 'Lobster tail, jumbo prawns, scallops, and catch of the day.', price: 'AED 150', image: 'https://image2url.com/r2/default/images/1774100418142-8df91140-e098-42a7-b2b1-bd2d239e36db.jpg' },
+    { name: 'Truffle Mushroom Risotto', description: 'Arborio rice with wild mushrooms, black truffle, and aged parmesan.', price: 'AED 95', image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Saffron Glazed Black Cod', description: 'Miso and saffron marinated black cod with asparagus.', price: 'AED 180', image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&q=80&w=400' },
+  ],
+  desserts: [
+    { name: 'Kunafa', description: 'Traditional warm cheese pastry soaked in sweet rose syrup.', price: 'AED 40', image: 'https://images.unsplash.com/photo-1621300977465-3592eb09ba96?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Baklava', description: 'Layers of filo pastry with chopped nuts and honey.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1599598425947-33000c28aa9c?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Gold Leaf Chocolate Fondant', description: 'Valrhona chocolate fondant topped with 24k edible gold.', price: 'AED 75', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=400' },
+  ],
+  beverages: [
+    { name: '24k Gold Cappuccino', description: 'Premium espresso blended with steamed milk, topped with 24k gold flakes.', price: 'AED 60', image: 'https://images.unsplash.com/photo-1534040385115-33dcb3acba5b?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Rose Water Lemonade', description: 'Freshly squeezed lemons infused with pure Damask rose water.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=400' },
+    { name: 'Mint Tea Pot', description: 'Traditional Moroccan mint tea served in a silver pot.', price: 'AED 45', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&q=80&w=400' },
+  ]
+};
 
-  h1, h2, h3, h4, h5, h6, .font-serif {
-    font-family: 'Playfair Display', serif;
-  }
+const REVIEWS = [
+  { name: "Ahmed Al Maktoum", text: "Absolutely world-class dining experience in Dubai! The lamb chops are unmatched.", rating: 5 },
+  { name: "Sarah Jenkins", text: "The ambiance is incredibly luxurious. Perfect for our anniversary dinner. Highly recommend the Seafood Platter.", rating: 5 },
+  { name: "Faisal R.", text: "Exceptional service and authentic flavors elevated to fine dining. A true hidden gem on Al Rasheed Rd.", rating: 5 },
+];
 
-  .text-gold { color: var(--gold); }
-  .bg-gold { background-color: var(--gold); }
-  .border-gold { border-color: var(--gold); }
+const GALLERY_IMAGES = [
+  "https://image2url.com/r2/default/images/1774100204319-cb069ff7-6f6a-4c4a-ab67-5b09347eb12c.jpg",
+  "https://image2url.com/r2/default/images/1774100255213-c1b11a2e-7179-4572-a967-6355d6bc9966.jpg",
+  "https://image2url.com/r2/default/images/1774100305816-29efa7b5-6abb-4a41-9070-44a140e6b2b8.jpg",
+  "https://image2url.com/r2/default/images/1774100340329-62aec995-716c-4e55-a385-8d7f6338948a.jpg",
+  "https://image2url.com/r2/default/images/1774100382814-5ed1908d-83f7-4055-a2d9-d2279031205d.jpg",
+  "https://image2url.com/r2/default/images/1774100418142-8df91140-e098-42a7-b2b1-bd2d239e36db.jpg",
+  "https://image2url.com/r2/default/images/1774100454596-1cbb0008-4c08-421b-9dc6-fa6012107310.jpg",
+  "https://image2url.com/r2/default/images/1774100516322-2ef4d567-380e-4608-83be-6ccca8527eae.jpg",
+  "https://image2url.com/r2/default/images/1774100546847-4b5f8ef8-caab-455b-a623-55819f9a6f6c.jpg"
+];
 
-  /* Spɛshal Eg an Ovalu Shep Dem */
-  .egg-shape {
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  }
-  
-  .egg-shape-inverse {
-    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-  }
+// --- UTILITY COMPONENTS ---
 
-  .oval-shape {
-    border-radius: 50%;
-  }
+const GoldText = ({ children }) => (
+  <span className="text-[#d4af37] drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">{children}</span>
+);
 
-  /* Sof Gol Layt Dem */
-  .glow-gold {
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
-  }
-  .glow-gold-hover:hover {
-    box-shadow: 0 0 50px rgba(212, 175, 55, 0.25);
-  }
+const SectionHeading = ({ title, subtitle }) => (
+  <div className="text-center mb-16">
+    <motion.h3 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-[#d4af37] tracking-[0.3em] text-sm md:text-base uppercase mb-4 font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]"
+    >
+      {subtitle}
+    </motion.h3>
+    <motion.h2 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.1 }}
+      className="text-4xl md:text-5xl lg:text-7xl font-serif text-[#f3e5b1] drop-shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+      style={{ fontFamily: "'Playfair Display', serif" }}
+    >
+      {title}
+    </motion.h2>
+    <div className="w-24 h-[2px] bg-[#d4af37] mx-auto mt-8 shadow-[0_0_15px_rgba(212,175,55,0.8)] rounded-full"></div>
+  </div>
+);
 
-  /* Sinimatik Pan Animeshon */
-  @keyframes panImage {
-    0% { transform: scale(1.05) translate(0, 0); }
-    50% { transform: scale(1.1) translate(-1%, -1%); }
-    100% { transform: scale(1.05) translate(0, 0); }
-  }
-  .animate-pan {
-    animation: panImage 30s infinite ease-in-out;
-  }
-
-  /* Kostom Skrolba */
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: var(--black); }
-  ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
-
-  /* Nav we de Flot */
-  .glass-nav {
-    background: rgba(18, 18, 18, 0.85);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 100px;
-  }
-`;
-
-// --- KOMPONENT FO SMUT ANIMESHON WE I DE SHO ---
-const Reveal = ({ children, delay = 0, direction = 'up', className = '' }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
+// --- 3D LUXURY BACKGROUND (Three.js) ---
+const ThreeBackground = () => {
+  const mountRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
-    );
+    let frameId;
+    let scene, camera, renderer, particlesMesh;
 
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    const initThree = () => {
+      if (!window.THREE || !mountRef.current) return;
+      const THREE = window.THREE;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      mountRef.current.appendChild(renderer.domElement);
+
+      // Gold particles
+      const particlesGeometry = new THREE.BufferGeometry();
+      const particlesCount = 300;
+      const posArray = new Float32Array(particlesCount * 3);
+      
+      for(let i = 0; i < particlesCount * 3; i++) {
+        posArray[i] = (Math.random() - 0.5) * 15; // Spread
+      }
+      
+      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      const material = new THREE.PointsMaterial({
+        size: 0.02,
+        color: 0xd4af37, // Gold
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending
+      });
+      
+      particlesMesh = new THREE.Points(particlesGeometry, material);
+      scene.add(particlesMesh);
+      camera.position.z = 4;
+
+      let mouseX = 0;
+      let mouseY = 0;
+
+      const animate = () => {
+        frameId = requestAnimationFrame(animate);
+        particlesMesh.rotation.y += 0.0005;
+        particlesMesh.rotation.x += 0.0002;
+        // Subtle parallax
+        particlesMesh.position.x += (mouseX * 0.001 - particlesMesh.position.x) * 0.05;
+        particlesMesh.position.y += (-mouseY * 0.001 - particlesMesh.position.y) * 0.05;
+        renderer.render(scene, camera);
+      };
+      
+      animate();
+
+      const handleMouseMove = (event) => {
+        mouseX = event.clientX - window.innerWidth / 2;
+        mouseY = event.clientY - window.innerHeight / 2;
+      };
+      
+      const handleResize = () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('resize', handleResize);
+    };
+
+    // Dynamically inject Three.js script
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    script.onload = initThree;
+    document.head.appendChild(script);
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      if (renderer && mountRef.current) mountRef.current.removeChild(renderer.domElement);
+      if (document.head.contains(script)) document.head.removeChild(script);
+    };
   }, []);
 
-  const getTransform = () => {
-    if (isVisible) return 'translate-x-0 translate-y-0 scale-100';
-    switch (direction) {
-      case 'up': return 'translate-y-16';
-      case 'down': return '-translate-y-16';
-      case 'left': return 'translate-x-16';
-      case 'right': return '-translate-x-16';
-      case 'scale': return 'scale-90';
-      default: return 'translate-y-16';
-    }
-  };
+  return <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" />;
+};
+
+// --- MAIN COMPONENTS ---
+
+const CustomCursor = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const updateMousePosition = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseOver = (e) => {
+      if (e.target.tagName.toLowerCase() === 'button' || 
+          e.target.tagName.toLowerCase() === 'a' ||
+          e.target.closest('button') || 
+          e.target.closest('a')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mousemove', updateMousePosition);
+    window.addEventListener('mouseover', handleMouseOver);
+
+    return () => {
+      window.removeEventListener('mousemove', updateMousePosition);
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
 
   return (
-    <div
-      ref={ref}
-      className={`transition-all duration-1000 ease-out ${className} ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      } ${getTransform()}`}
-      style={{ transitionDelay: `${delay}ms` }}
+    <motion.div
+      className="fixed top-0 left-0 w-8 h-8 border-2 border-[#d4af37] rounded-full pointer-events-none z-[100] mix-blend-screen hidden md:flex justify-center items-center shadow-[0_0_15px_rgba(212,175,55,0.5)]"
+      animate={{
+        x: mousePosition.x - 16,
+        y: mousePosition.y - 16,
+        scale: isHovering ? 1.5 : 1,
+        backgroundColor: isHovering ? 'rgba(212, 175, 55, 0.2)' : 'transparent',
+      }}
+      transition={{ type: 'tween', ease: 'backOut', duration: 0.15 }}
     >
-      {children}
-    </div>
+      <motion.div className="w-1.5 h-1.5 bg-[#f3e5b1] rounded-full shadow-[0_0_10px_rgba(243,229,177,1)]" />
+    </motion.div>
   );
 };
 
-// --- MEN APP KOMPONENT ---
-export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeMenuCategory, setActiveMenuCategory] = useState('Fas Fud');
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // --- DATA DEM ---
-  const menuCategories = ['Fas Fud', 'Indyan It', 'Snaks', 'Dringk Dem'];
-  const menuData = {
-    'Fas Fud': [
-      { name: 'Signecha Gol Baga', desc: 'Fos klas bif pati, trufil mayo, an anyan insay fresh bred.', price: 'AED 45', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Trufil Pamizan Frayz', desc: 'Krinspi frayz wit trufil oyl an pamizan chiz.', price: 'AED 28', image: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Krinspi Chikn Slayda', desc: 'Fray chikn, spaysi slaw, an wi sikrit gol sos.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Gome Klob Sandwij', desc: 'Tripul bred wit rosted toki, bif bekon, an grin lif dem.', price: 'AED 40', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
-    ],
-    'Indyan It': [
-      { name: 'Bota Chikn Royal', desc: 'Soff chikn na tomati an kashu grevi, wit gol lif.', price: 'AED 42', image: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Klassik Briyani Dom', desc: 'Basmati rays we dɔn kuk wit spays an mit.', price: 'AED 48', image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Dal Makhani Signecha', desc: 'Blak lentil we dɔn kuk smol smol wit bota an krim.', price: 'AED 38', image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Paniir Tikka Sizla', desc: 'Chiz we dɔn ros wit spays, na hot plet.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=400&q=80' },
-    ],
-    'Snaks': [
-      { name: 'Gol Samosa Chat', desc: 'Krinspi samosa wit poteto, yogot, an mint sos.', price: 'AED 22', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Nacho we get boku tin', desc: 'Korn chips wit chiz, jalapeño, an salsa.', price: 'AED 30', image: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Peri Peri Wing Dem', desc: 'Chikn wing dem na wi spaysi an sawar peri peri sos.', price: 'AED 32', image: 'https://images.unsplash.com/photo-1569691899455-88464f6d3318?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Stof Dynabayt', desc: 'Chiz an jalapeño bol dem wit swit chili sos.', price: 'AED 26', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=400&q=80' },
-    ],
-    'Dringk Dem': [
-      { name: '24k Gol Kapuchino', desc: 'Fos klas Arabik kofi we get 24k gol lif na tap.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1534687941688-60dcbfafdba4?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Roz Safron Milk', desc: 'Wam milk we get safron an roz wata.', price: 'AED 25', image: 'https://images.unsplash.com/photo-1558024920-b41e1887dc32?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Signecha Mohito', desc: 'Fresh mint, laym, an wi sikrit sirɔp.', price: 'AED 28', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=80' },
-      { name: 'Fresh Jus Dem', desc: 'Fruk dem we wi jus pres tide.', price: 'AED 24', image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=400&q=80' },
-    ]
-  };
-
-  const galleryImages = [
-    "https://image2url.com/r2/default/images/1773855721582-25a57dca-2657-4948-9c6e-ddf9f1241aad.jpg",
-    "https://image2url.com/r2/default/images/1773855765776-56e36d5e-3b5e-4c5c-a682-6c960033362b.jpg",
-    "https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg",
-    "https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg"
-  ];
-
-  const reviews = [
-    { name: "Aisha Sultan", text: "I fyn pas mak. Di ovalu shep na Fud Spot de mach di lokziri na Dubay.", rating: 5 },
-    { name: "Rohan Mehta", text: "Di Indyan It na di bɛst we a dɔn ɛva it. I tes fyn lek aw i luk wit di gol.", rating: 5 },
-    { name: "Sarah Williams", text: "Na rili fyn say na Al Ain Center. Nɔto wan shap ɛj nɔ de, i mek yu fil rili gud fo it de.", rating: 5 }
-  ];
-
-  // --- IFFƐKT DEM ---
   useEffect(() => {
-    // Fos Klas Lodin Skrin
-    const timer = setTimeout(() => setIsLoading(false), 2800);
-    
-    // Luk skrol fo Nav
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- HANDLA DEM ---
-  const handleReservation = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    
-    const message = `Adu,%20A%20want%20fo%20buk%20tebu%20na%20Fud%20Spot%20Rɛstɔrant%20&%20Kafitiria.%0A%0A*Nem:* ${data.name}%0A*Fon:* ${data.phone}%0A*Gɛst dem:* ${data.guests}%0A*Det:* ${data.date}%0A*Tem:* ${data.time}`;
-    
-    window.open(`https://wa.me/971581467575?text=${message}`, '_blank');
-  };
+  const navLinks = [
+    { name: 'Home', href: '#home' },
+    { name: 'Story', href: '#about' },
+    { name: 'Menu', href: '#menu' },
+    { name: 'Gallery', href: '#gallery' },
+    { name: 'Contact', href: '#contact' },
+  ];
 
-  const scrollTo = (id) => {
-    setIsMobileMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) {
-      window.scrollTo({
-        top: el.offsetTop - 80,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  // --- RƐNDA ---
   return (
     <>
-      <style>{styles}</style>
+      <nav 
+        className={`fixed w-full z-50 transition-all duration-500 ${
+          scrolled ? 'bg-[#000000]/95 backdrop-blur-xl border-b border-[#d4af37]/20 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]' : 'bg-transparent py-6'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <a href="#home" className="text-2xl font-serif text-[#f3e5b1] tracking-widest flex flex-col items-center drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">
+            <span style={{ fontFamily: "'Playfair Display', serif" }}>NJOOM AL AAELAH</span>
+            <span className="text-[0.5rem] tracking-[0.4em] text-[#d4af37] uppercase font-bold mt-1">Kitchen & Restaurant</span>
+          </a>
 
-      {/* --- LODIN SKRIN --- */}
-      <div className={`fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center transition-opacity duration-1000 ${isLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <div className="relative w-32 h-40 flex items-center justify-center egg-shape border border-[#D4AF37] glow-gold">
-          <div className="absolute inset-2 border-b-2 border-l-2 border-[#F3E5AB] opacity-50 egg-shape animate-spin" style={{ animationDuration: '3s' }}></div>
-          <span className="font-serif text-3xl text-[#D4AF37] tracking-widest">FS</span>
-        </div>
-        <div className="mt-8 text-sm tracking-[0.4em] text-[#D4AF37] uppercase font-light">Mek Loksiri</div>
-      </div>
-
-      {/* --- NAVIGESHON --- */}
-      <div className="fixed w-full z-50 flex justify-center top-0 pt-6 px-4 transition-all duration-500 pointer-events-none">
-        <nav className={`pointer-events-auto transition-all duration-500 px-8 py-4 flex justify-between items-center w-full max-w-5xl ${isScrolled ? 'glass-nav glow-gold' : 'bg-transparent border border-transparent'}`}>
-          <div className="text-xl md:text-2xl font-serif text-white flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0,0)}>
-            <span className="text-[#D4AF37]">Fud</span> Spot
-          </div>
-          
-          {/* Dɛkstɔp Menyoo */}
-          <div className="hidden md:flex items-center gap-8 text-xs tracking-[0.2em] uppercase font-medium">
-            {['Bawt Wi', 'Menyoo', 'Galari', 'Say we wi de'].map((item) => (
-              <button key={item} onClick={() => scrollTo(item === 'Say we wi de' ? 'location' : item === 'Bawt Wi' ? 'about' : item.toLowerCase())} className="text-white/80 hover:text-[#D4AF37] transition-colors relative group">
-                {item}
-                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              </button>
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map((link) => (
+              <a 
+                key={link.name} 
+                href={link.href}
+                className="text-sm text-[#bca773] hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.5)] transition-all tracking-widest uppercase font-semibold"
+              >
+                {link.name}
+              </a>
             ))}
-            <button onClick={() => scrollTo('reservation')} className="bg-[#D4AF37] text-black px-6 py-3 rounded-[50px] hover:bg-[#F3E5AB] transition-colors duration-300 font-bold ml-4">
-              Buk Naw
-            </button>
+            <a 
+              href="#reservation"
+              className="px-8 py-3 rounded-[40px] bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] transition-all duration-300 tracking-widest text-sm uppercase scale-100 hover:scale-105"
+            >
+              Book a Table
+            </a>
           </div>
 
-          {/* Mobayl Tɔgul */}
-          <button className="md:hidden text-white hover:text-[#D4AF37] transition-colors" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden text-[#d4af37]"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
           </button>
-        </nav>
+        </div>
+      </nav>
+
+      {/* Mobile Nav */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-[#050402] pt-24 px-6 flex flex-col items-center border-b border-[#d4af37]/20"
+          >
+            {navLinks.map((link) => (
+              <a 
+                key={link.name} 
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl text-[#bca773] hover:text-[#f3e5b1] transition-colors my-4 font-serif"
+                style={{ fontFamily: "'Playfair Display', serif" }}
+              >
+                {link.name}
+              </a>
+            ))}
+            <a 
+              href="#reservation"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-8 px-8 py-4 rounded-[40px] bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold shadow-[0_0_20px_rgba(212,175,55,0.4)] tracking-widest uppercase w-full max-w-xs text-center"
+            >
+              Book a Table
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const Hero = () => {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, 400]);
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+
+  return (
+    <section id="home" className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-[#000]">
+      <motion.div 
+        style={{ y, opacity }}
+        className="absolute inset-0 w-full h-full"
+      >
+        <div className="absolute inset-0 bg-black/60 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-[#050402]/50 to-[#000000] z-10" />
+        <img 
+          src="https://image2url.com/r2/default/images/1774100204319-cb069ff7-6f6a-4c4a-ab67-5b09347eb12c.jpg" 
+          alt="Luxury Dining"
+          className="w-full h-full object-cover"
+        />
+      </motion.div>
+
+      <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+        >
+          <p className="text-[#d4af37] tracking-[0.4em] uppercase text-sm md:text-base mb-6 font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+            Premium Fine Dining Experience
+          </p>
+          <h1 
+            className="text-5xl md:text-7xl lg:text-8xl text-[#f3e5b1] font-serif leading-tight mb-8 drop-shadow-[0_0_30px_rgba(212,175,55,0.3)]"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            Experience Royal Dining <br className="hidden md:block" /> in Dubai
+          </h1>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+            <a 
+              href="#reservation"
+              className="group relative px-10 py-5 bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold tracking-widest uppercase overflow-hidden rounded-[40px] shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_50px_rgba(212,175,55,0.7)] transition-all duration-500 scale-100 hover:scale-105"
+            >
+              <div className="absolute inset-0 w-0 bg-white transition-all duration-[400ms] ease-out group-hover:w-full opacity-20"></div>
+              <span className="relative">Book a Table</span>
+            </a>
+            <a 
+              href="#menu"
+              className="px-10 py-5 border-2 border-[#d4af37]/50 text-[#d4af37] hover:bg-[#d4af37] hover:text-black rounded-[40px] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-500 tracking-widest uppercase font-bold backdrop-blur-sm"
+            >
+              Explore Menu
+            </a>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Mobayl Menyoo Ovale */}
-      <div className={`fixed inset-0 bg-[#0A0A0A]/95 backdrop-blur-xl z-40 transition-transform duration-500 ease-in-out md:hidden flex flex-col items-center justify-center gap-8 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        {['Bawt Wi', 'Menyoo', 'Galari', 'Say we wi de', 'Buk Tebu'].map((item) => (
-          <button 
-            key={item} 
-            onClick={() => scrollTo(item === 'Say we wi de' ? 'location' : item === 'Bawt Wi' ? 'about' : item === 'Buk Tebu' ? 'reservation' : item.toLowerCase())}
-            className="text-3xl font-serif text-white hover:text-[#D4AF37] transition-colors relative z-10"
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center"
+      >
+        <span className="text-[#bca773] text-xs tracking-[0.2em] uppercase mb-4 font-semibold">Scroll to explore</span>
+        <div className="w-[2px] h-16 bg-[#d4af37]/20 relative overflow-hidden rounded-full">
+          <motion.div 
+            animate={{ y: [0, 64] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+            className="absolute top-0 left-0 w-full h-1/2 bg-[#d4af37] shadow-[0_0_10px_rgba(212,175,55,1)]"
+          />
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
+const About = () => {
+  return (
+    <section id="about" className="py-24 lg:py-40 bg-[#000000] relative overflow-hidden">
+      {/* Decorative Elements */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#d4af37]/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 rounded-full blur-[150px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1 }}
+            className="relative"
           >
-            {item}
-          </button>
+            <div className="relative z-10">
+              <img 
+                src="https://image2url.com/r2/default/images/1774100255213-c1b11a2e-7179-4572-a967-6355d6bc9966.jpg" 
+                alt="Chef preparing food" 
+                className="w-full h-[600px] object-cover rounded-[40px] grayscale-[20%] hover:grayscale-0 transition-all duration-700 shadow-[0_0_40px_rgba(212,175,55,0.1)] border border-[#d4af37]/20"
+              />
+              <div className="absolute inset-0 border-2 border-[#d4af37]/40 translate-x-6 translate-y-6 -z-10 rounded-[40px]"></div>
+            </div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="absolute -bottom-10 -right-4 lg:-right-10 bg-[#0a0805] p-8 border border-[#d4af37]/30 shadow-[0_0_50px_rgba(212,175,55,0.15)] rounded-[40px] backdrop-blur-xl hidden md:block"
+            >
+              <p className="text-5xl font-serif text-[#d4af37] mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>15+</p>
+              <p className="text-[#9e8a52] text-sm tracking-widest uppercase font-semibold">Years of Culinary<br/>Excellence</p>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1 }}
+          >
+            <h3 className="text-[#d4af37] tracking-[0.3em] text-sm md:text-base uppercase mb-4 font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">Our Story</h3>
+            <h2 
+              className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#f3e5b1] mb-8 leading-tight drop-shadow-[0_0_20px_rgba(212,175,55,0.1)]"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              A Symphony of <GoldText>Flavors</GoldText> in the Heart of Dubai.
+            </h2>
+            <div className="space-y-6 text-[#bca773] font-light leading-relaxed text-lg">
+              <p>
+                Founded on the vibrant Al Rasheed Road, Njoom Al Aaelah represents the pinnacle of luxury dining. We blend traditional Middle Eastern heritage with contemporary culinary techniques to create an unforgettable gastronomic journey.
+              </p>
+              <p>
+                Every dish is meticulously crafted by our master chefs using only the finest, globally sourced ingredients. From our delicately spiced Arabic Mezze to our signature Gold Leaf desserts, we promise an experience that transcends the ordinary.
+              </p>
+            </div>
+            <div className="mt-12">
+              {/* Using a bright gold CSS filter to tint the signature image to match the theme */}
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Signature_of_John_Hancock.svg/1200px-Signature_of_John_Hancock.svg.png" alt="Chef Signature" className="h-16 mb-4 filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" style={{ filter: 'invert(75%) sepia(42%) saturate(544%) hue-rotate(352deg) brightness(95%) contrast(88%)' }} />
+              <p className="text-[#d4af37] font-serif italic text-xl">Executive Chef</p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Menu = () => {
+  const [activeTab, setActiveTab] = useState('starters');
+
+  return (
+    <section id="menu" className="py-24 lg:py-40 bg-[#050402] relative z-10">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <SectionHeading title="Culinary Masterpieces" subtitle="The Menu" />
+
+        {/* Menu Tabs */}
+        <div className="flex justify-center flex-wrap gap-4 md:gap-6 mb-16">
+          {Object.keys(MENU).map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveTab(category)}
+              className={`text-sm md:text-base tracking-[0.2em] uppercase px-8 py-3 rounded-[40px] transition-all duration-300 font-bold border ${
+                activeTab === category 
+                ? 'bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black border-transparent shadow-[0_0_20px_rgba(212,175,55,0.4)]' 
+                : 'bg-[#0a0805] text-[#9e8a52] border-[#d4af37]/30 hover:border-[#d4af37] hover:text-[#d4af37] hover:shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Menu Items */}
+        <motion.div 
+          key={activeTab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+          {MENU[activeTab].map((item, index) => (
+            <motion.div 
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="group cursor-pointer flex flex-col sm:flex-row gap-6 items-center sm:items-start bg-gradient-to-br from-[#0a0805] to-[#000000] p-6 border border-[#d4af37]/20 hover:border-[#d4af37]/60 hover:shadow-[0_0_40px_rgba(212,175,55,0.15)] transition-all duration-500 rounded-[40px]"
+            >
+              <div className="w-full sm:w-36 h-56 sm:h-36 overflow-hidden rounded-[30px] flex-shrink-0 relative border border-[#d4af37]/20">
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10" />
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+              </div>
+              <div className="flex-grow w-full py-2">
+                <div className="flex justify-between items-baseline mb-3">
+                  <h4 
+                    className="text-xl md:text-2xl text-[#f3e5b1] font-serif group-hover:text-[#d4af37] transition-colors drop-shadow-[0_0_8px_rgba(212,175,55,0.1)]"
+                    style={{ fontFamily: "'Playfair Display', serif" }}
+                  >
+                    {item.name}
+                  </h4>
+                  <div className="flex-grow mx-4 border-b border-[#d4af37]/30 border-dotted relative top-[-6px] hidden sm:block"></div>
+                  <span className="text-[#d4af37] font-bold tracking-wider whitespace-nowrap ml-auto sm:ml-0 text-lg drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">{item.price}</span>
+                </div>
+                <p className="text-[#9e8a52] text-sm font-light leading-relaxed group-hover:text-[#c4b17c] transition-colors">
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <div className="mt-20 text-center">
+          <a href="#" className="inline-flex items-center gap-2 text-[#d4af37] hover:text-[#f3e5b1] hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-all tracking-widest uppercase text-sm font-bold">
+            Download Full Menu <ChevronRight size={18} />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Gallery = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  return (
+    <section id="gallery" className="py-24 bg-[#000000] relative z-10">
+      <SectionHeading title="The Ambiance" subtitle="Gallery" />
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 max-w-7xl mx-auto">
+        {GALLERY_IMAGES.map((src, index) => (
+          <motion.div 
+            key={index}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1, duration: 0.8 }}
+            className="relative h-[400px] overflow-hidden group cursor-pointer rounded-[40px] border border-[#d4af37]/20 hover:border-[#d4af37]/60 hover:shadow-[0_0_40px_rgba(212,175,55,0.2)] transition-all duration-500"
+            onClick={() => setSelectedImage(src)}
+          >
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-500 z-10" />
+            <img 
+              src={src} 
+              alt="Restaurant Gallery" 
+              className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-1000 ease-out"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 flex items-end p-8">
+              <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <p className="text-[#d4af37] text-sm tracking-widest uppercase mb-2 font-bold drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]">Dubai</p>
+                <p className="text-[#f3e5b1] font-serif text-2xl drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>Luxury Dining</p>
+              </div>
+            </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* --- HIRO SƐKSHON --- */}
-      <header className="relative h-screen flex items-center justify-center overflow-hidden bg-[#050505] pt-20">
-        <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none p-4 md:p-10">
-          <div className="w-full max-w-lg md:max-w-3xl h-[85vh] egg-shape overflow-hidden relative glow-gold border border-[#D4AF37]/30">
-            <img 
-              src="https://image2url.com/r2/default/images/1773855611849-0dd9ee94-a03e-4919-b2d9-f9e9d0b9eeb1.jpg" 
-              alt="Fos klas it say" 
-              className="w-full h-full object-cover animate-pan opacity-50"
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-[#000]/95 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <button 
+              className="absolute top-8 right-8 text-[#d4af37] hover:text-[#f3e5b1] hover:drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] transition-all z-[110]"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X size={40} />
+            </button>
+            <motion.img 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              src={selectedImage} 
+              alt="Enlarged Gallery Image" 
+              className="max-w-full max-h-[90vh] object-contain rounded-[40px] border border-[#d4af37]/30 shadow-[0_0_60px_rgba(212,175,55,0.2)]"
+              onClick={(e) => e.stopPropagation()} 
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
-          </div>
-        </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+};
 
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-10">
-          <Reveal delay={100}>
-            <div className="inline-flex items-center gap-4 bg-[#121212]/80 backdrop-blur-md px-6 py-2 rounded-[50px] border border-[#D4AF37]/30 mb-8">
-              <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
-              <p className="text-[#D4AF37] tracking-[0.2em] text-xs font-semibold uppercase">
-                Fos klas tin na Dubay
+const Testimonials = () => {
+  return (
+    <section className="py-24 lg:py-40 bg-[#050402] relative overflow-hidden">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl opacity-5 pointer-events-none flex justify-center items-center text-[#d4af37]">
+        <Star size={400} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <SectionHeading title="Guest Experiences" subtitle="Reviews" />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {REVIEWS.map((review, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.2 }}
+              className="bg-[#000000] border border-[#d4af37]/30 p-10 md:p-12 hover:border-[#d4af37] hover:shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-500 group rounded-[40px]"
+            >
+              <div className="flex gap-2 mb-8">
+                {[...Array(review.rating)].map((_, i) => (
+                  <Star key={i} size={20} className="fill-[#d4af37] text-[#d4af37] drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]" />
+                ))}
+              </div>
+              <p className="text-[#bca773] font-light leading-relaxed mb-10 text-lg italic group-hover:text-[#f3e5b1] transition-colors">
+                "{review.text}"
               </p>
-            </div>
-          </Reveal>
-          
-          <Reveal delay={300}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white leading-[1.15] mb-8 drop-shadow-2xl">
-              Wan Nyu Shep <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#D4AF37]">
-                fo It Loksiri
-              </span>
-            </h1>
-          </Reveal>
-          
-          <Reveal delay={500}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
-              <button 
-                onClick={() => scrollTo('reservation')}
-                className="w-full sm:w-auto px-10 py-4 bg-[#D4AF37] text-black rounded-[50px] hover:bg-[#F3E5AB] transition-all duration-300 font-bold tracking-widest uppercase text-xs shadow-[0_0_20px_rgba(212,175,55,0.4)]"
-              >
-                Buk Tebu
-              </button>
-              <button 
-                onClick={() => scrollTo('menu')}
-                className="w-full sm:w-auto px-10 py-4 bg-[#121212]/60 backdrop-blur-sm text-white rounded-[50px] border border-[#D4AF37]/50 hover:border-[#D4AF37] hover:bg-[#121212] transition-all duration-300 font-bold tracking-widest uppercase text-xs flex items-center justify-center gap-2"
-              >
-                Luk Di Menyoo
-                <Play size={14} className="fill-current text-[#D4AF37]" />
-              </button>
-            </div>
-          </Reveal>
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d4af37] to-[#aa8323] flex items-center justify-center text-black font-serif text-xl shadow-[0_0_15px_rgba(212,175,55,0.5)] border-2 border-[#000]">
+                  {review.name.charAt(0)}
+                </div>
+                <div>
+                  <h4 className="text-[#f3e5b1] font-serif tracking-wide text-lg drop-shadow-[0_0_5px_rgba(212,175,55,0.2)]">{review.name}</h4>
+                  <p className="text-[#9e8a52] text-xs uppercase tracking-widest font-bold mt-1">VIP Guest</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </header>
+      </div>
+    </section>
+  );
+};
 
-      {/* --- BAWT WI SƐKSHON --- */}
-      <section id="about" className="py-24 md:py-32 bg-[#0A0A0A] text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-        
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            {/* Tekst Na Di Say */}
-            <Reveal direction="right" className="order-2 lg:order-1 bg-[#121212] p-10 md:p-16 rounded-[60px] border border-white/5 glow-gold-hover transition-shadow duration-500">
-              <h2 className="text-[#D4AF37] tracking-[0.2em] text-xs uppercase mb-4 font-bold flex items-center gap-3">
-                <span className="w-8 h-[1px] bg-[#D4AF37]"></span> Wi Tori
-              </h2>
-              <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight mb-8">
-                Gud Kwanliti <span className="text-[#D4AF37] italic">we Fyn</span>
+const Reservation = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    guests: '',
+    date: '',
+    time: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Format the message for WhatsApp
+    const message = `*New Reservation Request*\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Guests:* ${formData.guests}\n*Date:* ${formData.date}\n*Time:* ${formData.time}`;
+    const encodedMessage = encodeURIComponent(message);
+    
+    // Open WhatsApp in a new tab with the pre-filled message
+    window.open(`https://wa.me/${RESTAURANT.whatsapp}?text=${encodedMessage}`, '_blank');
+    
+    setIsSubmitted(true);
+    setFormData({ name: '', phone: '', guests: '', date: '', time: '' }); // Reset form
+  };
+
+  return (
+    <section id="reservation" className="py-24 lg:py-40 relative bg-[#000000] overflow-hidden">
+      {/* Background Image Parallax */}
+      <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-fixed bg-center mix-blend-luminosity"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#050402]/90 to-[#000000]"></div>
+
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
+        <div className="bg-[#050402]/95 backdrop-blur-2xl border border-[#d4af37]/40 p-10 md:p-20 shadow-[0_0_80px_rgba(212,175,55,0.1)] rounded-[40px] min-h-[500px] flex flex-col justify-center">
+          
+          {isSubmitted ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="text-center py-10"
+            >
+              <div className="w-24 h-24 bg-gradient-to-br from-[#d4af37] to-[#aa8323] rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(212,175,55,0.5)] border-4 border-[#000]">
+                <CheckCircle size={48} className="text-black" />
+              </div>
+              <h3 className="text-4xl md:text-5xl font-serif text-[#f3e5b1] mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                Reservation Request Sent
               </h3>
-              <p className="text-white/60 mb-6 leading-relaxed font-light">
-                Fud Spot Rɛstɔrant an Kafitiria na nyu we fo it. I de na Al Ain Center, Al Mankhool Rd, wi mɛk mɔ i get pɔm-pɔm shep, nɔto ɛni shap ɛj nɔ de na wi it, na aw wi de tritim pipul, ɔ na wi bil.
+              <p className="text-[#bca773] text-lg max-w-2xl mx-auto leading-relaxed">
+                Thank you for choosing Njoom Al Aaelah. Your reservation details have been sent via WhatsApp. Our concierge team will confirm your table shortly.
               </p>
-              <p className="text-white/60 mb-10 leading-relaxed font-light">
-                Evri tin we wi de mek na gud kwanliti. Wi de mek fas fud an Indyan it fo bi fyn an lokziri na wan de.
-              </p>
-              
-              <div className="flex items-center gap-6 bg-black/50 p-6 rounded-[40px] border border-white/5">
-                <div className="w-14 h-14 rounded-full border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] bg-[#D4AF37]/10 shrink-0">
-                  <Star size={24} fill="currentColor" />
-                </div>
-                <div>
-                  <h4 className="font-serif font-bold text-lg text-white">5-Sta Bɛst</h4>
-                  <p className="text-xs text-white/50 tracking-wider uppercase mt-1">Fos klas it say an kafitiria</p>
-                </div>
-              </div>
-            </Reveal>
-
-            {/* Pikcho Say */}
-            <Reveal direction="left" className="order-1 lg:order-2 relative flex justify-center">
-              <div className="w-full max-w-[400px] aspect-[3/4] egg-shape relative overflow-hidden border border-[#D4AF37]/20 glow-gold p-2 bg-[#121212]">
-                <div className="w-full h-full egg-shape overflow-hidden">
-                  <img 
-                    src="https://image2url.com/r2/default/images/1773855646363-1b3921bd-151e-4bda-a338-803ae44b926c.jpg" 
-                    alt="Fos klas tin dem" 
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-1000"
-                  />
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* --- MENYOO SƐKSHON --- */}
-      <section id="menu" className="py-24 md:py-32 bg-[#050505] relative border-y border-[#D4AF37]/10">
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <Reveal delay={100}>
-              <h2 className="text-[#D4AF37] tracking-[0.2em] text-xs uppercase mb-4 font-bold">Wan Rawn Palet</h2>
-              <h3 className="text-4xl md:text-5xl font-serif text-white">Di Gol Menyoo</h3>
-            </Reveal>
-          </div>
-
-          {/* Bɔtin Dem */}
-          <Reveal delay={200} className="flex flex-wrap justify-center gap-4 mb-16">
-            {menuCategories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveMenuCategory(category)}
-                className={`text-xs md:text-sm tracking-widest uppercase px-6 py-3 rounded-[50px] transition-all duration-300 border ${
-                  activeMenuCategory === category 
-                    ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37] shadow-[0_0_15px_rgba(212,175,55,0.2)]' 
-                    : 'border-white/10 text-white/50 hover:text-white hover:border-white/30 bg-[#121212]'
-                }`}
+              <button 
+                onClick={() => setIsSubmitted(false)}
+                className="mt-10 px-8 py-3 border border-[#d4af37]/50 text-[#d4af37] rounded-full hover:bg-[#d4af37] hover:text-black transition-all font-bold tracking-widest uppercase text-sm"
               >
-                {category}
+                Make Another Booking
               </button>
-            ))}
-          </Reveal>
-
-          {/* Menyoo Aytɛm Dem */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {menuData[activeMenuCategory].map((item, index) => (
-              <Reveal key={item.name} delay={index * 100} direction="up">
-                <div className="bg-[#121212] p-6 rounded-[50px] border border-white/5 hover:border-[#D4AF37]/50 transition-colors duration-500 group cursor-pointer glow-gold-hover h-full flex flex-col sm:flex-row items-center gap-6">
-                  {/* Pikcho fo di It */}
-                  <div className="w-32 h-32 shrink-0 egg-shape overflow-hidden border border-[#D4AF37]/30 p-1 glow-gold">
-                    <div className="w-full h-full egg-shape overflow-hidden">
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                      />
-                    </div>
+            </motion.div>
+          ) : (
+            <>
+              <SectionHeading title="Reserve Your Table" subtitle="Bookings" />
+              
+              <form className="space-y-8" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="relative group">
+                    <input type="text" id="name" value={formData.name} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-8 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer" placeholder=" " />
+                    <label htmlFor="name" className="absolute left-8 top-5 text-[#9e8a52] text-sm tracking-widest uppercase transition-all peer-focus:-top-3 peer-focus:left-6 peer-focus:text-[#d4af37] peer-focus:text-xs peer-focus:bg-[#050402] peer-focus:px-3 peer-valid:-top-3 peer-valid:left-6 peer-valid:text-xs peer-valid:bg-[#050402] peer-valid:px-3 rounded-full font-bold">Full Name</label>
                   </div>
-                  {/* Tɛkst Dem */}
-                  <div className="flex-1 w-full text-center sm:text-left">
-                    <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-2 gap-2">
-                      <h4 className="text-xl font-serif text-white group-hover:text-[#D4AF37] transition-colors">{item.name}</h4>
-                      <span className="text-black bg-[#D4AF37] px-4 py-1 rounded-[50px] font-bold tracking-wider text-xs whitespace-nowrap">{item.price}</span>
-                    </div>
-                    <p className="text-white/50 text-sm leading-relaxed font-light">{item.desc}</p>
+                  <div className="relative group">
+                    <input type="tel" id="phone" value={formData.phone} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-8 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer" placeholder=" " />
+                    <label htmlFor="phone" className="absolute left-8 top-5 text-[#9e8a52] text-sm tracking-widest uppercase transition-all peer-focus:-top-3 peer-focus:left-6 peer-focus:text-[#d4af37] peer-focus:text-xs peer-focus:bg-[#050402] peer-focus:px-3 peer-valid:-top-3 peer-valid:left-6 peer-valid:text-xs peer-valid:bg-[#050402] peer-valid:px-3 rounded-full font-bold">Phone Number</label>
                   </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          
-          <div className="text-center mt-16">
-            <Reveal delay={300}>
-              <button onClick={() => scrollTo('reservation')} className="inline-flex items-center gap-3 text-[#D4AF37] hover:text-[#F3E5AB] transition-colors duration-300 tracking-widest uppercase text-xs font-bold bg-[#D4AF37]/10 px-8 py-4 rounded-[50px] border border-[#D4AF37]/30">
-                Buk fo Tes <ChevronRight size={16} />
-              </button>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* --- GALARI SƐKSHON --- */}
-      <section id="gallery" className="py-24 bg-[#0A0A0A]">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <Reveal className="text-center mb-16">
-            <h2 className="text-[#D4AF37] tracking-[0.2em] text-xs uppercase mb-4 font-bold">Fyn Pikcho Dem</h2>
-            <h3 className="text-4xl md:text-5xl font-serif text-white">Mek Fyn bay Dizayn</h3>
-          </Reveal>
-
-          {/* Ovalu Layawt */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {galleryImages.map((src, index) => (
-              <Reveal key={index} delay={index * 100} direction="scale" className="group flex justify-center">
-                <div className={`w-full max-w-[300px] relative overflow-hidden border border-[#D4AF37]/20 glow-gold p-2 bg-[#121212] transition-transform duration-500 hover:-translate-y-4 ${index % 2 === 0 ? 'egg-shape aspect-[3/4]' : 'oval-shape aspect-square mt-0 lg:mt-16'}`}>
-                  <div className={`w-full h-full overflow-hidden ${index % 2 === 0 ? 'egg-shape' : 'oval-shape'}`}>
-                    <img 
-                      src={src} 
-                      alt={`Galari Pikcho ${index + 1}`} 
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-125"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-sm">
-                      <div className="w-12 h-12 rounded-full bg-[#D4AF37] flex items-center justify-center text-black transform scale-50 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500">
-                        <Play size={20} fill="currentColor" />
-                      </div>
+                  <div className="relative group">
+                    <select id="guests" value={formData.guests} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-8 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all appearance-none peer">
+                      <option value="" disabled hidden></option>
+                      <option value="1" className="bg-[#050402]">1 Guest</option>
+                      <option value="2" className="bg-[#050402]">2 Guests</option>
+                      <option value="3" className="bg-[#050402]">3 Guests</option>
+                      <option value="4" className="bg-[#050402]">4 Guests</option>
+                      <option value="5+" className="bg-[#050402]">5+ Guests</option>
+                    </select>
+                    <label htmlFor="guests" className="absolute left-8 top-5 text-[#9e8a52] text-sm tracking-widest uppercase transition-all peer-focus:-top-3 peer-focus:left-6 peer-focus:text-[#d4af37] peer-focus:text-xs peer-focus:bg-[#050402] peer-focus:px-3 peer-valid:-top-3 peer-valid:left-6 peer-valid:text-xs peer-valid:bg-[#050402] peer-valid:px-3 rounded-full font-bold">Number of Guests</label>
+                  </div>
+                  <div className="relative group flex gap-4">
+                    <div className="w-1/2 relative">
+                      <input type="date" id="date" value={formData.date} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-6 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer [color-scheme:dark]" placeholder=" " />
+                      <label htmlFor="date" className="absolute left-6 -top-3 bg-[#050402] px-3 text-[#d4af37] text-xs tracking-widest uppercase rounded-full font-bold">Date</label>
+                    </div>
+                    <div className="w-1/2 relative">
+                      <input type="time" id="time" value={formData.time} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-6 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer [color-scheme:dark]" placeholder=" " />
+                      <label htmlFor="time" className="absolute left-6 -top-3 bg-[#050402] px-3 text-[#d4af37] text-xs tracking-widest uppercase rounded-full font-bold">Time</label>
                     </div>
                   </div>
                 </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* --- TƐSTIMONIALS SƐKSHON --- */}
-      <section className="py-24 bg-[#050505] text-white relative overflow-hidden border-t border-[#D4AF37]/10">
-        <div className="absolute inset-0 bg-[url('https://image2url.com/r2/default/images/1773855879123-3c090c06-ff80-4ba5-8fb4-1d494e2686c3.jpg')] opacity-[0.03] bg-cover bg-fixed bg-center"></div>
-        
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <Reveal className="text-center mb-16">
-            <h2 className="text-[#D4AF37] tracking-[0.2em] text-xs uppercase mb-4 font-bold">Wetn Pipul Se</h2>
-            <h3 className="text-4xl font-serif text-white">Gol Wod Dem</h3>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {reviews.map((review, index) => (
-              <Reveal key={index} delay={index * 200} direction="up" className="bg-[#121212] p-10 rounded-[50px] border border-[#D4AF37]/20 hover:border-[#D4AF37] glow-gold-hover transition-all duration-500 flex flex-col justify-between">
-                <div>
-                  <Quote className="text-[#D4AF37] mb-6 opacity-70" size={36} />
-                  <p className="text-base leading-relaxed text-white/80 font-serif italic mb-8">"{review.text}"</p>
-                </div>
-                <div className="flex items-center justify-between border-t border-white/10 pt-6">
-                  <div>
-                    <h4 className="font-bold tracking-wide uppercase text-xs text-white">{review.name}</h4>
-                  </div>
-                  <div className="flex gap-1 text-[#D4AF37]">
-                    {[...Array(review.rating)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* --- BUKIN & LOKESHON SƐKSHON --- */}
-      <section id="reservation" className="bg-[#0A0A0A] py-24 relative border-t border-[#D4AF37]/10">
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            
-            {/* Bukin Fɔm */}
-            <Reveal direction="left">
-              <div className="bg-[#121212] p-10 md:p-16 rounded-[60px] border border-[#D4AF37]/30 glow-gold relative overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
                 
-                <h3 className="text-3xl font-serif text-white mb-2 text-center">Buk Yu Tebu</h3>
-                <p className="text-white/50 mb-10 text-xs tracking-wider uppercase text-center font-bold">Buk wi fyn it say nw.</p>
-                
-                <form onSubmit={handleReservation} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <input required name="name" type="text" className="w-full bg-[#050505] border border-white/10 rounded-[50px] px-6 py-4 text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Ful Nem" />
-                    </div>
-                    <div>
-                      <input required name="phone" type="tel" className="w-full bg-[#050505] border border-white/10 rounded-[50px] px-6 py-4 text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Fon Nomba" />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <select required name="guests" className="w-full bg-[#050505] border border-white/10 rounded-[50px] px-6 py-4 text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors appearance-none">
-                        <option value="" disabled selected className="text-white/50">Gɛst dem</option>
-                        {[1,2,3,4,5,6,7,8].map(num => <option key={num} value={num}>{num} Pɔsin</option>)}
-                        <option value="9+">9+ Pɔsin dem</option>
-                      </select>
-                    </div>
-                    <div>
-                      <input required name="date" type="date" className="w-full bg-[#050505] border border-white/10 rounded-[50px] px-6 py-4 text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [color-scheme:dark]" />
-                    </div>
-                    <div>
-                      <input required name="time" type="time" className="w-full bg-[#050505] border border-white/10 rounded-[50px] px-6 py-4 text-white text-sm focus:outline-none focus:border-[#D4AF37] transition-colors [color-scheme:dark]" />
-                    </div>
-                  </div>
-
-                  <button type="submit" className="w-full mt-6 bg-[#D4AF37] text-black py-5 rounded-[50px] font-bold tracking-widest uppercase text-xs hover:bg-[#F3E5AB] transition-colors duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)]">
-                    Buk pan WhatsApp <MessageCircle size={16} />
+                <div className="pt-10 flex flex-col items-center gap-6">
+                  <button type="submit" className="w-full md:w-auto px-16 py-5 rounded-[40px] bg-gradient-to-r from-[#d4af37] via-[#f3e5b1] to-[#aa8323] bg-[length:200%_auto] hover:bg-right text-black font-bold tracking-widest uppercase shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_60px_rgba(212,175,55,0.8)] hover:scale-105 transition-all duration-500">
+                    Confirm Reservation
                   </button>
-                </form>
-              </div>
-            </Reveal>
-
-            {/* Lokeshon & Map */}
-            <Reveal direction="right" id="location" className="flex flex-col justify-between">
-              <div className="mb-10 bg-[#121212] p-10 rounded-[50px] border border-white/5">
-                <h3 className="text-3xl font-serif text-white mb-8">Say we wi de an Tem</h3>
-                
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/10 flex items-center justify-center shrink-0 border border-[#D4AF37]/30">
-                      <MapPin className="text-[#D4AF37]" size={18} />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold mb-1 tracking-wider uppercase text-xs">Adres</h4>
-                      <p className="text-white/60 text-sm leading-relaxed font-light">
-                        Shop #G14, Al Ain Center<br/>
-                        Al Mankhool Rd, Dubai, UAE
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/10 flex items-center justify-center shrink-0 border border-[#D4AF37]/30">
-                      <Phone className="text-[#D4AF37]" size={18} />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold mb-1 tracking-wider uppercase text-xs">Kɔntakt</h4>
-                      <p className="text-white/60 text-sm font-light">+971 58 146 7575</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/10 flex items-center justify-center shrink-0 border border-[#D4AF37]/30">
-                      <Clock className="text-[#D4AF37]" size={18} />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold mb-1 tracking-wider uppercase text-xs">Tem we wi de Opin</h4>
-                      <p className="text-white/60 text-sm font-light">Evri De: 11:00 AM - 1:00 AM</p>
-                    </div>
-                  </div>
                 </div>
-              </div>
-
-              {/* Map Pikcho */}
-              <div className="relative h-48 w-full bg-[#111] overflow-hidden group rounded-[100px] border border-[#D4AF37]/30 p-2 glow-gold">
-                <div className="w-full h-full rounded-[100px] overflow-hidden relative">
-                  <img 
-                    src="https://image2url.com/r2/default/images/1773855914103-338ffd19-feea-4251-a3c6-2740918527a4.jpg" 
-                    alt="Map we sho de lokeshon" 
-                    className="w-full h-full object-cover opacity-50 mix-blend-luminosity group-hover:scale-105 transition-transform duration-1000"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-80"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <a href="https://maps.google.com/?q=Food+Spot+Restaurant+Al+Ain+Center+Dubai" target="_blank" rel="noreferrer" className="bg-black/80 backdrop-blur-md text-[#D4AF37] px-8 py-4 rounded-[50px] border border-[#D4AF37]/50 text-xs font-bold tracking-widest uppercase hover:bg-[#D4AF37] hover:text-black transition-colors flex items-center gap-2">
-                      <Navigation size={14} fill="currentColor" /> Gɛt Darɛkshɔn
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-
-          </div>
+              </form>
+            </>
+          )}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+};
 
-      {/* --- FUTA --- */}
-      <footer className="bg-[#050505] pt-24 pb-10 rounded-t-[50px] md:rounded-t-[100px] border-t border-[#D4AF37]/20 relative mt-[-20px] z-20 shadow-[0_-10px_30px_rgba(212,175,55,0.05)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 text-center md:text-left">
-            
-            <div className="col-span-1 md:col-span-2 flex flex-col items-center md:items-start">
-              <div className="text-3xl font-serif text-white mb-6">
-                <span className="text-[#D4AF37]">Fud</span> Spot
-              </div>
-              <p className="text-white/50 text-sm leading-relaxed max-w-xs font-light">
-                Di fayn it an di fos klas tin dem we i mɛk fo wi pipul we de na Dubay.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center md:items-start">
-              <h4 className="text-[#D4AF37] font-bold mb-6 tracking-widest uppercase text-xs">Luk Arawn</h4>
-              <ul className="space-y-4 text-white/50 text-sm font-light">
-                <li><a href="#about" className="hover:text-[#D4AF37] transition-colors">Wi Tori</a></li>
-                <li><a href="#menu" className="hover:text-[#D4AF37] transition-colors">Gol Menyoo</a></li>
-                <li><a href="#gallery" className="hover:text-[#D4AF37] transition-colors">Pikcho Dem</a></li>
-                <li><a href="#reservation" className="hover:text-[#D4AF37] transition-colors">Buk Naw</a></li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col items-center md:items-start">
-              <h4 className="text-[#D4AF37] font-bold mb-6 tracking-widest uppercase text-xs">Soshial Dem</h4>
-              <div className="flex gap-4">
-                <a href="#" className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/70 hover:text-black hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all"><Instagram size={18} /></a>
-                <a href="#" className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/70 hover:text-black hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all"><Facebook size={18} /></a>
-                <a href="#" className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/70 hover:text-black hover:bg-[#D4AF37] hover:border-[#D4AF37] transition-all"><Twitter size={18} /></a>
-              </div>
-            </div>
-
-          </div>
+const ContactMap = () => {
+  return (
+    <section id="contact" className="bg-[#000000] py-24">
+      <div className="flex flex-col lg:flex-row h-auto lg:h-[650px] max-w-7xl mx-auto px-6 gap-8">
+        
+        {/* Contact Info */}
+        <div className="w-full lg:w-1/3 p-12 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-[#0a0805] to-[#000] border border-[#d4af37]/30 rounded-[40px] shadow-[0_0_40px_rgba(212,175,55,0.1)] relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/5 rounded-full blur-[80px]"></div>
           
-          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-white/30 tracking-wider font-light">
-            <p>&copy; {new Date().getFullYear()} Fud Spot Rɛstɔrant & Kafitiria. All rights reserved.</p>
-            <div className="flex gap-4 mt-4 md:mt-0">
-              <a href="#" className="hover:text-white transition-colors">Prayvesi Pɔlisi</a>
-              <a href="#" className="hover:text-white transition-colors">Tams of Savis</a>
+          <h3 className="text-4xl font-serif text-[#f3e5b1] mb-12 drop-shadow-[0_0_15px_rgba(212,175,55,0.2)]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Contact <GoldText>Us</GoldText>
+          </h3>
+          
+          <div className="space-y-10 relative z-10">
+            <div className="flex items-start gap-5 group">
+              <MapPin className="text-[#d4af37] mt-1 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] transition-all" size={28} />
+              <div>
+                <h4 className="text-[#d4af37] tracking-widest uppercase text-sm mb-2 font-bold">Location</h4>
+                <p className="text-[#bca773] font-light text-lg">{RESTAURANT.location}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-5 group">
+              <Phone className="text-[#d4af37] mt-1 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] transition-all" size={28} />
+              <div>
+                <h4 className="text-[#d4af37] tracking-widest uppercase text-sm mb-2 font-bold">Reservations</h4>
+                <a href={`tel:${RESTAURANT.phone}`} className="text-[#bca773] font-light text-lg hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.5)] transition-all block">
+                  {RESTAURANT.phone}
+                </a>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-5 group">
+              <Clock className="text-[#d4af37] mt-1 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] transition-all" size={28} />
+              <div>
+                <h4 className="text-[#d4af37] tracking-widest uppercase text-sm mb-2 font-bold">Hours</h4>
+                <p className="text-[#bca773] font-light text-lg">{RESTAURANT.openHours}</p>
+              </div>
             </div>
           </div>
         </div>
-      </footer>
 
-      {/* --- WHATSAPP BƆTIN --- */}
-      <a 
-        href="https://wa.me/971581467575?text=Adu,%20A%20want%20fo%20buk%20tebu%20na%20Fud%20Spot%20Rɛstɔrant%20&%20Kafitiria" 
-        target="_blank" 
-        rel="noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 transition-transform duration-300 group flex items-center gap-0 overflow-hidden"
-        aria-label="Chat pan WhatsApp"
-      >
-        <MessageCircle size={28} />
-        <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out font-bold tracking-wide text-xs pl-0 group-hover:pl-3 uppercase">
-          Buk Tebu
-        </span>
-      </a>
+        {/* Map Embed */}
+        <div className="w-full lg:w-2/3 h-[400px] lg:h-full relative grayscale-[40%] hover:grayscale-0 transition-all duration-1000 rounded-[40px] overflow-hidden border border-[#d4af37]/30 shadow-[0_0_40px_rgba(212,175,55,0.1)] z-10">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14431.603300589133!2d55.30908155!3d25.273934399999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5ccaeb199677%3A0x8e82a87b7a6962f9!2sAl%20Rasheed%20Rd%20-%20Dubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1711200000000!5m2!1sen!2sus" 
+            style={{ border: 0, width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} 
+            allowFullScreen="" 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Restaurant Location"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-    </>
+const Footer = () => {
+  return (
+    <footer className="bg-[#050402] pt-28 pb-12 border-t border-[#d4af37]/20 text-center relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#d4af37]/5 rounded-full blur-[150px] pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* VIP Club Newsletter Section */}
+        <div className="mb-24 max-w-3xl mx-auto bg-gradient-to-b from-[#0a0805] to-[#000000] p-10 md:p-14 rounded-[40px] border border-[#d4af37]/30 shadow-[0_0_50px_rgba(212,175,55,0.1)] relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#d4af37]/10 rounded-full blur-[50px] pointer-events-none"></div>
+          <h4 className="text-[#f3e5b1] font-serif text-3xl md:text-4xl mb-4 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Join the <GoldText>VIP Club</GoldText>
+          </h4>
+          <p className="text-[#bca773] text-sm md:text-base mb-10 max-w-xl mx-auto">
+            Subscribe to receive exclusive invitations to private tasting events, chef's specials, and priority reservations.
+          </p>
+          <form className="flex flex-col sm:flex-row gap-4 justify-center" onSubmit={(e) => e.preventDefault()}>
+            <input 
+              type="email" 
+              placeholder="Enter your email address" 
+              required
+              className="bg-[#050402] border border-[#d4af37]/40 rounded-full px-8 py-4 text-[#f3e5b1] focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all w-full sm:w-2/3 font-semibold" 
+            />
+            <button className="bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold uppercase tracking-widest px-8 py-4 rounded-full shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-105 transition-all duration-300">
+              Subscribe
+            </button>
+          </form>
+        </div>
+
+        <a href="#home" className="inline-block text-3xl font-serif text-[#f3e5b1] tracking-widest flex-col items-center mb-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+          <span style={{ fontFamily: "'Playfair Display', serif" }}>NJOOM AL AAELAH</span>
+        </a>
+        
+        <div className="flex justify-center gap-6 mb-16">
+          <a href="#" className="w-14 h-14 rounded-full border border-[#d4af37]/30 flex items-center justify-center text-[#bca773] hover:text-black hover:bg-[#d4af37] hover:border-[#d4af37] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300">
+            <Instagram size={24} />
+          </a>
+          <a href="#" className="w-14 h-14 rounded-full border border-[#d4af37]/30 flex items-center justify-center text-[#bca773] hover:text-black hover:bg-[#d4af37] hover:border-[#d4af37] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300">
+            <Facebook size={24} />
+          </a>
+          <a href="#" className="w-14 h-14 rounded-full border border-[#d4af37]/30 flex items-center justify-center text-[#bca773] hover:text-black hover:bg-[#d4af37] hover:border-[#d4af37] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300">
+            <Twitter size={24} />
+          </a>
+        </div>
+
+        <div className="text-[#9e8a52] text-sm tracking-widest uppercase flex flex-col md:flex-row justify-center items-center gap-6 md:gap-16 font-bold border-t border-[#d4af37]/20 pt-10">
+          <p>&copy; {new Date().getFullYear()} Njoom Al Aaelah. All rights reserved.</p>
+          <div className="flex justify-center gap-6 md:gap-16">
+            <a href="#" className="hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.8)] transition-all">Privacy Policy</a>
+            <a href="#" className="hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.8)] transition-all">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// Floating WhatsApp Button
+const FloatingWhatsApp = () => (
+  <motion.a
+    initial={{ scale: 0 }}
+    animate={{ scale: 1 }}
+    transition={{ delay: 2, type: 'spring' }}
+    href={`https://wa.me/${RESTAURANT.whatsapp}`}
+    target="_blank"
+    rel="noreferrer"
+    className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-[#25D366] to-[#1ebd5a] text-white p-5 rounded-full shadow-[0_0_30px_rgba(37,211,102,0.4)] hover:shadow-[0_0_50px_rgba(37,211,102,0.7)] transition-all duration-300 flex items-center justify-center group border border-white/20 hover:scale-110"
+  >
+    <MessageCircle size={32} />
+    <span className="absolute right-full mr-6 bg-[#000] border border-[#d4af37]/30 text-[#f3e5b1] px-5 py-3 rounded-[40px] text-sm font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+      Chat with us
+    </span>
+  </motion.a>
+);
+
+// --- MAIN APP COMPONENT ---
+
+export default function App() {
+  // Inject Premium Fonts
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    
+    // Smooth scrolling CSS fallback
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    return () => {
+      document.head.removeChild(link);
+      document.documentElement.style.scrollBehavior = 'auto';
+    };
+  }, []);
+
+  return (
+    <div className="bg-[#000000] min-h-screen text-[#f3e5b1] font-sans selection:bg-[#d4af37] selection:text-black">
+      <ThreeBackground />
+      <CustomCursor />
+      <Navbar />
+      <main className="relative z-10">
+        <Hero />
+        <About />
+        <Menu />
+        <Gallery />
+        <Testimonials />
+        <Reservation />
+        <ContactMap />
+      </main>
+      <Footer />
+      <FloatingWhatsApp />
+    </div>
   );
 }
