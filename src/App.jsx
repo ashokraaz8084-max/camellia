@@ -1,945 +1,674 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 import { 
-  Phone, 
-  MapPin, 
-  Clock, 
-  Instagram, 
-  Facebook, 
-  Twitter, 
-  Star, 
-  ChevronRight,
-  Menu as MenuIcon,
-  X,
-  MessageCircle,
-  CheckCircle
+  ShoppingCart, X, Plus, Minus, Phone, MapPin, 
+  Clock, Star, ChevronRight, Menu as MenuIcon, Instagram, Facebook, Twitter
 } from 'lucide-react';
 
-// --- CONFIGURATION & DATA ---
+// --- STYLES & FONTS INJECTION ---
+const globalStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
 
-const RESTAURANT = {
-  name: "Njoom Al Aaelah",
-  subtitle: "Kitchen & Restaurant",
-  location: "78MP+223 - Al Rasheed Rd, Dubai, UAE",
-  phone: "+971 50 787 8576",
-  whatsapp: "971507878576",
-  email: "reservations@njoomalaaelah.com",
-  openHours: "Daily: 12:00 PM - 2:00 AM"
-};
+  html {
+    scroll-behavior: smooth;
+    background-color: #000;
+  }
 
-// Simulated Headless CMS Data Hook (Sanity/Strapi ready)
-const MENU = {
-  starters: [
-    { name: 'Arabic Mezze Platter', description: 'A selection of traditional dips, salads, and warm pita.', price: 'AED 45', image: 'https://image2url.com/r2/default/images/1774100305816-29efa7b5-6abb-4a41-9070-44a140e6b2b8.jpg' },
-    { name: 'Hummus with Bread', description: 'Silky smooth chickpea dip with olive oil and pine nuts.', price: 'AED 30', image: 'https://image2url.com/r2/default/images/1774100340329-62aec995-716c-4e55-a385-8d7f6338948a.jpg' },
-    { name: 'Wagyu Beef Carpaccio', description: 'Thinly sliced premium beef with truffle oil and parmesan.', price: 'AED 85', image: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Crispy Calamari', description: 'Lightly dusted calamari rings with saffron aioli.', price: 'AED 55', image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=400' },
-  ],
-  mains: [
-    { name: 'Grilled Lamb Chops', description: 'Prime lamb chops marinated in rosemary and garlic, char-grilled.', price: 'AED 120', image: 'https://image2url.com/r2/default/images/1774100382814-5ed1908d-83f7-4055-a2d9-d2279031205d.jpg' },
-    { name: 'Seafood Platter', description: 'Lobster tail, jumbo prawns, scallops, and catch of the day.', price: 'AED 150', image: 'https://image2url.com/r2/default/images/1774100418142-8df91140-e098-42a7-b2b1-bd2d239e36db.jpg' },
-    { name: 'Truffle Mushroom Risotto', description: 'Arborio rice with wild mushrooms, black truffle, and aged parmesan.', price: 'AED 95', image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Saffron Glazed Black Cod', description: 'Miso and saffron marinated black cod with asparagus.', price: 'AED 180', image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&q=80&w=400' },
-  ],
-  desserts: [
-    { name: 'Kunafa', description: 'Traditional warm cheese pastry soaked in sweet rose syrup.', price: 'AED 40', image: 'https://images.unsplash.com/photo-1621300977465-3592eb09ba96?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Baklava', description: 'Layers of filo pastry with chopped nuts and honey.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1599598425947-33000c28aa9c?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Gold Leaf Chocolate Fondant', description: 'Valrhona chocolate fondant topped with 24k edible gold.', price: 'AED 75', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&q=80&w=400' },
-  ],
-  beverages: [
-    { name: '24k Gold Cappuccino', description: 'Premium espresso blended with steamed milk, topped with 24k gold flakes.', price: 'AED 60', image: 'https://images.unsplash.com/photo-1534040385115-33dcb3acba5b?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Rose Water Lemonade', description: 'Freshly squeezed lemons infused with pure Damask rose water.', price: 'AED 35', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Mint Tea Pot', description: 'Traditional Moroccan mint tea served in a silver pot.', price: 'AED 45', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&q=80&w=400' },
-  ]
-};
+  body {
+    font-family: 'Lato', sans-serif;
+    background-color: #000;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .text-gold {
+    color: #D4AF37;
+  }
+  
+  .bg-gold {
+    background-color: #D4AF37;
+  }
+
+  .border-gold {
+    border-color: #D4AF37;
+  }
+
+  .gold-gradient-text {
+    background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gold-gradient-bg {
+    background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728);
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  }
+
+  .glass-panel {
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D4AF37;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b5952f;
+  }
+`;
+
+// --- MOCK DATA ---
+const MENU_ITEMS = [
+  {
+    id: 1,
+    name: "Truffle & Gold Arancini",
+    description: "Wild mushroom risotto spheres, black truffle center, 24k gold leaf garnish.",
+    price: 120,
+    category: "Starters",
+    image: "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg"
+  },
+  {
+    id: 2,
+    name: "Wagyu Beef Tartare",
+    description: "Grade A5 Wagyu, quail egg yolk, beluga caviar, charcoal crisps.",
+    price: 185,
+    category: "Starters",
+    image: "https://image2url.com/r2/default/images/1774110709609-0cf13fe4-c2ea-4e13-8547-66765f8c02df.jpg"
+  },
+  {
+    id: 3,
+    name: "Golden Tomahawk Steak",
+    description: "1.2kg Prime Tomahawk, fully encased in edible 24-karat gold, served with signature sides.",
+    price: 1250,
+    category: "Main Course",
+    image: "https://image2url.com/r2/default/images/1774110745040-e3060498-012b-4731-918b-618ec3040e69.jpg"
+  },
+  {
+    id: 4,
+    name: "Saffron Lobster Thermidor",
+    description: "Fresh Omani lobster, creamy saffron & cognac sauce, gruyere crust.",
+    price: 450,
+    category: "Main Course",
+    image: "https://image2url.com/r2/default/images/1774110784939-c135172d-afc7-49d9-aae9-78c69e8fab26.jpg"
+  },
+  {
+    id: 5,
+    name: "Royal Black Cod",
+    description: "Miso-glazed black cod, yuzu infused asparagus, edible flowers.",
+    price: 320,
+    category: "Main Course",
+    image: "https://image2url.com/r2/default/images/1774110824941-bde0d96b-7e53-4488-ac4e-2a3e8e34f887.jpg"
+  },
+  {
+    id: 6,
+    name: "24K Chocolate Sphere",
+    description: "Valrhona dark chocolate, hot caramel pour, hazelnut praline core.",
+    price: 150,
+    category: "Desserts",
+    image: "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg"
+  },
+  {
+    id: 7,
+    name: "Pistachio & Rose Baklava",
+    description: "Deconstructed premium baklava, Iranian pistachio ice cream, rose nectar.",
+    price: 95,
+    category: "Desserts",
+    image: "https://image2url.com/r2/default/images/1774110709609-0cf13fe4-c2ea-4e13-8547-66765f8c02df.jpg"
+  },
+  {
+    id: 8,
+    name: "The Emirati Elixir",
+    description: "Signature mocktail with saffron, gold dust, fresh lemon, and smoked rosemary.",
+    price: 65,
+    category: "Drinks",
+    image: "https://image2url.com/r2/default/images/1774110745040-e3060498-012b-4731-918b-618ec3040e69.jpg"
+  }
+];
 
 const REVIEWS = [
-  { name: "Ahmed Al Maktoum", text: "Absolutely world-class dining experience in Dubai! The lamb chops are unmatched.", rating: 5 },
-  { name: "Sarah Jenkins", text: "The ambiance is incredibly luxurious. Perfect for our anniversary dinner. Highly recommend the Seafood Platter.", rating: 5 },
-  { name: "Faisal R.", text: "Exceptional service and authentic flavors elevated to fine dining. A true hidden gem on Al Rasheed Rd.", rating: 5 },
+  { name: "Sheikh H.", text: "An absolute masterpiece of culinary art. The gold tomahawk was an unforgettable experience.", rating: 5 },
+  { name: "Elena R.", text: "The epitome of Dubai luxury dining. Impeccable service and the truffle arancini are divine.", rating: 5 },
+  { name: "James T.", text: "From the ambiance to the final dessert, everything screams perfection. 10/10.", rating: 5 }
 ];
 
-const GALLERY_IMAGES = [
-  "https://image2url.com/r2/default/images/1774100204319-cb069ff7-6f6a-4c4a-ab67-5b09347eb12c.jpg",
-  "https://image2url.com/r2/default/images/1774100255213-c1b11a2e-7179-4572-a967-6355d6bc9966.jpg",
-  "https://image2url.com/r2/default/images/1774100305816-29efa7b5-6abb-4a41-9070-44a140e6b2b8.jpg",
-  "https://image2url.com/r2/default/images/1774100340329-62aec995-716c-4e55-a385-8d7f6338948a.jpg",
-  "https://image2url.com/r2/default/images/1774100382814-5ed1908d-83f7-4055-a2d9-d2279031205d.jpg",
-  "https://image2url.com/r2/default/images/1774100418142-8df91140-e098-42a7-b2b1-bd2d239e36db.jpg",
-  "https://image2url.com/r2/default/images/1774100454596-1cbb0008-4c08-421b-9dc6-fa6012107310.jpg",
-  "https://image2url.com/r2/default/images/1774100516322-2ef4d567-380e-4608-83be-6ccca8527eae.jpg",
-  "https://image2url.com/r2/default/images/1774100546847-4b5f8ef8-caab-455b-a623-55819f9a6f6c.jpg"
+const GALLERY = [
+  "https://image2url.com/r2/default/images/1774110784939-c135172d-afc7-49d9-aae9-78c69e8fab26.jpg",
+  "https://image2url.com/r2/default/images/1774110824941-bde0d96b-7e53-4488-ac4e-2a3e8e34f887.jpg",
+  "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg",
+  "https://image2url.com/r2/default/images/1774110709609-0cf13fe4-c2ea-4e13-8547-66765f8c02df.jpg",
 ];
 
-// --- UTILITY COMPONENTS ---
 
-const GoldText = ({ children }) => (
-  <span className="text-[#d4af37] drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">{children}</span>
-);
+export default function App() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("Starters");
+  const [reservationData, setReservationData] = useState({ name: '', phone: '', date: '' });
 
-const SectionHeading = ({ title, subtitle }) => (
-  <div className="text-center mb-16">
-    <motion.h3 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="text-[#d4af37] tracking-[0.3em] text-sm md:text-base uppercase mb-4 font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]"
-    >
-      {subtitle}
-    </motion.h3>
-    <motion.h2 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: 0.1 }}
-      className="text-4xl md:text-5xl lg:text-7xl font-serif text-[#f3e5b1] drop-shadow-[0_0_20px_rgba(212,175,55,0.2)]"
-      style={{ fontFamily: "'Playfair Display', serif" }}
-    >
-      {title}
-    </motion.h2>
-    <div className="w-24 h-[2px] bg-[#d4af37] mx-auto mt-8 shadow-[0_0_15px_rgba(212,175,55,0.8)] rounded-full"></div>
-  </div>
-);
-
-// --- 3D LUXURY BACKGROUND (Three.js) ---
-const ThreeBackground = () => {
-  const mountRef = useRef(null);
-
-  useEffect(() => {
-    let frameId;
-    let scene, camera, renderer, particlesMesh;
-
-    const initThree = () => {
-      if (!window.THREE || !mountRef.current) return;
-      const THREE = window.THREE;
-
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      mountRef.current.appendChild(renderer.domElement);
-
-      // Gold particles
-      const particlesGeometry = new THREE.BufferGeometry();
-      const particlesCount = 300;
-      const posArray = new Float32Array(particlesCount * 3);
-      
-      for(let i = 0; i < particlesCount * 3; i++) {
-        posArray[i] = (Math.random() - 0.5) * 15; // Spread
-      }
-      
-      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-      const material = new THREE.PointsMaterial({
-        size: 0.02,
-        color: 0xd4af37, // Gold
-        transparent: true,
-        opacity: 0.4,
-        blending: THREE.AdditiveBlending
-      });
-      
-      particlesMesh = new THREE.Points(particlesGeometry, material);
-      scene.add(particlesMesh);
-      camera.position.z = 4;
-
-      let mouseX = 0;
-      let mouseY = 0;
-
-      const animate = () => {
-        frameId = requestAnimationFrame(animate);
-        particlesMesh.rotation.y += 0.0005;
-        particlesMesh.rotation.x += 0.0002;
-        // Subtle parallax
-        particlesMesh.position.x += (mouseX * 0.001 - particlesMesh.position.x) * 0.05;
-        particlesMesh.position.y += (-mouseY * 0.001 - particlesMesh.position.y) * 0.05;
-        renderer.render(scene, camera);
-      };
-      
-      animate();
-
-      const handleMouseMove = (event) => {
-        mouseX = event.clientX - window.innerWidth / 2;
-        mouseY = event.clientY - window.innerHeight / 2;
-      };
-      
-      const handleResize = () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      };
-
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('resize', handleResize);
-    };
-
-    // Dynamically inject Three.js script
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = initThree;
-    document.head.appendChild(script);
-
-    return () => {
-      if (frameId) cancelAnimationFrame(frameId);
-      if (renderer && mountRef.current) mountRef.current.removeChild(renderer.domElement);
-      if (document.head.contains(script)) document.head.removeChild(script);
-    };
-  }, []);
-
-  return <div ref={mountRef} className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" />;
-};
-
-// --- MAIN COMPONENTS ---
-
-const CustomCursor = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleMouseOver = (e) => {
-      if (e.target.tagName.toLowerCase() === 'button' || 
-          e.target.tagName.toLowerCase() === 'a' ||
-          e.target.closest('button') || 
-          e.target.closest('a')) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-
-    window.addEventListener('mousemove', updateMousePosition);
-    window.addEventListener('mouseover', handleMouseOver);
-
-    return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
-      window.removeEventListener('mouseover', handleMouseOver);
-    };
-  }, []);
-
-  return (
-    <motion.div
-      className="fixed top-0 left-0 w-8 h-8 border-2 border-[#d4af37] rounded-full pointer-events-none z-[100] mix-blend-screen hidden md:flex justify-center items-center shadow-[0_0_15px_rgba(212,175,55,0.5)]"
-      animate={{
-        x: mousePosition.x - 16,
-        y: mousePosition.y - 16,
-        scale: isHovering ? 1.5 : 1,
-        backgroundColor: isHovering ? 'rgba(212, 175, 55, 0.2)' : 'transparent',
-      }}
-      transition={{ type: 'tween', ease: 'backOut', duration: 0.15 }}
-    >
-      <motion.div className="w-1.5 h-1.5 bg-[#f3e5b1] rounded-full shadow-[0_0_10px_rgba(243,229,177,1)]" />
-    </motion.div>
-  );
-};
-
-const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  // Handle Scroll for Navbar
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Story', href: '#about' },
-    { name: 'Menu', href: '#menu' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  // Cart Functions
+  const addToCart = (item) => {
+    setCart(prev => {
+      const existing = prev.find(i => i.id === item.id);
+      if (existing) {
+        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { ...item, quantity: 1 }];
+    });
+    setIsCartOpen(true);
+  };
+
+  const updateQuantity = (id, delta) => {
+    setCart(prev => prev.map(item => {
+      if (item.id === id) {
+        const newQuantity = item.quantity + delta;
+        return newQuantity > 0 ? { ...item, quantity: newQuantity } : null;
+      }
+      return item;
+    }).filter(Boolean));
+  };
+
+  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // WhatsApp Checkout Function
+  const handleWhatsAppOrder = () => {
+    if (cart.length === 0) return;
+
+    const phoneNumber = "971523385425";
+    let message = `*Hello Kitchen Shate AlHamriah, I would like to place an order:*\n\n`;
+    
+    message += `*Items:*\n`;
+    cart.forEach(item => {
+      message += `- ${item.name} x${item.quantity} (AED ${item.price * item.quantity})\n`;
+    });
+    
+    message += `\n*Total: AED ${cartTotal}*\n\n`;
+    message += `*Customer Details:*\n`;
+    message += `Name: \n`;
+    message += `Delivery Address / Table No: \n`;
+    message += `Special Instructions: `;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+  };
+
+  // WhatsApp Reservation Function
+  const handleReservation = (e) => {
+    e.preventDefault();
+    const phoneNumber = "971523385425";
+    const message = `*Luxury Dining Reservation Request* 🍽️\n\n*Name:* ${reservationData.name}\n*Phone:* ${reservationData.phone}\n*Date:* ${reservationData.date}\n\nPlease confirm availability.`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+    
+    // Clear form after submitting
+    setReservationData({ name: '', phone: '', date: '' });
+  };
+
+  const categories = ["Starters", "Main Course", "Desserts", "Drinks"];
 
   return (
-    <>
-      <nav 
-        className={`fixed w-full z-50 transition-all duration-500 ${
-          scrolled ? 'bg-[#000000]/95 backdrop-blur-xl border-b border-[#d4af37]/20 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]' : 'bg-transparent py-6'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <a href="#home" className="text-2xl font-serif text-[#f3e5b1] tracking-widest flex flex-col items-center drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">
-            <span style={{ fontFamily: "'Playfair Display', serif" }}>NJOOM AL AAELAH</span>
-            <span className="text-[0.5rem] tracking-[0.4em] text-[#d4af37] uppercase font-bold mt-1">Kitchen & Restaurant</span>
-          </a>
+    <div className="relative min-h-screen bg-black text-white selection:bg-[#D4AF37] selection:text-black">
+      <style>{globalStyles}</style>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                className="text-sm text-[#bca773] hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.5)] transition-all tracking-widest uppercase font-semibold"
-              >
-                {link.name}
-              </a>
-            ))}
-            <a 
-              href="#reservation"
-              className="px-8 py-3 rounded-[40px] bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] transition-all duration-300 tracking-widest text-sm uppercase scale-100 hover:scale-105"
-            >
-              Book a Table
-            </a>
+      {/* --- NAVBAR --- */}
+      <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-black/90 backdrop-blur-md py-4 border-b border-[#D4AF37]/30 shadow-[0_10px_40px_rgba(212,175,55,0.15)]' : 'bg-transparent py-6'}`}>
+        <div className="container mx-auto px-6 flex justify-between items-center">
+          
+          {/* Logo */}
+          <div className="flex flex-col">
+            <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-wider gold-gradient-text uppercase">
+              Kitchen Shate
+            </h1>
+            <span className="text-[10px] md:text-xs tracking-[0.3em] text-gray-400 uppercase mt-1">Al Hamriah</span>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="md:hidden text-[#d4af37]"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
-          </button>
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center space-x-10">
+            {['Home', 'About', 'Menu', 'Gallery', 'Reservation'].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="text-sm uppercase tracking-widest hover:text-[#D4AF37] transition-colors duration-300">
+                {item}
+              </a>
+            ))}
+          </div>
+
+          {/* Icons (Cart & Mobile Menu) */}
+          <div className="flex items-center space-x-6">
+            <button onClick={() => setIsCartOpen(true)} className="relative group p-2">
+              <ShoppingCart className="w-6 h-6 text-white group-hover:text-[#D4AF37] transition-colors" />
+              {cartItemCount > 0 && (
+                <span className="absolute top-0 right-0 bg-[#D4AF37] text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </button>
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden text-white">
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-xl border-b border-[#D4AF37]/20 py-6 px-6 flex flex-col space-y-6">
+            {['Home', 'About', 'Menu', 'Gallery', 'Reservation'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase()}`} 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-lg uppercase tracking-widest font-serif border-b border-zinc-800 pb-2 hover:text-[#D4AF37]"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        )}
       </nav>
 
-      {/* Mobile Nav */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-[#050402] pt-24 px-6 flex flex-col items-center border-b border-[#d4af37]/20"
-          >
-            {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-2xl text-[#bca773] hover:text-[#f3e5b1] transition-colors my-4 font-serif"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-              >
-                {link.name}
-              </a>
-            ))}
-            <a 
-              href="#reservation"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-8 px-8 py-4 rounded-[40px] bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold shadow-[0_0_20px_rgba(212,175,55,0.4)] tracking-widest uppercase w-full max-w-xs text-center"
-            >
-              Book a Table
-            </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-
-const Hero = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 1000], [0, 400]);
-  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
-
-  return (
-    <section id="home" className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-[#000]">
-      <motion.div 
-        style={{ y, opacity }}
-        className="absolute inset-0 w-full h-full"
-      >
-        <div className="absolute inset-0 bg-black/60 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-[#050402]/50 to-[#000000] z-10" />
-        <img 
-          src="https://image2url.com/r2/default/images/1774100204319-cb069ff7-6f6a-4c4a-ab67-5b09347eb12c.jpg" 
-          alt="Luxury Dining"
-          className="w-full h-full object-cover"
-        />
-      </motion.div>
-
-      <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
-        >
-          <p className="text-[#d4af37] tracking-[0.4em] uppercase text-sm md:text-base mb-6 font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
-            Premium Fine Dining Experience
-          </p>
-          <h1 
-            className="text-5xl md:text-7xl lg:text-8xl text-[#f3e5b1] font-serif leading-tight mb-8 drop-shadow-[0_0_30px_rgba(212,175,55,0.3)]"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
-            Experience Royal Dining <br className="hidden md:block" /> in Dubai
-          </h1>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
-            <a 
-              href="#reservation"
-              className="group relative px-10 py-5 bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold tracking-widest uppercase overflow-hidden rounded-[40px] shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_50px_rgba(212,175,55,0.7)] transition-all duration-500 scale-100 hover:scale-105"
-            >
-              <div className="absolute inset-0 w-0 bg-white transition-all duration-[400ms] ease-out group-hover:w-full opacity-20"></div>
-              <span className="relative">Book a Table</span>
-            </a>
-            <a 
-              href="#menu"
-              className="px-10 py-5 border-2 border-[#d4af37]/50 text-[#d4af37] hover:bg-[#d4af37] hover:text-black rounded-[40px] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all duration-500 tracking-widest uppercase font-bold backdrop-blur-sm"
-            >
-              Explore Menu
-            </a>
+      {/* --- CART SIDEBAR --- */}
+      <div className={`fixed inset-0 z-[60] transition-opacity duration-300 ${isCartOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCartOpen(false)} />
+        
+        {/* Sidebar */}
+        <div className={`absolute top-0 right-0 h-full w-full sm:w-[400px] glass-panel border-l border-[#D4AF37]/40 shadow-[-20px_0_50px_rgba(212,175,55,0.15)] transform transition-transform duration-500 ease-in-out flex flex-col ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="flex justify-between items-center p-6 border-b border-[#D4AF37]/20">
+            <h2 className="font-serif text-2xl text-gold">Your Order</h2>
+            <button onClick={() => setIsCartOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+              <X className="w-6 h-6" />
+            </button>
           </div>
-        </motion.div>
-      </div>
 
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center"
-      >
-        <span className="text-[#bca773] text-xs tracking-[0.2em] uppercase mb-4 font-semibold">Scroll to explore</span>
-        <div className="w-[2px] h-16 bg-[#d4af37]/20 relative overflow-hidden rounded-full">
-          <motion.div 
-            animate={{ y: [0, 64] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            className="absolute top-0 left-0 w-full h-1/2 bg-[#d4af37] shadow-[0_0_10px_rgba(212,175,55,1)]"
-          />
-        </div>
-      </motion.div>
-    </section>
-  );
-};
-
-const About = () => {
-  return (
-    <section id="about" className="py-24 lg:py-40 bg-[#000000] relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#d4af37]/5 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 rounded-full blur-[150px] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1 }}
-            className="relative"
-          >
-            <div className="relative z-10">
-              <img 
-                src="https://image2url.com/r2/default/images/1774100255213-c1b11a2e-7179-4572-a967-6355d6bc9966.jpg" 
-                alt="Chef preparing food" 
-                className="w-full h-[600px] object-cover rounded-[40px] grayscale-[20%] hover:grayscale-0 transition-all duration-700 shadow-[0_0_40px_rgba(212,175,55,0.1)] border border-[#d4af37]/20"
-              />
-              <div className="absolute inset-0 border-2 border-[#d4af37]/40 translate-x-6 translate-y-6 -z-10 rounded-[40px]"></div>
-            </div>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="absolute -bottom-10 -right-4 lg:-right-10 bg-[#0a0805] p-8 border border-[#d4af37]/30 shadow-[0_0_50px_rgba(212,175,55,0.15)] rounded-[40px] backdrop-blur-xl hidden md:block"
-            >
-              <p className="text-5xl font-serif text-[#d4af37] mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>15+</p>
-              <p className="text-[#9e8a52] text-sm tracking-widest uppercase font-semibold">Years of Culinary<br/>Excellence</p>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1 }}
-          >
-            <h3 className="text-[#d4af37] tracking-[0.3em] text-sm md:text-base uppercase mb-4 font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">Our Story</h3>
-            <h2 
-              className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#f3e5b1] mb-8 leading-tight drop-shadow-[0_0_20px_rgba(212,175,55,0.1)]"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              A Symphony of <GoldText>Flavors</GoldText> in the Heart of Dubai.
-            </h2>
-            <div className="space-y-6 text-[#bca773] font-light leading-relaxed text-lg">
-              <p>
-                Founded on the vibrant Al Rasheed Road, Njoom Al Aaelah represents the pinnacle of luxury dining. We blend traditional Middle Eastern heritage with contemporary culinary techniques to create an unforgettable gastronomic journey.
-              </p>
-              <p>
-                Every dish is meticulously crafted by our master chefs using only the finest, globally sourced ingredients. From our delicately spiced Arabic Mezze to our signature Gold Leaf desserts, we promise an experience that transcends the ordinary.
-              </p>
-            </div>
-            <div className="mt-12">
-              {/* Using a bright gold CSS filter to tint the signature image to match the theme */}
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Signature_of_John_Hancock.svg/1200px-Signature_of_John_Hancock.svg.png" alt="Chef Signature" className="h-16 mb-4 filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]" style={{ filter: 'invert(75%) sepia(42%) saturate(544%) hue-rotate(352deg) brightness(95%) contrast(88%)' }} />
-              <p className="text-[#d4af37] font-serif italic text-xl">Executive Chef</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Menu = () => {
-  const [activeTab, setActiveTab] = useState('starters');
-
-  return (
-    <section id="menu" className="py-24 lg:py-40 bg-[#050402] relative z-10">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <SectionHeading title="Culinary Masterpieces" subtitle="The Menu" />
-
-        {/* Menu Tabs */}
-        <div className="flex justify-center flex-wrap gap-4 md:gap-6 mb-16">
-          {Object.keys(MENU).map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveTab(category)}
-              className={`text-sm md:text-base tracking-[0.2em] uppercase px-8 py-3 rounded-[40px] transition-all duration-300 font-bold border ${
-                activeTab === category 
-                ? 'bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black border-transparent shadow-[0_0_20px_rgba(212,175,55,0.4)]' 
-                : 'bg-[#0a0805] text-[#9e8a52] border-[#d4af37]/30 hover:border-[#d4af37] hover:text-[#d4af37] hover:shadow-[0_0_15px_rgba(212,175,55,0.2)]'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {/* Menu Items */}
-        <motion.div 
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
-          {MENU[activeTab].map((item, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group cursor-pointer flex flex-col sm:flex-row gap-6 items-center sm:items-start bg-gradient-to-br from-[#0a0805] to-[#000000] p-6 border border-[#d4af37]/20 hover:border-[#d4af37]/60 hover:shadow-[0_0_40px_rgba(212,175,55,0.15)] transition-all duration-500 rounded-[40px]"
-            >
-              <div className="w-full sm:w-36 h-56 sm:h-36 overflow-hidden rounded-[30px] flex-shrink-0 relative border border-[#d4af37]/20">
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {cart.length === 0 ? (
+              <div className="text-center text-gray-400 mt-20 font-serif italic text-lg">
+                Your culinary journey has not yet begun.
               </div>
-              <div className="flex-grow w-full py-2">
-                <div className="flex justify-between items-baseline mb-3">
-                  <h4 
-                    className="text-xl md:text-2xl text-[#f3e5b1] font-serif group-hover:text-[#d4af37] transition-colors drop-shadow-[0_0_8px_rgba(212,175,55,0.1)]"
-                    style={{ fontFamily: "'Playfair Display', serif" }}
-                  >
-                    {item.name}
-                  </h4>
-                  <div className="flex-grow mx-4 border-b border-[#d4af37]/30 border-dotted relative top-[-6px] hidden sm:block"></div>
-                  <span className="text-[#d4af37] font-bold tracking-wider whitespace-nowrap ml-auto sm:ml-0 text-lg drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">{item.price}</span>
+            ) : (
+              cart.map(item => (
+                <div key={item.id} className="flex gap-4 items-center bg-black/40 p-4 rounded-2xl border border-white/5">
+                  <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-xl" />
+                  <div className="flex-1">
+                    <h4 className="font-serif text-sm text-gold">{item.name}</h4>
+                    <p className="text-xs text-gray-400 mt-1">AED {item.price}</p>
+                    <div className="flex items-center gap-3 mt-3">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-[#D4AF37]/20 rounded-full transition-colors"><Minus className="w-3 h-3" /></button>
+                      <span className="text-sm w-4 text-center">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-[#D4AF37]/20 rounded-full transition-colors"><Plus className="w-3 h-3" /></button>
+                    </div>
+                  </div>
+                  <div className="text-right font-serif text-gold">
+                    AED {item.price * item.quantity}
+                  </div>
                 </div>
-                <p className="text-[#9e8a52] text-sm font-light leading-relaxed group-hover:text-[#c4b17c] transition-colors">
-                  {item.description}
-                </p>
+              ))
+            )}
+          </div>
+
+          {cart.length > 0 && (
+            <div className="p-6 border-t border-[#D4AF37]/20 bg-black/80">
+              <div className="flex justify-between items-center mb-6">
+                <span className="font-serif text-lg text-gray-300">Total</span>
+                <span className="font-serif text-2xl text-gold">AED {cartTotal}</span>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <div className="mt-20 text-center">
-          <a href="#" className="inline-flex items-center gap-2 text-[#d4af37] hover:text-[#f3e5b1] hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-all tracking-widest uppercase text-sm font-bold">
-            Download Full Menu <ChevronRight size={18} />
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Gallery = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  return (
-    <section id="gallery" className="py-24 bg-[#000000] relative z-10">
-      <SectionHeading title="The Ambiance" subtitle="Gallery" />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 max-w-7xl mx-auto">
-        {GALLERY_IMAGES.map((src, index) => (
-          <motion.div 
-            key={index}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.8 }}
-            className="relative h-[400px] overflow-hidden group cursor-pointer rounded-[40px] border border-[#d4af37]/20 hover:border-[#d4af37]/60 hover:shadow-[0_0_40px_rgba(212,175,55,0.2)] transition-all duration-500"
-            onClick={() => setSelectedImage(src)}
-          >
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-500 z-10" />
-            <img 
-              src={src} 
-              alt="Restaurant Gallery" 
-              className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-1000 ease-out"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 flex items-end p-8">
-              <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <p className="text-[#d4af37] text-sm tracking-widest uppercase mb-2 font-bold drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]">Dubai</p>
-                <p className="text-[#f3e5b1] font-serif text-2xl drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>Luxury Dining</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-[#000]/95 backdrop-blur-md flex items-center justify-center p-4"
-            onClick={() => setSelectedImage(null)}
-          >
-            <button 
-              className="absolute top-8 right-8 text-[#d4af37] hover:text-[#f3e5b1] hover:drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] transition-all z-[110]"
-              onClick={() => setSelectedImage(null)}
-            >
-              <X size={40} />
-            </button>
-            <motion.img 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              src={selectedImage} 
-              alt="Enlarged Gallery Image" 
-              className="max-w-full max-h-[90vh] object-contain rounded-[40px] border border-[#d4af37]/30 shadow-[0_0_60px_rgba(212,175,55,0.2)]"
-              onClick={(e) => e.stopPropagation()} 
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
-  );
-};
-
-const Testimonials = () => {
-  return (
-    <section className="py-24 lg:py-40 bg-[#050402] relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl opacity-5 pointer-events-none flex justify-center items-center text-[#d4af37]">
-        <Star size={400} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <SectionHeading title="Guest Experiences" subtitle="Reviews" />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {REVIEWS.map((review, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="bg-[#000000] border border-[#d4af37]/30 p-10 md:p-12 hover:border-[#d4af37] hover:shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-500 group rounded-[40px]"
-            >
-              <div className="flex gap-2 mb-8">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} size={20} className="fill-[#d4af37] text-[#d4af37] drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]" />
-                ))}
-              </div>
-              <p className="text-[#bca773] font-light leading-relaxed mb-10 text-lg italic group-hover:text-[#f3e5b1] transition-colors">
-                "{review.text}"
-              </p>
-              <div className="flex items-center gap-6">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d4af37] to-[#aa8323] flex items-center justify-center text-black font-serif text-xl shadow-[0_0_15px_rgba(212,175,55,0.5)] border-2 border-[#000]">
-                  {review.name.charAt(0)}
-                </div>
-                <div>
-                  <h4 className="text-[#f3e5b1] font-serif tracking-wide text-lg drop-shadow-[0_0_5px_rgba(212,175,55,0.2)]">{review.name}</h4>
-                  <p className="text-[#9e8a52] text-xs uppercase tracking-widest font-bold mt-1">VIP Guest</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Reservation = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    guests: '',
-    date: '',
-    time: ''
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Format the message for WhatsApp
-    const message = `*New Reservation Request*\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Guests:* ${formData.guests}\n*Date:* ${formData.date}\n*Time:* ${formData.time}`;
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Open WhatsApp in a new tab with the pre-filled message
-    window.open(`https://wa.me/${RESTAURANT.whatsapp}?text=${encodedMessage}`, '_blank');
-    
-    setIsSubmitted(true);
-    setFormData({ name: '', phone: '', guests: '', date: '', time: '' }); // Reset form
-  };
-
-  return (
-    <section id="reservation" className="py-24 lg:py-40 relative bg-[#000000] overflow-hidden">
-      {/* Background Image Parallax */}
-      <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-fixed bg-center mix-blend-luminosity"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#050402]/90 to-[#000000]"></div>
-
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
-        <div className="bg-[#050402]/95 backdrop-blur-2xl border border-[#d4af37]/40 p-10 md:p-20 shadow-[0_0_80px_rgba(212,175,55,0.1)] rounded-[40px] min-h-[500px] flex flex-col justify-center">
-          
-          {isSubmitted ? (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="text-center py-10"
-            >
-              <div className="w-24 h-24 bg-gradient-to-br from-[#d4af37] to-[#aa8323] rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(212,175,55,0.5)] border-4 border-[#000]">
-                <CheckCircle size={48} className="text-black" />
-              </div>
-              <h3 className="text-4xl md:text-5xl font-serif text-[#f3e5b1] mb-6 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Reservation Request Sent
-              </h3>
-              <p className="text-[#bca773] text-lg max-w-2xl mx-auto leading-relaxed">
-                Thank you for choosing Njoom Al Aaelah. Your reservation details have been sent via WhatsApp. Our concierge team will confirm your table shortly.
-              </p>
               <button 
-                onClick={() => setIsSubmitted(false)}
-                className="mt-10 px-8 py-3 border border-[#d4af37]/50 text-[#d4af37] rounded-full hover:bg-[#d4af37] hover:text-black transition-all font-bold tracking-widest uppercase text-sm"
+                onClick={handleWhatsAppOrder}
+                className="w-full py-4 gold-gradient-bg text-black font-bold uppercase tracking-widest text-sm rounded-full hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 flex justify-center items-center gap-2"
               >
-                Make Another Booking
+                Checkout via WhatsApp
+                <ChevronRight className="w-4 h-4" />
               </button>
-            </motion.div>
-          ) : (
-            <>
-              <SectionHeading title="Reserve Your Table" subtitle="Bookings" />
-              
-              <form className="space-y-8" onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="relative group">
-                    <input type="text" id="name" value={formData.name} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-8 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer" placeholder=" " />
-                    <label htmlFor="name" className="absolute left-8 top-5 text-[#9e8a52] text-sm tracking-widest uppercase transition-all peer-focus:-top-3 peer-focus:left-6 peer-focus:text-[#d4af37] peer-focus:text-xs peer-focus:bg-[#050402] peer-focus:px-3 peer-valid:-top-3 peer-valid:left-6 peer-valid:text-xs peer-valid:bg-[#050402] peer-valid:px-3 rounded-full font-bold">Full Name</label>
-                  </div>
-                  <div className="relative group">
-                    <input type="tel" id="phone" value={formData.phone} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-8 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer" placeholder=" " />
-                    <label htmlFor="phone" className="absolute left-8 top-5 text-[#9e8a52] text-sm tracking-widest uppercase transition-all peer-focus:-top-3 peer-focus:left-6 peer-focus:text-[#d4af37] peer-focus:text-xs peer-focus:bg-[#050402] peer-focus:px-3 peer-valid:-top-3 peer-valid:left-6 peer-valid:text-xs peer-valid:bg-[#050402] peer-valid:px-3 rounded-full font-bold">Phone Number</label>
-                  </div>
-                  <div className="relative group">
-                    <select id="guests" value={formData.guests} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-8 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all appearance-none peer">
-                      <option value="" disabled hidden></option>
-                      <option value="1" className="bg-[#050402]">1 Guest</option>
-                      <option value="2" className="bg-[#050402]">2 Guests</option>
-                      <option value="3" className="bg-[#050402]">3 Guests</option>
-                      <option value="4" className="bg-[#050402]">4 Guests</option>
-                      <option value="5+" className="bg-[#050402]">5+ Guests</option>
-                    </select>
-                    <label htmlFor="guests" className="absolute left-8 top-5 text-[#9e8a52] text-sm tracking-widest uppercase transition-all peer-focus:-top-3 peer-focus:left-6 peer-focus:text-[#d4af37] peer-focus:text-xs peer-focus:bg-[#050402] peer-focus:px-3 peer-valid:-top-3 peer-valid:left-6 peer-valid:text-xs peer-valid:bg-[#050402] peer-valid:px-3 rounded-full font-bold">Number of Guests</label>
-                  </div>
-                  <div className="relative group flex gap-4">
-                    <div className="w-1/2 relative">
-                      <input type="date" id="date" value={formData.date} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-6 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer [color-scheme:dark]" placeholder=" " />
-                      <label htmlFor="date" className="absolute left-6 -top-3 bg-[#050402] px-3 text-[#d4af37] text-xs tracking-widest uppercase rounded-full font-bold">Date</label>
-                    </div>
-                    <div className="w-1/2 relative">
-                      <input type="time" id="time" value={formData.time} onChange={handleChange} required className="w-full bg-[#0a0805] border border-[#d4af37]/30 rounded-[40px] px-6 py-5 text-[#f3e5b1] font-semibold focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all peer [color-scheme:dark]" placeholder=" " />
-                      <label htmlFor="time" className="absolute left-6 -top-3 bg-[#050402] px-3 text-[#d4af37] text-xs tracking-widest uppercase rounded-full font-bold">Time</label>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="pt-10 flex flex-col items-center gap-6">
-                  <button type="submit" className="w-full md:w-auto px-16 py-5 rounded-[40px] bg-gradient-to-r from-[#d4af37] via-[#f3e5b1] to-[#aa8323] bg-[length:200%_auto] hover:bg-right text-black font-bold tracking-widest uppercase shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_60px_rgba(212,175,55,0.8)] hover:scale-105 transition-all duration-500">
-                    Confirm Reservation
-                  </button>
-                </div>
-              </form>
-            </>
+            </div>
           )}
         </div>
       </div>
-    </section>
-  );
-};
 
-const ContactMap = () => {
-  return (
-    <section id="contact" className="bg-[#000000] py-24">
-      <div className="flex flex-col lg:flex-row h-auto lg:h-[650px] max-w-7xl mx-auto px-6 gap-8">
-        
-        {/* Contact Info */}
-        <div className="w-full lg:w-1/3 p-12 lg:p-16 flex flex-col justify-center bg-gradient-to-br from-[#0a0805] to-[#000] border border-[#d4af37]/30 rounded-[40px] shadow-[0_0_40px_rgba(212,175,55,0.1)] relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/5 rounded-full blur-[80px]"></div>
-          
-          <h3 className="text-4xl font-serif text-[#f3e5b1] mb-12 drop-shadow-[0_0_15px_rgba(212,175,55,0.2)]" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Contact <GoldText>Us</GoldText>
-          </h3>
-          
-          <div className="space-y-10 relative z-10">
-            <div className="flex items-start gap-5 group">
-              <MapPin className="text-[#d4af37] mt-1 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] transition-all" size={28} />
-              <div>
-                <h4 className="text-[#d4af37] tracking-widest uppercase text-sm mb-2 font-bold">Location</h4>
-                <p className="text-[#bca773] font-light text-lg">{RESTAURANT.location}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-5 group">
-              <Phone className="text-[#d4af37] mt-1 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] transition-all" size={28} />
-              <div>
-                <h4 className="text-[#d4af37] tracking-widest uppercase text-sm mb-2 font-bold">Reservations</h4>
-                <a href={`tel:${RESTAURANT.phone}`} className="text-[#bca773] font-light text-lg hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.5)] transition-all block">
-                  {RESTAURANT.phone}
-                </a>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-5 group">
-              <Clock className="text-[#d4af37] mt-1 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] transition-all" size={28} />
-              <div>
-                <h4 className="text-[#d4af37] tracking-widest uppercase text-sm mb-2 font-bold">Hours</h4>
-                <p className="text-[#bca773] font-light text-lg">{RESTAURANT.openHours}</p>
-              </div>
-            </div>
-          </div>
+      {/* --- HERO SECTION --- */}
+      <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://image2url.com/r2/default/images/1774110824941-bde0d96b-7e53-4488-ac4e-2a3e8e34f887.jpg" 
+            alt="Luxury Dining Background" 
+            className="w-full h-full object-cover object-center transform scale-105 animate-pulse-slow opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black"></div>
         </div>
 
-        {/* Map Embed */}
-        <div className="w-full lg:w-2/3 h-[400px] lg:h-full relative grayscale-[40%] hover:grayscale-0 transition-all duration-1000 rounded-[40px] overflow-hidden border border-[#d4af37]/30 shadow-[0_0_40px_rgba(212,175,55,0.1)] z-10">
-          <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14431.603300589133!2d55.30908155!3d25.273934399999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5ccaeb199677%3A0x8e82a87b7a6962f9!2sAl%20Rasheed%20Rd%20-%20Dubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1711200000000!5m2!1sen!2sus" 
-            style={{ border: 0, width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }} 
-            allowFullScreen="" 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Restaurant Location"
-          ></iframe>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer className="bg-[#050402] pt-28 pb-12 border-t border-[#d4af37]/20 text-center relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-60"></div>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#d4af37]/5 rounded-full blur-[150px] pointer-events-none"></div>
-      
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        
-        {/* VIP Club Newsletter Section */}
-        <div className="mb-24 max-w-3xl mx-auto bg-gradient-to-b from-[#0a0805] to-[#000000] p-10 md:p-14 rounded-[40px] border border-[#d4af37]/30 shadow-[0_0_50px_rgba(212,175,55,0.1)] relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#d4af37]/10 rounded-full blur-[50px] pointer-events-none"></div>
-          <h4 className="text-[#f3e5b1] font-serif text-3xl md:text-4xl mb-4 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Join the <GoldText>VIP Club</GoldText>
-          </h4>
-          <p className="text-[#bca773] text-sm md:text-base mb-10 max-w-xl mx-auto">
-            Subscribe to receive exclusive invitations to private tasting events, chef's specials, and priority reservations.
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center mt-16">
+          <span className="text-[#D4AF37] tracking-[0.5em] text-xs md:text-sm uppercase mb-6 block font-medium">Dubai's Premier Culinary Destination</span>
+          
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight font-bold drop-shadow-2xl">
+            <span className="text-white tracking-wide">KITCHEN SHATE</span><br/>
+            <span className="gold-gradient-text italic pr-2">AL HAMRIAH</span>
+          </h1>
+          
+          <p className="text-gray-300 text-lg md:text-xl font-light mb-12 max-w-2xl mx-auto">
+            Experience the zenith of fine dining. Indulge in our masterfully crafted 
+            menu, surrounded by unparalleled opulence.
           </p>
-          <form className="flex flex-col sm:flex-row gap-4 justify-center" onSubmit={(e) => e.preventDefault()}>
-            <input 
-              type="email" 
-              placeholder="Enter your email address" 
-              required
-              className="bg-[#050402] border border-[#d4af37]/40 rounded-full px-8 py-4 text-[#f3e5b1] focus:outline-none focus:border-[#d4af37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] transition-all w-full sm:w-2/3 font-semibold" 
-            />
-            <button className="bg-gradient-to-r from-[#d4af37] to-[#aa8323] text-black font-bold uppercase tracking-widest px-8 py-4 rounded-full shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-105 transition-all duration-300">
-              Subscribe
-            </button>
-          </form>
-        </div>
-
-        <a href="#home" className="inline-block text-3xl font-serif text-[#f3e5b1] tracking-widest flex-col items-center mb-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-          <span style={{ fontFamily: "'Playfair Display', serif" }}>NJOOM AL AAELAH</span>
-        </a>
-        
-        <div className="flex justify-center gap-6 mb-16">
-          <a href="#" className="w-14 h-14 rounded-full border border-[#d4af37]/30 flex items-center justify-center text-[#bca773] hover:text-black hover:bg-[#d4af37] hover:border-[#d4af37] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300">
-            <Instagram size={24} />
-          </a>
-          <a href="#" className="w-14 h-14 rounded-full border border-[#d4af37]/30 flex items-center justify-center text-[#bca773] hover:text-black hover:bg-[#d4af37] hover:border-[#d4af37] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300">
-            <Facebook size={24} />
-          </a>
-          <a href="#" className="w-14 h-14 rounded-full border border-[#d4af37]/30 flex items-center justify-center text-[#bca773] hover:text-black hover:bg-[#d4af37] hover:border-[#d4af37] hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] transition-all duration-300">
-            <Twitter size={24} />
-          </a>
-        </div>
-
-        <div className="text-[#9e8a52] text-sm tracking-widest uppercase flex flex-col md:flex-row justify-center items-center gap-6 md:gap-16 font-bold border-t border-[#d4af37]/20 pt-10">
-          <p>&copy; {new Date().getFullYear()} Njoom Al Aaelah. All rights reserved.</p>
-          <div className="flex justify-center gap-6 md:gap-16">
-            <a href="#" className="hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.8)] transition-all">Privacy Policy</a>
-            <a href="#" className="hover:text-[#f3e5b1] hover:drop-shadow-[0_0_8px_rgba(243,229,177,0.8)] transition-all">Terms of Service</a>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto">
+            <a href="#menu" className="px-10 py-4 bg-transparent border border-[#D4AF37] text-[#D4AF37] uppercase tracking-widest text-sm hover:bg-[#D4AF37] hover:text-black hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-500 rounded-full text-center">
+              View Menu
+            </a>
+            <a href="#reservation" className="px-10 py-4 gold-gradient-bg text-black uppercase tracking-widest text-sm font-bold shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_40px_rgba(212,175,55,0.8)] transition-all duration-500 rounded-full flex items-center justify-center gap-2">
+              Book a Table
+            </a>
           </div>
         </div>
-      </div>
-    </footer>
-  );
-};
+      </section>
 
-// Floating WhatsApp Button
-const FloatingWhatsApp = () => (
-  <motion.a
-    initial={{ scale: 0 }}
-    animate={{ scale: 1 }}
-    transition={{ delay: 2, type: 'spring' }}
-    href={`https://wa.me/${RESTAURANT.whatsapp}`}
-    target="_blank"
-    rel="noreferrer"
-    className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-[#25D366] to-[#1ebd5a] text-white p-5 rounded-full shadow-[0_0_30px_rgba(37,211,102,0.4)] hover:shadow-[0_0_50px_rgba(37,211,102,0.7)] transition-all duration-300 flex items-center justify-center group border border-white/20 hover:scale-110"
-  >
-    <MessageCircle size={32} />
-    <span className="absolute right-full mr-6 bg-[#000] border border-[#d4af37]/30 text-[#f3e5b1] px-5 py-3 rounded-[40px] text-sm font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-[0_0_20px_rgba(212,175,55,0.2)]">
-      Chat with us
-    </span>
-  </motion.a>
-);
+      {/* --- ABOUT SECTION --- */}
+      <section id="about" className="py-24 md:py-32 relative">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <div className="lg:w-1/2 relative">
+              <div className="absolute -inset-4 border border-[#D4AF37]/30 transform translate-x-4 translate-y-4"></div>
+              <img 
+                src="https://image2url.com/r2/default/images/1774110745040-e3060498-012b-4731-918b-618ec3040e69.jpg" 
+                alt="Restaurant Interior" 
+                className="relative z-10 w-full h-[500px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
+              />
+            </div>
+            <div className="lg:w-1/2 space-y-8">
+              <div className="flex items-center gap-4">
+                <div className="h-[1px] w-12 bg-[#D4AF37]"></div>
+                <span className="text-[#D4AF37] uppercase tracking-widest text-sm">Our Story</span>
+              </div>
+              <h2 className="font-serif text-4xl md:text-5xl leading-snug">
+                A Symphony of <span className="text-[#D4AF37] italic">Taste & Elegance</span>
+              </h2>
+              <p className="text-gray-400 leading-relaxed font-light text-lg">
+                Nestled in the heart of Dubai on Al Hamriya St, Kitchen Shate AlHamriah redefines 
+                the luxury dining landscape. We blend traditional culinary artistry with modern 
+                opulence, offering an exclusive menu where every dish is adorned with passion, 
+                precision, and a touch of gold.
+              </p>
+              <p className="text-gray-400 leading-relaxed font-light text-lg">
+                Our world-renowned chefs curate experiences that tantalize the palate and 
+                mesmerize the senses, ensuring every visit is an unforgettable occasion.
+              </p>
+              <div className="pt-6">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Signature_of_Gordon_Ramsay.svg/1200px-Signature_of_Gordon_Ramsay.svg.png" alt="Chef Signature" className="h-12 opacity-50 filter invert" />
+                <p className="text-[#D4AF37] font-serif mt-2 italic">Executive Chef</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-// --- MAIN APP COMPONENT ---
+      {/* --- MENU SECTION --- */}
+      <section id="menu" className="py-24 md:py-32 bg-zinc-950 relative border-t border-b border-white/5">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-4xl md:text-5xl mb-4">The <span className="gold-gradient-text italic">Collection</span></h2>
+            <div className="h-[1px] w-24 bg-[#D4AF37] mx-auto opacity-50 mb-8"></div>
+            
+            {/* Categories */}
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+              {categories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`text-sm uppercase tracking-widest px-8 py-3 rounded-full border transition-all duration-300 ${
+                    activeCategory === category 
+                      ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.3)]' 
+                      : 'border-white/10 text-gray-400 hover:border-[#D4AF37]/50 hover:text-white hover:shadow-[0_0_15px_rgba(212,175,55,0.1)]'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
 
-export default function App() {
-  // Inject Premium Fonts
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;600;700&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-    
-    // Smooth scrolling CSS fallback
-    document.documentElement.style.scrollBehavior = 'smooth';
-    
-    return () => {
-      document.head.removeChild(link);
-      document.documentElement.style.scrollBehavior = 'auto';
-    };
-  }, []);
+          {/* Menu Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
+            {MENU_ITEMS.filter(item => item.category === activeCategory).map(item => (
+              <div key={item.id} className="group flex flex-col sm:flex-row gap-6 p-5 rounded-3xl bg-black/40 border border-white/5 hover:border-[#D4AF37]/50 hover:shadow-[0_10px_40px_rgba(212,175,55,0.15)] transition-all duration-500">
+                <div className="w-full sm:w-40 h-40 overflow-hidden rounded-2xl shrink-0 shadow-[0_0_20px_rgba(0,0,0,0.8)] group-hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] transition-all duration-500">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  />
+                </div>
+                <div className="flex-1 flex flex-col justify-center">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-serif text-xl md:text-2xl text-white group-hover:text-[#D4AF37] transition-colors">
+                      {item.name}
+                    </h3>
+                    <span className="font-serif text-xl text-[#D4AF37]">AED {item.price}</span>
+                  </div>
+                  <p className="text-gray-400 text-sm font-light leading-relaxed mb-6">
+                    {item.description}
+                  </p>
+                  <div className="mt-auto">
+                    <button 
+                      onClick={() => addToCart(item)}
+                      className="text-xs uppercase tracking-widest border border-white/20 px-6 py-3 hover:border-[#D4AF37] hover:text-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.3)] transition-all rounded-full flex items-center gap-2 w-fit"
+                    >
+                      <Plus className="w-3 h-3" /> Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  return (
-    <div className="bg-[#000000] min-h-screen text-[#f3e5b1] font-sans selection:bg-[#d4af37] selection:text-black">
-      <ThreeBackground />
-      <CustomCursor />
-      <Navbar />
-      <main className="relative z-10">
-        <Hero />
-        <About />
-        <Menu />
-        <Gallery />
-        <Testimonials />
-        <Reservation />
-        <ContactMap />
-      </main>
-      <Footer />
-      <FloatingWhatsApp />
+      {/* --- GALLERY SECTION --- */}
+      <section id="gallery" className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center gap-4 mb-16 justify-center">
+            <div className="h-[1px] w-12 bg-[#D4AF37]"></div>
+            <h2 className="font-serif text-3xl uppercase tracking-widest text-[#D4AF37]">Gallery</h2>
+            <div className="h-[1px] w-12 bg-[#D4AF37]"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {GALLERY.map((img, idx) => (
+              <div key={idx} className="relative group overflow-hidden h-80 rounded-3xl cursor-pointer">
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                <img 
+                  src={img} 
+                  alt="Gallery Item" 
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 border border-[#D4AF37]/0 group-hover:border-[#D4AF37]/50 transition-colors duration-500 z-20 m-4 rounded-2xl"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- REVIEWS SECTION --- */}
+      <section className="py-24 bg-zinc-950 border-t border-b border-[#D4AF37]/10 relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-[100px]"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-4xl mb-4">Guest <span className="text-[#D4AF37] italic">Reflections</span></h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {REVIEWS.map((review, idx) => (
+              <div key={idx} className="glass-panel p-10 rounded-3xl text-center hover:-translate-y-2 hover:shadow-[0_15px_50px_rgba(212,175,55,0.2)] hover:border-[#D4AF37]/40 transition-all duration-500">
+                <div className="flex justify-center gap-1 mb-6">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />
+                  ))}
+                </div>
+                <p className="text-gray-300 font-serif italic text-lg mb-6">"{review.text}"</p>
+                <h4 className="uppercase tracking-widest text-xs text-[#D4AF37]">{review.name}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- RESERVATION SECTION --- */}
+      <section id="reservation" className="py-24 relative">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="glass-panel p-8 md:p-16 rounded-[2.5rem] relative overflow-hidden shadow-[0_0_50px_rgba(212,175,55,0.15)] border border-[#D4AF37]/20">
+            {/* Decorative corner borders */}
+            <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[#D4AF37] opacity-50 m-8 rounded-tl-2xl shadow-[-5px_-5px_15px_rgba(212,175,55,0.2)]"></div>
+            <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-[#D4AF37] opacity-50 m-8 rounded-br-2xl shadow-[5px_5px_15px_rgba(212,175,55,0.2)]"></div>
+
+            <div className="text-center mb-12 relative z-10">
+              <h2 className="font-serif text-4xl mb-4">Reserve Your <span className="text-[#D4AF37] italic">Table</span></h2>
+              <p className="text-gray-400 font-light">Secure your place for an unforgettable dining experience.</p>
+            </div>
+
+            <form onSubmit={handleReservation} className="relative z-10 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input 
+                  type="text" 
+                  required
+                  value={reservationData.name}
+                  onChange={(e) => setReservationData({...reservationData, name: e.target.value})}
+                  placeholder="Full Name" 
+                  className="w-full bg-black/50 border border-white/10 px-6 py-4 text-white focus:border-[#D4AF37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] focus:outline-none transition-all duration-300 rounded-full" 
+                />
+                <input 
+                  type="tel" 
+                  required
+                  value={reservationData.phone}
+                  onChange={(e) => setReservationData({...reservationData, phone: e.target.value})}
+                  placeholder="Phone Number" 
+                  className="w-full bg-black/50 border border-white/10 px-6 py-4 text-white focus:border-[#D4AF37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] focus:outline-none transition-all duration-300 rounded-full" 
+                />
+                <input 
+                  type="date" 
+                  required
+                  value={reservationData.date}
+                  onChange={(e) => setReservationData({...reservationData, date: e.target.value})}
+                  className="w-full bg-black/50 border border-white/10 px-6 py-4 text-white focus:border-[#D4AF37] focus:shadow-[0_0_20px_rgba(212,175,55,0.2)] focus:outline-none transition-all duration-300 rounded-full md:col-span-2" 
+                  style={{colorScheme: 'dark'}} 
+                />
+              </div>
+              <button type="submit" className="w-full py-5 gold-gradient-bg text-black uppercase tracking-widest font-bold mt-4 shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_40px_rgba(212,175,55,0.7)] transition-all duration-300 rounded-full">
+                Request Reservation
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      {/* --- LOCATION & MAP SECTION --- */}
+      <section className="relative h-[400px] md:h-[500px] w-full border-t border-[#D4AF37]/20 grayscale-[80%] hover:grayscale-0 transition-all duration-1000">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.26189912061!2d55.3341113!3d25.2618991!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5cc11451dc05%3A0x88f58b191c0e3ea6!2sAl%20Hamriya%20St%2C%20Dubai%2C%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" 
+          width="100%" 
+          height="100%" 
+          style={{ border: 0 }} 
+          allowFullScreen="" 
+          loading="lazy" 
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Kitchen Shate Location"
+          className="absolute inset-0"
+        ></iframe>
+        {/* Luxury dark overlay that fades on hover */}
+        <div className="absolute inset-0 bg-black/50 pointer-events-none transition-opacity duration-1000 hover:opacity-0"></div>
+        
+        {/* Floating Address Badge */}
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 glass-panel px-6 py-3 rounded-full flex items-center gap-3 shadow-[0_0_30px_rgba(212,175,55,0.25)] border-[#D4AF37]/30 z-10 hover:shadow-[0_0_40px_rgba(212,175,55,0.5)] transition-all duration-500 cursor-default">
+          <MapPin className="w-4 h-4 text-[#D4AF37]" />
+          <span className="text-sm tracking-widest uppercase font-medium">Al Hamriya St, Dubai</span>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <footer id="contact" className="bg-zinc-950 pt-24 pb-12 border-t border-[#D4AF37]/20">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16 text-center md:text-left">
+            
+            {/* Brand */}
+            <div>
+              <h1 className="font-serif text-2xl font-bold tracking-wider gold-gradient-text uppercase mb-4">
+                Kitchen Shate
+              </h1>
+              <p className="text-gray-400 font-light text-sm leading-relaxed mb-6">
+                Where luxury meets culinary excellence. Experience the finest dining in the heart of Dubai.
+              </p>
+              <div className="flex gap-4 justify-center md:justify-start">
+                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all"><Instagram className="w-4 h-4" /></a>
+                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all"><Facebook className="w-4 h-4" /></a>
+                <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all"><Twitter className="w-4 h-4" /></a>
+              </div>
+            </div>
+
+            {/* Contact Info */}
+            <div className="flex flex-col items-center md:items-start space-y-4">
+              <h3 className="font-serif text-xl text-white mb-2">Contact Us</h3>
+              <a href="tel:+971523385425" className="flex items-center gap-3 text-gray-400 hover:text-[#D4AF37] transition-colors group">
+                <Phone className="w-5 h-5 group-hover:text-[#D4AF37]" />
+                <span className="font-light">+971 52 338 5425</span>
+              </a>
+              <div className="flex items-center gap-3 text-gray-400 group">
+                <MapPin className="w-5 h-5 group-hover:text-[#D4AF37]" />
+                <span className="font-light">Al Hamriya St - Hor Al Anz St, Dubai</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-400 group">
+                <Clock className="w-5 h-5 group-hover:text-[#D4AF37]" />
+                <span className="font-light">Open Daily: 11:00 AM – 11:00 PM</span>
+              </div>
+            </div>
+
+            {/* Newsletter/Quick Action */}
+            <div className="flex flex-col items-center md:items-start">
+              <h3 className="font-serif text-xl text-white mb-6">Direct Order</h3>
+              <p className="text-gray-400 font-light text-sm mb-6">Experience our luxury menu from the comfort of your home.</p>
+              <button 
+                onClick={() => window.open('https://wa.me/971523385425', '_blank')}
+                className="px-8 py-4 bg-transparent border border-[#D4AF37] text-[#D4AF37] uppercase tracking-widest text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 rounded-full flex items-center gap-2"
+              >
+                <Phone className="w-4 h-4" />
+                WhatsApp Us
+              </button>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-600 text-xs tracking-widest uppercase">
+              © {new Date().getFullYear()} Kitchen Shate AlHamriah. All rights reserved.
+            </p>
+            <div className="flex gap-6 text-gray-600 text-xs tracking-widest uppercase">
+              <a href="#" className="hover:text-[#D4AF37] transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-[#D4AF37] transition-colors">Terms of Service</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
