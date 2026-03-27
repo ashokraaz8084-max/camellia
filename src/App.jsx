@@ -19,18 +19,18 @@ import {
 // --- DATA ---
 const MENU_DATA = {
   Starters: [
-    { name: "Truffle Murgh Tikka", desc: "Charcoal-smoked free-range chicken, black truffle shavings, 24k gold leaf.", price: "AED 125", image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=800" },
-    { name: "Wagyu Seekh Kebab", desc: "Grade A5 Wagyu beef, signature 21-spice blend, mint & pomegranate glaze.", price: "AED 195", image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&q=80&w=800" },
+    { name: "Truffle Murgh Tikka", desc: "Charcoal-smoked free-range chicken, black truffle shavings, 24k gold leaf.", price: "AED 125", image: "https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" },
+    { name: "Wagyu Seekh Kebab", desc: "Grade A5 Wagyu beef, signature 21-spice blend, mint & pomegranate glaze.", price: "AED 195", image: "https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" },
     { name: "Saffron Lobster Shorba", desc: "Omani lobster bisque infused with Kashmiri saffron and coconut foam.", price: "AED 145", image: "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg" },
   ],
   "Main Course": [
-    { name: "Royal Nalli Nihari", desc: "Slow-cooked lamb shank, rich bone marrow gravy, artisanal sheer mal.", price: "AED 210", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800" },
-    { name: "Dal Naanstop Reserve", desc: "Black lentils simmered for 48 hours, churned with French butter.", price: "AED 95", image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800" },
-    { name: "Sea Bass Pollichathu", desc: "Chilean sea bass wrapped in banana leaf, shallot & kokum masala.", price: "AED 185", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=800" },
+    { name: "Royal Nalli Nihari", desc: "Slow-cooked lamb shank, rich bone marrow gravy, artisanal sheer mal.", price: "AED 210", image: "https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg" },
+    { name: "Dal Naanstop Reserve", desc: "Black lentils simmered for 48 hours, churned with French butter.", price: "AED 95", image: "https://image2url.com/r2/default/images/1773560294694-77c5082f-4c2c-481e-b483-73e47c55fda5.jpeg" },
+    { name: "Sea Bass Pollichathu", desc: "Chilean sea bass wrapped in banana leaf, shallot & kokum masala.", price: "AED 185", image: "https://image2url.com/r2/default/images/1773855572515-8311f664-9920-463f-80b2-7410919432d0.jpg" },
   ],
   Desserts: [
-    { name: "Rosewater & Pistachio Sphere", desc: "Melting white chocolate dome, pistachio sponge, warm rose syrup.", price: "AED 85", image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800" },
-    { name: "Saffron Rasmalai Mille-Feuille", desc: "Crispy filo pastry, saffron cottage cheese mousse, edible gold.", price: "AED 90", image: "https://images.unsplash.com/photo-1605153322277-dd0d7f608b4d?auto=format&fit=crop&q=80&w=800" },
+    { name: "Rosewater & Pistachio Sphere", desc: "Melting white chocolate dome, pistachio sponge, warm rose syrup.", price: "AED 85", image: "https://image2url.com/r2/default/images/1773855611849-0dd9ee94-a03e-4919-b2d9-f9e9d0b9eeb1.jpg" },
+    { name: "Saffron Rasmalai Mille-Feuille", desc: "Crispy filo pastry, saffron cottage cheese mousse, edible gold.", price: "AED 90", image: "https://image2url.com/r2/default/images/1773855646363-1b3921bd-151e-4bda-a338-803ae44b926c.jpg" },
   ]
 };
 
@@ -75,12 +75,12 @@ const REVIEWS = [
 ];
 
 const GALLERY = [
-  "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&q=80&w=800",
-  "https://image2url.com/r2/default/images/1774110824941-bde0d96b-7e53-4488-ac4e-2a3e8e34f887.jpg",
-  "https://images.unsplash.com/photo-1574966739987-65e38f2cea8d?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=800",
-  "https://image2url.com/r2/default/images/1774110709609-0cf13fe4-c2ea-4e13-8547-66765f8c02df.jpg",
-  "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=800"
+  "https://image2url.com/r2/default/images/1773855721582-25a57dca-2657-4948-9c6e-ddf9f1241aad.jpg",
+  "https://image2url.com/r2/default/images/1773855765776-56e36d5e-3b5e-4c5c-a682-6c960033362b.jpg",
+  "https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg",
+  "https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg",
+  "https://image2url.com/r2/default/images/1773855879123-3c090c06-ff80-4ba5-8fb4-1d494e2686c3.jpg",
+  "https://image2url.com/r2/default/images/1773855914103-338ffd19-feea-4251-a3c6-2740918527a4.jpg"
 ];
 
 // --- HOOKS & UTILS ---
@@ -107,6 +107,29 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    date: '',
+    time: '19:00',
+    guests: '2 People',
+    requests: ''
+  });
+
+  const handleWhatsAppSubmit = (e) => {
+    e.preventDefault();
+    const { name, phone, date, time, guests, requests } = formData;
+    if(!name || !phone || !date) {
+      alert("Kripya saari zaroori details bharein (Name, Phone, Date).");
+      return;
+    }
+    
+    const message = `*New Reservation Request - Naanstop Dubai* 🍽️\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Date:* ${date}\n*Time:* ${time}\n*Guests:* ${guests}\n*Special Requests:* ${requests || 'None'}`;
+    const whatsappUrl = `https://wa.me/971547908933?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % REVIEWS.length);
@@ -126,16 +149,25 @@ export default function App() {
         .font-sans { font-family: 'Montserrat', sans-serif; }
         
         .glass-nav {
-          background: rgba(5, 5, 5, 0.7);
+          background: rgba(5, 5, 5, 0.85);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
-          border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
         }
         
+        /* New Black & Gold Combo Box Style */
         .glass-card {
-          background: rgba(20, 15, 10, 0.6);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(212, 175, 55, 0.15);
+          background: linear-gradient(145deg, rgba(15, 15, 15, 0.95) 0%, rgba(35, 25, 5, 0.9) 100%);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          border-radius: 40px;
+          box-shadow: 0 10px 30px -5px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.1);
+          transition: all 0.4s ease;
+        }
+
+        .glass-card:hover {
+          border-color: rgba(212, 175, 55, 0.6);
+          box-shadow: 0 15px 40px -5px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2);
         }
 
         .text-gold { color: #D4AF37; }
@@ -209,7 +241,7 @@ export default function App() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 w-full h-full">
           <img 
-            src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=2070" 
+            src="https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg" 
             alt="Luxury Dining" 
             className="w-full h-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
           />
@@ -251,7 +283,7 @@ export default function App() {
           <div className="relative reveal opacity-0 translate-y-12">
             <div className="absolute -inset-4 border border-gold/30 translate-x-4 translate-y-4"></div>
             <img 
-              src="https://images.unsplash.com/photo-1578474846511-04ba529f0b88?auto=format&fit=crop&q=80&w=1000" 
+              src="https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg" 
               alt="Chef plating food" 
               className="relative z-10 w-full h-[600px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
             />
@@ -306,16 +338,16 @@ export default function App() {
           {/* Menu Items */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {MENU_DATA[activeMenu].map((item, index) => (
-              <div key={index} className="group cursor-pointer reveal opacity-0 translate-y-12" style={{ transitionDelay: `${index * 150}ms` }}>
-                <div className="overflow-hidden h-64 mb-6 relative menu-image-wrap">
+              <div key={index} className="glass-card p-6 group cursor-pointer reveal opacity-0 translate-y-12" style={{ transitionDelay: `${index * 150}ms` }}>
+                <div className="overflow-hidden h-64 mb-6 relative menu-image-wrap rounded-[25px]">
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10"></div>
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover menu-image transition-transform duration-700" />
-                  <div className="absolute bottom-4 right-4 z-20 bg-black/80 backdrop-blur-sm text-gold px-4 py-2 font-serif">
+                  <div className="absolute bottom-4 right-4 z-20 bg-black/80 backdrop-blur-sm text-gold px-4 py-2 font-serif rounded-full border border-gold/30">
                     {item.price}
                   </div>
                 </div>
-                <h3 className="font-serif text-2xl text-white mb-3 group-hover:text-gold transition-colors">{item.name}</h3>
-                <p className="text-gray-400 font-light text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-serif text-2xl text-white mb-3 group-hover:text-gold transition-colors px-2">{item.name}</h3>
+                <p className="text-gray-400 font-light text-sm leading-relaxed px-2 pb-2">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -348,11 +380,15 @@ export default function App() {
 
       {/* GALLERY */}
       <section id="gallery" className="py-20 bg-[#0a0806]">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-2 px-1 md:px-2">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-16 text-center reveal opacity-0 translate-y-12">
+          <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-4">Visual Feast</h4>
+          <h2 className="font-serif text-4xl md:text-5xl text-white">The Gallery</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 px-4 md:px-12 max-w-7xl mx-auto">
           {GALLERY.map((img, index) => (
-            <div key={index} className="relative overflow-hidden group aspect-square reveal opacity-0 translate-y-12" style={{ transitionDelay: `${(index % 3) * 100}ms` }}>
-              <img src={img} alt={`Gallery ${index}`} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+            <div key={index} className="glass-card p-2 relative overflow-hidden group aspect-square reveal opacity-0 translate-y-12" style={{ transitionDelay: `${(index % 3) * 100}ms` }}>
+              <img src={img} alt={`Gallery ${index}`} className="w-full h-full object-cover rounded-[30px] transition-transform duration-1000 group-hover:scale-105" />
+              <div className="absolute inset-2 rounded-[30px] bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                 <span className="text-gold text-4xl font-light">+</span>
               </div>
             </div>
@@ -365,23 +401,22 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Image Side (Editorial Layout) */}
-          <div className="relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] overflow-hidden reveal opacity-0 translate-y-12 shadow-2xl">
-            {/* Inner Gold Border for Premium Feel */}
-            <div className="absolute inset-0 border border-gold/30 z-20 pointer-events-none m-4 md:m-6"></div>
+          <div className="glass-card p-3 relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] overflow-hidden reveal opacity-0 translate-y-12">
+            <div className="absolute inset-3 border border-gold/40 z-20 pointer-events-none rounded-[30px]"></div>
             
-            {REVIEWS.map((review, index) => (
-              <img 
-                key={index}
-                src={review.image}
-                alt={`Review by ${review.author}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform ${
-                  index === activeTestimonial ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
-                }`}
-              />
-            ))}
-            
-            {/* Vignette Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-10 pointer-events-none"></div>
+            <div className="w-full h-full relative rounded-[30px] overflow-hidden">
+              {REVIEWS.map((review, index) => (
+                <img 
+                  key={index}
+                  src={review.image}
+                  alt={`Review by ${review.author}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform ${
+                    index === activeTestimonial ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
+                  }`}
+                />
+              ))}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10 pointer-events-none"></div>
+            </div>
           </div>
 
           {/* Text Side */}
@@ -487,26 +522,26 @@ export default function App() {
             <h2 className="font-serif text-3xl text-white mb-2 relative z-10">Request a Table</h2>
             <p className="text-gray-400 text-sm mb-8 relative z-10">For parties larger than 6, please contact us directly.</p>
             
-            <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6 relative z-10" onSubmit={handleWhatsAppSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
-                  <input type="text" className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors" placeholder="John Doe" />
+                  <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors" placeholder="John Doe" required />
                 </div>
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
-                  <input type="tel" className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors" placeholder="+971 50 000 0000" />
+                  <input type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors" placeholder="+971 50 000 0000" required />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Date</label>
-                  <input type="date" className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors [color-scheme:dark]" />
+                  <input type="date" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors [color-scheme:dark]" required />
                 </div>
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Time</label>
-                  <select className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors appearance-none cursor-pointer">
+                  <select value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors appearance-none cursor-pointer">
                     <option className="bg-[#140f0a]">19:00</option>
                     <option className="bg-[#140f0a]">19:30</option>
                     <option className="bg-[#140f0a]">20:00</option>
@@ -517,7 +552,7 @@ export default function App() {
                 </div>
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Guests</label>
-                  <select className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors appearance-none cursor-pointer">
+                  <select value={formData.guests} onChange={(e) => setFormData({...formData, guests: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors appearance-none cursor-pointer">
                     <option className="bg-[#140f0a]">2 People</option>
                     <option className="bg-[#140f0a]">3 People</option>
                     <option className="bg-[#140f0a]">4 People</option>
@@ -529,11 +564,11 @@ export default function App() {
               
               <div>
                 <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Special Requests</label>
-                <textarea rows="3" className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors resize-none" placeholder="Allergies, anniversaries, etc."></textarea>
+                <textarea rows="3" value={formData.requests} onChange={(e) => setFormData({...formData, requests: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors resize-none" placeholder="Allergies, anniversaries, etc."></textarea>
               </div>
               
-              <button className="w-full bg-gold text-black uppercase tracking-widest text-sm font-semibold py-4 hover:bg-white transition-colors duration-300 mt-4">
-                Confirm Reservation Request
+              <button type="submit" className="w-full bg-gold text-black uppercase tracking-widest text-sm font-semibold py-4 hover:bg-white transition-colors duration-300 mt-4 flex justify-center items-center gap-2">
+                Confirm & Send to WhatsApp
               </button>
             </form>
           </div>
@@ -566,6 +601,21 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      {/* Sticky WhatsApp Button */}
+      <a 
+        href="https://wa.me/971547908933" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-[90] bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] transition-all duration-300 flex items-center justify-center animate-[pulse_2s_infinite] group"
+      >
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span className="absolute right-16 bg-white text-black font-semibold text-xs px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+          Book Table via WhatsApp
+        </span>
+      </a>
     </div>
   );
 }
