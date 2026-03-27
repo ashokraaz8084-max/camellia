@@ -25,7 +25,7 @@ const MENU_DATA = {
   ],
   "Main Course": [
     { name: "Royal Nalli Nihari", desc: "Slow-cooked lamb shank, rich bone marrow gravy, artisanal sheer mal.", price: "AED 210", image: "https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg" },
-    { name: "Dal Naanstop Reserve", desc: "Black lentils simmered for 48 hours, churned with French butter.", price: "AED 95", image: "https://image2url.com/r2/default/images/1773560294694-77c5082f-4c2c-481e-b483-73e47c55fda5.jpeg" },
+    { name: "Dal Afghan Reserve", desc: "Black lentils simmered for 48 hours, churned with French butter.", price: "AED 95", image: "https://image2url.com/r2/default/images/1773560294694-77c5082f-4c2c-481e-b483-73e47c55fda5.jpeg" },
     { name: "Sea Bass Pollichathu", desc: "Chilean sea bass wrapped in banana leaf, shallot & kokum masala.", price: "AED 185", image: "https://image2url.com/r2/default/images/1773855572515-8311f664-9920-463f-80b2-7410919432d0.jpg" },
   ],
   Desserts: [
@@ -38,13 +38,13 @@ const FEATURES = [
   { icon: <ChefHat size={32} />, title: "Authentic Taste", desc: "Heritage recipes elevated with the world's finest ingredients." },
   { icon: <Sparkles size={32} />, title: "Luxury Ambience", desc: "Bespoke interiors designed for intimacy and grandeur." },
   { icon: <Wine size={32} />, title: "Elite Service", desc: "Anticipatory, discreet, and world-class hospitality." },
-  { icon: <MapPin size={32} />, title: "Prime Location", desc: "Situated exclusively in Burjman for the global elite." },
+  { icon: <MapPin size={32} />, title: "Prime Location", desc: "Situated exclusively in New Gold Souq for the global elite." },
 ];
 
 const REVIEWS = [
   { 
     image: "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg",
-    text: "A masterclass in fine dining. Naanstop doesn't just serve food; they curate an unforgettable evening. The Truffle Tikka is life-changing.", 
+    text: "A masterclass in fine dining. Afghan Internationals doesn't just serve food; they curate an unforgettable evening. The Truffle Tikka is life-changing.", 
     author: "Sarah M.", 
     location: "London, UK" 
   },
@@ -124,8 +124,8 @@ export default function App() {
       return;
     }
     
-    const message = `*New Reservation Request - Naanstop Dubai* 🍽️\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Date:* ${date}\n*Time:* ${time}\n*Guests:* ${guests}\n*Special Requests:* ${requests || 'None'}`;
-    const whatsappUrl = `https://wa.me/971547908933?text=${encodeURIComponent(message)}`;
+    const message = `*New Reservation Request - Afghan Internationals Dubai* 🍽️\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Date:* ${date}\n*Time:* ${time}\n*Guests:* ${guests}\n*Special Requests:* ${requests || 'None'}`;
+    const whatsappUrl = `https://wa.me/971501661146?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
   };
@@ -197,7 +197,7 @@ export default function App() {
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
             <a href="#" className="flex flex-col items-center">
-              <span className="font-serif text-2xl md:text-3xl font-bold tracking-widest text-white uppercase">Naanstop</span>
+              <span className="font-serif text-xl md:text-2xl font-bold tracking-widest text-white uppercase text-center">Afghan Internationals</span>
               <span className="text-[10px] tracking-[0.3em] text-gold mt-1 uppercase">Dubai</span>
             </a>
 
@@ -294,7 +294,7 @@ export default function App() {
             <h2 className="font-serif text-4xl md:text-5xl text-white mb-8 leading-snug">A Symphony of Spice in the Heart of Dubai.</h2>
             <div className="space-y-6 text-gray-400 font-light leading-relaxed">
               <p>
-                Located in the prestigious Burjman district, Naanstop redefines authentic Indian cuisine through the lens of modern luxury. Every dish is a curated masterpiece, blending centuries-old traditions with avant-garde culinary techniques.
+                Located in the prestigious New Gold Souq district, Afghan Internationals redefines authentic cuisine through the lens of modern luxury. Every dish is a curated masterpiece, blending centuries-old traditions with avant-garde culinary techniques.
               </p>
               <p>
                 Step into an ambiance of unparalleled opulence. From the 24k gold leaf accents to our world-class hospitality, we invite you to embark on an unforgettable gastronomic journey curated for the global elite.
@@ -481,14 +481,14 @@ export default function App() {
                 <MapPin className="text-gold shrink-0 mt-1" />
                 <div>
                   <h5 className="text-white uppercase tracking-widest text-sm mb-2">Address</h5>
-                  <p className="text-gray-400 font-light text-sm">Burjman Dubai - 7 6A St<br/>Near Al Wasel University<br/>Dubai, UAE</p>
+                  <p className="text-gray-400 font-light text-sm">New Gold Souq, Sherina Plaza 1<br/>Shop No 16 - 16th St<br/>Dubai, UAE</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">
                 <Phone className="text-gold shrink-0 mt-1" />
                 <div>
                   <h5 className="text-white uppercase tracking-widest text-sm mb-2">Reservations</h5>
-                  <p className="text-gray-400 font-light text-sm">+971 54 790 8933<br/>Complimentary VIP Valet Available</p>
+                  <p className="text-gray-400 font-light text-sm">+971 50 166 1146<br/>Complimentary VIP Valet Available</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start">
@@ -580,7 +580,7 @@ export default function App() {
       <footer className="bg-black py-16 text-center border-t border-gold/20">
         <div className="max-w-4xl mx-auto px-6">
           <a href="#" className="flex flex-col items-center mb-8 inline-block">
-             <span className="font-serif text-3xl font-bold tracking-widest text-white uppercase">Naanstop</span>
+             <span className="font-serif text-2xl md:text-3xl font-bold tracking-widest text-white uppercase text-center">Afghan Internationals</span>
           </a>
           
           <div className="flex justify-center gap-6 mb-12">
@@ -597,14 +597,14 @@ export default function App() {
           </div>
           
           <p className="text-gray-700 text-xs tracking-widest">
-            &copy; {new Date().getFullYear()} NAANSTOP DUBAI. ALL RIGHTS RESERVED. CRAFTED FOR EXCELLENCE.
+            &copy; {new Date().getFullYear()} AFGHAN INTERNATIONALS DUBAI. ALL RIGHTS RESERVED. CRAFTED FOR EXCELLENCE.
           </p>
         </div>
       </footer>
 
       {/* Sticky WhatsApp Button */}
       <a 
-        href="https://wa.me/971547908933" 
+        href="https://wa.me/971501661146" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-[90] bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] transition-all duration-300 flex items-center justify-center animate-[pulse_2s_infinite] group"
