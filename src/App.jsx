@@ -2,624 +2,550 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Phone, 
   MapPin, 
-  Clock, 
+  Calendar, 
+  MessageCircle, 
   ChevronRight, 
-  Star, 
-  Instagram, 
-  Facebook, 
-  Twitter, 
-  ChefHat, 
-  Utensils, 
-  Wine, 
+  Menu, 
+  X, 
+  Award, 
+  Users, 
+  HeartPulse, 
+  Stethoscope, 
+  Microscope,
+  Send,
+  CheckCircle2,
+  Instagram,
+  Facebook,
+  Linkedin,
+  ShieldCheck,
   Sparkles,
-  Menu as MenuIcon,
-  X
+  Globe,
+  Quote,
+  Zap,
+  Fingerprint,
+  ArrowRight,
+  Diamond,
+  UserCheck,
+  Star,
+  Lock,
+  Clock
 } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 
-// --- DATA (Deta) ---
-const MENU_DATA = {
-  Starters: [
-    { name: "Truffle Murgh Tikka", desc: "Charcoal-smoked free-range chicken, black truffle shavings, 24k gold leaf.", price: "AED 125", image: "https://image2url.com/r2/default/images/1773545952370-735e5c02-ed88-4939-87d3-f2fa350ae97c.jpg" },
-    { name: "Wagyu Seekh Kebab", desc: "Grade A5 Wagyu beef, signature 21-spice blend, mint & pomegranate glaze.", price: "AED 195", image: "https://image2url.com/r2/default/images/1773554566958-e658efeb-fe3c-434b-93d7-014867c6bf66.jpeg" },
-    { name: "Saffron Lobster Shorba", desc: "Omani lobster bisque infused with Kashmiri saffron and coconut foam.", price: "AED 145", image: "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg" },
-  ],
-  "Main Course": [
-    { name: "Royal Nalli Nihari", desc: "Slow-cooked lamb shank, rich bone marrow gravy, artisanal sheer mal.", price: "AED 210", image: "https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg" },
-    { name: "Dal Tahina Reserve", desc: "Black lentils simmered for 48 hours, churned with French butter.", price: "AED 95", image: "https://image2url.com/r2/default/images/1773560294694-77c5082f-4c2c-481e-b483-73e47c55fda5.jpeg" },
-    { name: "Sea Bass Pollichathu", desc: "Chilean sea bass wrapped in banana leaf, shallot & kokum masala.", price: "AED 185", image: "https://image2url.com/r2/default/images/1773855572515-8311f664-9920-463f-80b2-7410919432d0.jpg" },
-  ],
-  Desserts: [
-    { name: "Rosewater & Pistachio Sphere", desc: "Melting white chocolate dome, pistachio sponge, warm rose syrup.", price: "AED 85", image: "https://image2url.com/r2/default/images/1773855611849-0dd9ee94-a03e-4919-b2d9-f9e9d0b9eeb1.jpg" },
-    { name: "Saffron Rasmalai Mille-Feuille", desc: "Crispy filo pastry, saffron cottage cheese mousse, edible gold.", price: "AED 90", image: "https://image2url.com/r2/default/images/1773855646363-1b3921bd-151e-4bda-a338-803ae44b926c.jpg" },
-  ]
+// --- Global Configuration ---
+
+const CLINIC_INFO = {
+  name: "Abha Medical Center",
+  arabicName: "مركز أبها الطبي",
+  address: "Premium Medical District, Downtown Dubai, UAE",
+  phone: "+971 56 148 7176",
+  email: "registry@abhamedical.ae"
 };
 
-const FEATURES = [
-  { icon: <ChefHat size={32} />, title: "Authentic Taste", desc: "Heritage recipes elevated with the world's finest ingredients." },
-  { icon: <Sparkles size={32} />, title: "Luxury Ambience", desc: "Bespoke interiors designed for intimacy and grandeur." },
-  { icon: <Wine size={32} />, title: "Elite Service", desc: "Anticipatory, discreet, and world-class hospitality." },
-  { icon: <MapPin size={32} />, title: "Prime Location", desc: "Situated exclusively in Al Khaleej St for the global elite." },
-];
-
-const REVIEWS = [
-  { 
-    image: "https://image2url.com/r2/default/images/1774110672578-310d0899-046c-4c12-85fc-b51ba6ceef10.jpg",
-    text: "A masterclass in fine dining. Tahina Restaurant doesn't just serve food; they curate an unforgettable evening. The Truffle Tikka is life-changing.", 
-    author: "Sarah M.", 
-    location: "London, UK" 
-  },
-  { 
-    image: "https://image2url.com/r2/default/images/1774110709609-0cf13fe4-c2ea-4e13-8547-66765f8c02df.jpg",
-    text: "The definitive luxury Indian experience in Dubai. Flawless service, exquisite flavors, and an atmosphere that screams exclusivity.", 
-    author: "Ahmed R.", 
-    location: "Dubai, UAE" 
-  },
-  { 
-    image: "https://image2url.com/r2/default/images/1774110745040-e3060498-012b-4731-918b-618ec3040e69.jpg",
-    text: "Every dish is a work of art. The attention to detail, from the 24k gold leaf to the perfectly paired wines, is simply unmatched.", 
-    author: "Elena V.", 
-    location: "Monaco" 
-  },
-  { 
-    image: "https://image2url.com/r2/default/images/1774110784939-c135172d-afc7-49d9-aae9-78c69e8fab26.jpg",
-    text: "An absolute culinary triumph. The ambiance transports you, while the modern techniques applied to classic recipes leave you in awe.", 
-    author: "James T.", 
-    location: "New York, USA" 
-  },
-  { 
-    image: "https://image2url.com/r2/default/images/1774110824941-bde0d96b-7e53-4488-ac4e-2a3e8e34f887.jpg",
-    text: "Unrivaled elegance. From the moment the valet took our car to the final bite of the Saffron Rasmalai, we were treated like royalty.", 
-    author: "Priya K.", 
-    location: "Mumbai, India" 
-  }
-];
-
-const GALLERY = [
-  "https://image2url.com/r2/default/images/1773855721582-25a57dca-2657-4948-9c6e-ddf9f1241aad.jpg",
-  "https://image2url.com/r2/default/images/1773855765776-56e36d5e-3b5e-4c5c-a682-6c960033362b.jpg",
-  "https://image2url.com/r2/default/images/1773855814066-7d308432-cd99-43e2-aea8-43bf80410213.jpg",
-  "https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg",
-  "https://image2url.com/r2/default/images/1773855879123-3c090c06-ff80-4ba5-8fb4-1d494e2686c3.jpg",
-  "https://image2url.com/r2/default/images/1773855914103-338ffd19-feea-4251-a3c6-2740918527a4.jpg"
-];
-
-// --- HOOKS & UTILS (Scroll ke effects handle karne ke liye) ---
-const useScrollReveal = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('opacity-100', 'translate-y-0');
-          entry.target.classList.remove('opacity-0', 'translate-y-12');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+const IMAGES = {
+  hero: "https://image2url.com/r2/default/images/1775069808968-618b2e26-587a-40cd-a3a5-aa771994e40c.jpg",
+  about: "https://image2url.com/r2/default/images/1775069511420-9a842cbe-f895-4d8d-a2ea-4035610e4ef7.jpg",
+  service1: "https://image2url.com/r2/default/images/1775069673139-a7c830f5-9374-49d3-ab45-95369149740b.jpg",
+  service2: "https://image2url.com/r2/default/images/1775069967168-8118aafb-9e5a-4d98-9e14-1d8078f71253.jpg",
+  service3: "https://image2url.com/r2/default/images/1775069634349-7f628750-d699-4d23-9e89-cce329e900a2.jpg",
+  doctor1: "https://image2url.com/r2/default/images/1775069604126-268569d7-8548-49fa-9a11-3fa7d4813935.jpg",
+  doctor2: "https://image2url.com/r2/default/images/1775069849227-f68c6702-d1b1-4478-82f1-14b9c241b4a6.jpg",
+  reception: "https://image2url.com/r2/default/images/1775069932331-02eaab84-d6b2-4111-82a6-95f6cf02c04b.jpg"
 };
 
-// --- COMPONENTS (Main app structure) ---
+// --- Sub-Components (Premium Atoms) ---
+
+const LuxuryText = ({ children, delay = 0 }) => (
+  <div className="overflow-hidden">
+    <motion.div
+      initial={{ y: "100%", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  </div>
+);
+
+const SectionHeader = ({ number, title, subtitle, light = false }) => (
+  <div className="mb-24">
+    <div className="flex items-center gap-6 mb-8 overflow-hidden">
+      <span className="text-[10px] font-bold tracking-[0.5em] text-[#C5A059]">{number}</span>
+      <motion.div 
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.5 }}
+        className={`h-[1px] w-24 origin-left ${light ? 'bg-white/20' : 'bg-[#0A192F]/10'}`} 
+      />
+      <span className={`text-[9px] uppercase tracking-[0.6em] font-bold ${light ? 'text-white/40' : 'text-gray-400'}`}>{subtitle}</span>
+    </div>
+    <h2 className={`text-5xl md:text-8xl font-serif font-light leading-none tracking-tighter ${light ? 'text-white' : 'text-[#0A192F]'}`}>
+      {title}
+    </h2>
+  </div>
+);
+
+// Service card with 40px radius and gray shadow
+const ServiceCard = ({ title, desc, img, index }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.2 }}
+    className="group relative h-[600px] overflow-hidden cursor-pointer rounded-[40px] shadow-[2px_2px_2px_gray] bg-black"
+  >
+    <img src={img} className="w-full h-full object-cover opacity-60 grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[2.5s]" alt={title} />
+    <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F] via-transparent to-transparent opacity-80" />
+    <div className="absolute bottom-0 left-0 p-10 w-full transform group-hover:-translate-y-4 transition-transform duration-700">
+      <p className="text-[10px] font-bold tracking-[0.4em] text-[#C5A059] mb-4 uppercase">Center of Excellence</p>
+      <h3 className="text-3xl font-serif text-white mb-6 leading-tight">{title}</h3>
+      <p className="text-white/50 text-xs tracking-widest uppercase mb-8 line-clamp-2 leading-relaxed">{desc}</p>
+      <div className="flex justify-between items-center overflow-hidden h-6">
+        <ArrowRight className="text-white transform -translate-x-12 group-hover:translate-x-0 transition-all duration-700" size={24} />
+      </div>
+    </div>
+  </motion.div>
+);
+
+// --- Main Application ---
+
 export default function App() {
-  useScrollReveal();
-  const [activeMenu, setActiveMenu] = useState('Starters');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [registryStatus, setRegistryStatus] = useState('idle');
 
-  // Yahan reservation form ka state hai
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    date: '',
-    time: '19:00',
-    guests: '2 People',
-    requests: ''
-  });
+  const { scrollYProgress } = useScroll();
+  const heroY = useTransform(scrollYProgress, [0, 0.5], [0, 150]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
-  // WhatsApp form submission logic naye number ke sath
-  const handleWhatsAppSubmit = (e) => {
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleRegistrySubmit = (e) => {
     e.preventDefault();
-    const { name, phone, date, time, guests, requests } = formData;
-    if(!name || !phone || !date) {
-      alert("Kripya saari zaroori details bharein (Name, Phone, Date).");
-      return;
-    }
-    
-    const message = `*New Reservation Request - Tahina Restaurant Dubai* 🍽️\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Date:* ${date}\n*Time:* ${time}\n*Guests:* ${guests}\n*Special Requests:* ${requests || 'None'}`;
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=971555938562&text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappUrl, '_blank');
+    setRegistryStatus('submitting');
+    setTimeout(() => setRegistryStatus('success'), 2500);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % REVIEWS.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const gold = "#D4AF37";
-
   return (
-    <div className="bg-[#050505] text-gray-200 font-sans min-h-screen selection:bg-[#D4AF37] selection:text-black">
-      {/* Global Styles for Fonts and Custom Utilities */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
-        
-        .font-serif { font-family: 'Cinzel', serif; }
+    <div className="bg-[#FAF9F6] text-[#0A192F] font-sans selection:bg-[#C5A059] selection:text-white relative">
+      
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+        .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Montserrat', sans-serif; }
         
-        .glass-nav {
-          background: rgba(5, 5, 5, 0.85);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-        }
-        
-        /* New Black & Gold Combo Box Style */
-        .glass-card {
-          background: linear-gradient(145deg, rgba(15, 15, 15, 0.95) 0%, rgba(35, 25, 5, 0.9) 100%);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(212, 175, 55, 0.3);
-          border-radius: 40px;
-          box-shadow: 0 10px 30px -5px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.1);
-          transition: all 0.4s ease;
+        .gold-leaf {
+          background: linear-gradient(135deg, #C5A059 0%, #F1E2C2 50%, #C5A059 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
-        .glass-card:hover {
-          border-color: rgba(212, 175, 55, 0.6);
-          box-shadow: 0 15px 40px -5px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2);
+        .grain-texture {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background: url('https://www.transparenttextures.com/patterns/felt.png');
+          opacity: 0.04;
+          pointer-events: none;
+          z-index: 9999;
         }
 
-        .text-gold { color: #D4AF37; }
-        .bg-gold { background-color: #D4AF37; }
-        .border-gold { border-color: #D4AF37; }
-        
-        .reveal {
-          transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        .luxury-blur {
+          backdrop-filter: blur(30px) saturate(150%);
+          -webkit-backdrop-filter: blur(30px) saturate(150%);
         }
 
-        .menu-image-wrap:hover .menu-image {
-          transform: scale(1.05);
+        .premium-input {
+          background: transparent;
+          border-bottom: 1px solid rgba(10, 25, 47, 0.1);
+          padding: 1.5rem 0;
+          width: 100%;
+          font-size: 1rem;
+          font-weight: 300;
+          transition: all 0.5s ease;
         }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
-        
-        html { scroll-behavior: smooth; }
-      `}} />
 
-      {/* NAVIGATION (Navigeshon bar) */}
-      <nav className="fixed w-full z-50 glass-nav transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <a href="#" className="flex flex-col items-center">
-              <span className="font-serif text-xl md:text-2xl font-bold tracking-widest text-white uppercase text-center">Tahina Restaurant</span>
-              <span className="text-[10px] tracking-[0.3em] text-gold mt-1 uppercase">Dubai</span>
-            </a>
+        .premium-input:focus {
+          border-bottom: 1px solid #C5A059;
+          outline: none;
+        }
+      `}</style>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:flex space-x-8 items-center">
-              {['About', 'Menu', 'Experience', 'Gallery'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="text-sm uppercase tracking-widest hover:text-gold transition-colors duration-300">
-                  {item}
-                </a>
-              ))}
-              <a href="#reservations" className="ml-4 border border-gold text-gold px-6 py-2.5 text-sm uppercase tracking-widest hover:bg-gold hover:text-black transition-all duration-500 rounded-sm">
-                Reserve
-              </a>
-            </div>
+      <div className="grain-texture" />
 
-            {/* Mobile Menu Button */}
-            <button className="md:hidden text-gold" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-              {isMobileMenuOpen ? <X size={28} /> : <MenuIcon size={28} />}
-            </button>
+      {/* --- Navigation --- */}
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-1000 ${isScrolled ? 'bg-white/90 luxury-blur py-4 border-b border-[#C5A059]/10 shadow-sm' : 'bg-transparent py-10'}`}>
+        <div className="container mx-auto px-10 flex justify-between items-center">
+          <div className="flex flex-col group cursor-pointer">
+            <span className={`text-3xl font-serif tracking-tighter transition-colors ${isScrolled ? 'text-[#0A192F]' : 'text-white'}`}>ABHA</span>
+            <span className="text-[7px] tracking-[0.8em] font-bold text-[#C5A059] uppercase mt-1">Dubai Atelier</span>
           </div>
-        </div>
 
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden glass-nav absolute top-24 left-0 w-full flex flex-col items-center space-y-6 py-8 border-b border-gold/20">
-            {['About', 'Menu', 'Experience', 'Gallery', 'Reservations'].map((item) => (
+          <div className="hidden lg:flex items-center gap-16">
+            {['Expertise', 'The Board', 'Registry'].map((item) => (
               <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`} 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg font-serif uppercase tracking-widest hover:text-gold transition-colors"
+                key={item}
+                href={`#${item.toLowerCase().replace(' ', '')}`} 
+                className={`text-[9px] uppercase tracking-[0.5em] font-bold transition-all hover:text-[#C5A059] relative group ${isScrolled ? 'text-[#0A192F]' : 'text-white'}`}
               >
                 {item}
+                <span className="absolute -bottom-3 left-0 w-0 h-[1.5px] bg-[#C5A059] transition-all group-hover:w-full" />
               </a>
             ))}
           </div>
-        )}
+
+          <div className="flex items-center gap-10">
+            <a 
+              href="#registry"
+              className={`hidden md:block px-10 py-4 text-[9px] font-bold uppercase tracking-[0.4em] transition-all border rounded-full ${isScrolled ? 'bg-[#0A192F] text-white border-[#0A192F]' : 'bg-white/10 text-white border-white/20 hover:bg-white hover:text-[#0A192F]'}`}
+            >
+              Membership Registry
+            </a>
+            <button onClick={() => setIsMenuOpen(true)} className="text-[#C5A059]"><Menu size={32}/></button>
+          </div>
+        </div>
       </nav>
 
-      {/* HERO SECTION (Mukhya bhag) */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full">
-          <img 
-            src="https://image2url.com/r2/default/images/1773855844207-94da55ee-3ef4-4bfa-a806-d6ca09afce72.jpg" 
-            alt="Luxury Dining" 
-            className="w-full h-full object-cover scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#050505]"></div>
-        </div>
-        
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center mt-20">
-          <div className="flex items-center gap-4 mb-6 reveal opacity-0 translate-y-12 delay-100">
-            <div className="h-[1px] w-12 bg-gold"></div>
-            <span className="text-gold uppercase tracking-[0.4em] text-xs md:text-sm">Welcome to Excellence</span>
-            <div className="h-[1px] w-12 bg-gold"></div>
-          </div>
-          
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-4 reveal opacity-0 translate-y-12 delay-200">
-            Tahina Restaurant
-          </h1>
-          <p className="text-xl md:text-2xl text-gold font-light tracking-widest uppercase mb-10 reveal opacity-0 translate-y-12 delay-200">
-            Authentic Flavors. Luxury Dining.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 mt-4 reveal opacity-0 translate-y-12 delay-300">
-            <a href="#reservations" className="bg-gold text-black px-8 py-4 uppercase tracking-widest text-sm font-semibold hover:bg-white transition-all duration-300 flex items-center justify-center gap-2">
-              Reserve Table <ChevronRight size={18} />
-            </a>
-            <a href="#menu" className="glass-card text-white px-8 py-4 uppercase tracking-widest text-sm hover:border-gold transition-all duration-300 flex items-center justify-center">
-              View Menu
-            </a>
-          </div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-50">
-          <span className="text-[10px] tracking-widest uppercase mb-2">Scroll</span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-gold to-transparent"></div>
-        </div>
-      </section>
+      {/* --- Hero Section --- */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0">
+          <img src={IMAGES.hero} alt="Luxury Interior" className="w-full h-full object-cover opacity-60 grayscale-[15%] scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A192F]/90 via-transparent to-[#FAF9F6]" />
+        </motion.div>
 
-      {/* ABOUT SECTION */}
-      <section id="about" className="py-24 md:py-32 px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="relative reveal opacity-0 translate-y-12">
-            <div className="absolute -inset-4 border border-gold/30 translate-x-4 translate-y-4"></div>
-            <img 
-              src="https://image2url.com/r2/default/images/1773560236712-ea56b7ad-8112-4e54-9c1d-dcac839117e2.jpeg" 
-              alt="Chef plating food" 
-              className="relative z-10 w-full h-[600px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
-            />
-          </div>
+        <div className="container mx-auto px-10 relative z-10 text-center">
+          <LuxuryText delay={0.2}>
+            <span className="inline-block text-[#C5A059] text-[10px] tracking-[1.5em] uppercase font-bold mb-8">Flagship Downtown Dubai</span>
+          </LuxuryText>
           
-          <div className="reveal opacity-0 translate-y-12 delay-200">
-            <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-4">Our Story</h4>
-            <h2 className="font-serif text-4xl md:text-5xl text-white mb-8 leading-snug">A Symphony of Spice in the Heart of Dubai.</h2>
-            <div className="space-y-6 text-gray-400 font-light leading-relaxed">
-              <p>
-                Located in the prestigious Al Khaleej St district, Tahina Restaurant redefines authentic cuisine through the lens of modern luxury. Every dish is a curated masterpiece, blending centuries-old traditions with avant-garde culinary techniques.
+          <LuxuryText delay={0.4}>
+            <h1 className="text-6xl md:text-[140px] font-serif text-white font-light tracking-tighter leading-none mb-2">
+              ABHA
+            </h1>
+            <h2 className="text-4xl md:text-[80px] font-serif gold-leaf font-light italic mb-12 leading-none">
+              Medical Center
+            </h2>
+          </LuxuryText>
+
+          <LuxuryText delay={0.8}>
+            <div className="flex flex-col items-center gap-12 pt-16 border-t border-white/5">
+              <p className="text-[#E2D1B3]/50 max-w-xl text-[11px] md:text-[14px] tracking-[0.5em] font-light leading-loose uppercase text-center">
+                Bespoke Healthcare Excellence. <br />
+                A biological sanctuary for the world's most discerning patients.
               </p>
-              <p>
-                Step into an ambiance of unparalleled opulence. From the 24k gold leaf accents to our world-class hospitality, we invite you to embark on an unforgettable gastronomic journey curated for the global elite.
+              
+              <div className="flex flex-col sm:flex-row gap-8 items-center justify-center">
+                 <a 
+                   href="#registry" 
+                   className="px-16 py-6 bg-[#C5A059] text-white text-[10px] font-bold uppercase tracking-[0.4em] shadow-2xl rounded-full hover:bg-white hover:text-[#0A192F] transition-all duration-700 w-full sm:w-auto"
+                 >
+                   Book Appointment
+                 </a>
+                 <a 
+                   href="https://wa.me/971561487176" 
+                   target="_blank" 
+                   rel="noreferrer" 
+                   className="px-12 py-6 border border-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.4em] flex items-center gap-4 rounded-full hover:bg-white/10 transition-all duration-500 w-full sm:w-auto justify-center"
+                 >
+                   <MessageCircle size={20} className="text-[#25D366]" />
+                   WhatsApp
+                 </a>
+              </div>
+            </div>
+          </LuxuryText>
+        </div>
+      </section>
+
+      {/* --- Section 01: Heritage --- */}
+      <section id="about" className="py-60 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-10">
+          <div className="grid lg:grid-cols-12 gap-20 items-center">
+            <div className="col-span-12 lg:col-span-5 order-2 lg:order-1">
+              <SectionHeader number="01" title="The Legacy" subtitle="Bespoke Care" />
+              <p className="text-gray-500 text-xl font-light leading-loose mb-12 max-w-lg">
+                Located in the heart of the world's most dynamic city, Abha Medical Center is where clinical precision meets unparalleled luxury. We treat your biology as a heritage piece.
               </p>
-            </div>
-            
-            <div className="mt-12 flex items-center gap-6">
-              <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=150" alt="Executive Chef" className="w-16 h-16 rounded-full object-cover border-2 border-gold p-1" />
-              <div>
-                <p className="text-white font-serif text-xl">Sanjeev R.</p>
-                <p className="text-gold text-sm uppercase tracking-widest">Executive Chef</p>
+              <div className="grid grid-cols-2 gap-12">
+                 {[
+                   { t: "Elite Technology", i: <Microscope size={24}/> },
+                   { t: "Ultimate Discretion", i: <ShieldCheck size={24}/> },
+                   { t: "Expert Medical Board", i: <Award size={24}/> },
+                   { t: "Global Portability", i: <Globe size={24}/> }
+                 ].map((item, i) => (
+                   <div key={i} className="flex flex-col gap-4 p-8 bg-[#FAF9F6] rounded-[40px] shadow-[2px_2px_2px_gray] border border-gray-50">
+                      <div className="text-[#C5A059]">{item.i}</div>
+                      <span className="text-[9px] font-bold uppercase tracking-[0.4em]">{item.t}</span>
+                   </div>
+                 ))}
               </div>
+            </div>
+
+            <div className="col-span-12 lg:col-span-7 order-1 lg:order-2">
+               <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.5 }}
+                className="relative z-10"
+               >
+                 {/* Image clipped by 40px container, but img tag remains sharp */}
+                 <div className="rounded-[40px] overflow-hidden shadow-[2px_2px_2px_gray]">
+                    <img src={IMAGES.about} className="w-full h-[700px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000" alt="Excellence" />
+                 </div>
+               </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* MENU SHOWCASE */}
-      <section id="menu" className="py-24 md:py-32 bg-[#0a0806] relative">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-16 reveal opacity-0 translate-y-12">
-            <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-4">Culinary Art</h4>
-            <h2 className="font-serif text-4xl md:text-5xl text-white">The Menus</h2>
-          </div>
-
-          {/* Menu Tabs */}
-          <div className="flex flex-wrap justify-center gap-4 md:gap-12 mb-16 reveal opacity-0 translate-y-12 delay-100">
-            {Object.keys(MENU_DATA).map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveMenu(category)}
-                className={`text-sm uppercase tracking-widest pb-2 border-b-2 transition-all duration-300 ${
-                  activeMenu === category ? 'border-gold text-gold' : 'border-transparent text-gray-500 hover:text-white'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
-          {/* Menu Items */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {MENU_DATA[activeMenu].map((item, index) => (
-              <div key={index} className="glass-card p-6 group cursor-pointer reveal opacity-0 translate-y-12" style={{ transitionDelay: `${index * 150}ms` }}>
-                <div className="overflow-hidden h-64 mb-6 relative menu-image-wrap rounded-[25px]">
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10"></div>
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover menu-image transition-transform duration-700" />
-                  <div className="absolute bottom-4 right-4 z-20 bg-black/80 backdrop-blur-sm text-gold px-4 py-2 font-serif rounded-full border border-gold/30">
-                    {item.price}
-                  </div>
-                </div>
-                <h3 className="font-serif text-2xl text-white mb-3 group-hover:text-gold transition-colors px-2">{item.name}</h3>
-                <p className="text-gray-400 font-light text-sm leading-relaxed px-2 pb-2">{item.desc}</p>
-              </div>
-            ))}
-          </div>
+      {/* --- Section 02: Expertise --- */}
+      <section id="expertise" className="py-60 bg-[#0A192F] text-white">
+        <div className="container mx-auto px-10">
+          <SectionHeader number="02" title="Our Expertise" subtitle="Excellence Centers" light />
           
-          <div className="text-center mt-20 reveal opacity-0 translate-y-12">
-             <a href="#" className="inline-block border border-gold/50 text-white px-10 py-4 uppercase tracking-widest text-sm hover:bg-gold hover:text-black transition-all duration-300">
-              Download Full Menu (PDF)
-            </a>
+          <div className="grid lg:grid-cols-3 gap-12">
+             <ServiceCard title="Regenerative Aesthetics" desc="Biological rejuvenation through high-molecular skincare and precision technology." img={IMAGES.service1} index={0} />
+             <ServiceCard title="Biological Optimization" desc="Tailored longevity protocols designed to maximize your vital performance years." img={IMAGES.service2} index={1} />
+             <ServiceCard title="Precision Diagnostics" desc="Comprehensive health mapping utilizing 7T imaging and detailed molecular screening." img={IMAGES.service3} index={2} />
           </div>
         </div>
       </section>
 
-      {/* WHY CHOOSE US */}
-      <section id="experience" className="py-24 md:py-32 px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="text-center mb-20 reveal opacity-0 translate-y-12">
-          <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-4">The Standard</h4>
-          <h2 className="font-serif text-4xl md:text-5xl text-white">Pillars of Excellence</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {FEATURES.map((feature, index) => (
-            <div key={index} className="glass-card p-10 text-center hover:-translate-y-2 transition-transform duration-500 reveal opacity-0 translate-y-12" style={{ transitionDelay: `${index * 100}ms` }}>
-              <div className="text-gold mb-6 flex justify-center">{feature.icon}</div>
-              <h3 className="font-serif text-xl text-white mb-4">{feature.title}</h3>
-              <p className="text-gray-400 font-light text-sm leading-relaxed">{feature.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* GALLERY */}
-      <section id="gallery" className="py-20 bg-[#0a0806]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-16 text-center reveal opacity-0 translate-y-12">
-          <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-4">Visual Feast</h4>
-          <h2 className="font-serif text-4xl md:text-5xl text-white">The Gallery</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 px-4 md:px-12 max-w-7xl mx-auto">
-          {GALLERY.map((img, index) => (
-            <div key={index} className="glass-card p-2 relative overflow-hidden group aspect-square reveal opacity-0 translate-y-12" style={{ transitionDelay: `${(index % 3) * 100}ms` }}>
-              <img src={img} alt={`Gallery ${index}`} className="w-full h-full object-cover rounded-[30px] transition-transform duration-1000 group-hover:scale-105" />
-              <div className="absolute inset-2 rounded-[30px] bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                <span className="text-gold text-4xl font-light">+</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* REVIEWS */}
-      <section id="reviews" className="py-24 md:py-32 bg-[#050505] relative border-t border-gold/10 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          
-          {/* Image Side (Editorial Layout) */}
-          <div className="glass-card p-3 relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] overflow-hidden reveal opacity-0 translate-y-12">
-            <div className="absolute inset-3 border border-gold/40 z-20 pointer-events-none rounded-[30px]"></div>
-            
-            <div className="w-full h-full relative rounded-[30px] overflow-hidden">
-              {REVIEWS.map((review, index) => (
-                <img 
-                  key={index}
-                  src={review.image}
-                  alt={`Review by ${review.author}`}
-                  className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out transform ${
-                    index === activeTestimonial ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
-                  }`}
-                />
-              ))}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10 pointer-events-none"></div>
-            </div>
-          </div>
-
-          {/* Text Side */}
-          <div className="relative reveal opacity-0 translate-y-12 delay-200">
-            {/* Decorative Quote Mark */}
-            <div className="absolute -top-12 -left-8 md:-left-12 text-[120px] md:text-[160px] text-white/5 font-serif select-none pointer-events-none leading-none">"</div>
-            
-            <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-12 flex items-center gap-4">
-              <span className="h-[1px] w-8 bg-gold"></span> Elite Testimonials
-            </h4>
-            
-            <div className="relative h-[280px] md:h-[220px]">
-              {REVIEWS.map((review, index) => (
-                <div 
-                  key={index} 
-                  className={`absolute top-0 left-0 w-full transition-all duration-1000 transform ${
-                    index === activeTestimonial ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                  }`}
-                  style={{ pointerEvents: index === activeTestimonial ? 'auto' : 'none' }}
-                >
-                  <div className="flex gap-2 mb-6">
-                    {[...Array(5)].map((_, i) => <Star key={i} size={18} className="fill-gold text-gold" />)}
-                  </div>
-                  <p className="font-serif text-2xl md:text-3xl lg:text-4xl text-white leading-relaxed mb-8">"{review.text}"</p>
-                  <div>
-                    <p className="uppercase tracking-widest text-sm text-gold font-semibold">{review.author}</p>
-                    <p className="text-xs text-gray-500 mt-2 uppercase tracking-wider">{review.location}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Custom Premium Pagination Line */}
-            <div className="flex items-center gap-3 mt-8 md:mt-12">
-              {REVIEWS.map((_, index) => (
-                <button 
-                  key={index}
-                  onClick={() => setActiveTestimonial(index)}
-                  className={`h-[2px] transition-all duration-500 ease-in-out ${
-                    index === activeTestimonial ? 'bg-gold w-12' : 'bg-gray-700 w-4 hover:bg-gray-400'
-                  }`}
-                  aria-label={`View review ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* RESERVATION & LOCATION */}
-      <section id="reservations" className="py-24 md:py-32 bg-[#0a0806] relative border-t border-gold/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16">
-          
-          {/* Location Info */}
-          <div className="reveal opacity-0 translate-y-12">
-            <h4 className="text-gold uppercase tracking-[0.3em] text-sm mb-4">Visit Us</h4>
-            <h2 className="font-serif text-4xl text-white mb-10">The Location</h2>
-            
-            <div className="space-y-8 mb-12">
-              <div className="flex gap-4 items-start">
-                <MapPin className="text-gold shrink-0 mt-1" />
-                <div>
-                  <h5 className="text-white uppercase tracking-widest text-sm mb-2">Address</h5>
-                  <p className="text-gray-400 font-light text-sm">Al Khaleej St<br/>Dubai, UAE</p>
-                </div>
-              </div>
-              <div className="flex gap-4 items-start">
-                <Phone className="text-gold shrink-0 mt-1" />
-                <div>
-                  <h5 className="text-white uppercase tracking-widest text-sm mb-2">Reservations</h5>
-                  <p className="text-gray-400 font-light text-sm">+971 55 593 8562<br/>Complimentary VIP Valet Available</p>
-                </div>
-              </div>
-              <div className="flex gap-4 items-start">
-                <Clock className="text-gold shrink-0 mt-1" />
-                <div>
-                  <h5 className="text-white uppercase tracking-widest text-sm mb-2">Opening Hours</h5>
-                  <p className="text-gray-400 font-light text-sm">Mon - Sun: 6:00 PM - 2:00 AM</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Dark Styled Map Iframe */}
-            <div className="h-64 w-full border border-gold/20 overflow-hidden relative group">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3608.681177695029!2d55.29969231501061!3d25.247656983872242!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f432b4b4b4b4b%3A0x4b4b4b4b4b4b4b4b!2sBurJuman!5e0!3m2!1sen!2sae!4v1620000000000!5m2!1sen!2sae" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) grayscale(50%) brightness(80%)' }} 
-                  allowFullScreen="" 
-                  loading="lazy"
-                ></iframe>
-                <div className="absolute inset-0 bg-black/10 pointer-events-none group-hover:bg-transparent transition-all"></div>
-            </div>
-          </div>
-
-          {/* Booking Form */}
-          <div className="glass-card p-8 md:p-12 relative overflow-hidden reveal opacity-0 translate-y-12 delay-200">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl"></div>
-            
-            <h2 className="font-serif text-3xl text-white mb-2 relative z-10">Request a Table</h2>
-            <p className="text-gray-400 text-sm mb-8 relative z-10">For parties larger than 6, please contact us directly.</p>
-            
-            <form className="space-y-6 relative z-10" onSubmit={handleWhatsAppSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Full Name</label>
-                  <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors" placeholder="John Doe" required />
-                </div>
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Phone Number</label>
-                  <input type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors" placeholder="+971 50 000 0000" required />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Date</label>
-                  <input type="date" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors [color-scheme:dark]" required />
-                </div>
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Time</label>
-                  <select value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors appearance-none cursor-pointer">
-                    <option className="bg-[#140f0a]">19:00</option>
-                    <option className="bg-[#140f0a]">19:30</option>
-                    <option className="bg-[#140f0a]">20:00</option>
-                    <option className="bg-[#140f0a]">20:30</option>
-                    <option className="bg-[#140f0a]">21:00</option>
-                    <option className="bg-[#140f0a]">21:30</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Guests</label>
-                  <select value={formData.guests} onChange={(e) => setFormData({...formData, guests: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-gray-300 transition-colors appearance-none cursor-pointer">
-                    <option className="bg-[#140f0a]">2 People</option>
-                    <option className="bg-[#140f0a]">3 People</option>
-                    <option className="bg-[#140f0a]">4 People</option>
-                    <option className="bg-[#140f0a]">5 People</option>
-                    <option className="bg-[#140f0a]">6 People</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Special Requests</label>
-                <textarea rows="3" value={formData.requests} onChange={(e) => setFormData({...formData, requests: e.target.value})} className="w-full bg-transparent border-b border-gray-700 focus:border-gold outline-none py-2 text-white transition-colors resize-none" placeholder="Allergies, anniversaries, etc."></textarea>
-              </div>
-              
-              <button type="submit" className="w-full bg-gold text-black uppercase tracking-widest text-sm font-semibold py-4 hover:bg-white transition-colors duration-300 mt-4 flex justify-center items-center gap-2">
-                Confirm & Send to WhatsApp
-              </button>
-            </form>
-          </div>
-
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="bg-black py-16 text-center border-t border-gold/20">
-        <div className="max-w-4xl mx-auto px-6">
-          <a href="#" className="flex flex-col items-center mb-8 inline-block">
-             <span className="font-serif text-2xl md:text-3xl font-bold tracking-widest text-white uppercase text-center">Tahina Restaurant</span>
-          </a>
-          
-          <div className="flex justify-center gap-6 mb-12">
-            <a href="#" className="text-gray-500 hover:text-gold transition-colors"><Instagram size={20} /></a>
-            <a href="#" className="text-gray-500 hover:text-gold transition-colors"><Facebook size={20} /></a>
-            <a href="#" className="text-gray-500 hover:text-gold transition-colors"><Twitter size={20} /></a>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-6 text-xs uppercase tracking-widest text-gray-600 mb-12">
-            <a href="#" className="hover:text-gold transition-colors">Press</a>
-            <a href="#" className="hover:text-gold transition-colors">Careers</a>
-            <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-gold transition-colors">Terms of Service</a>
-          </div>
-          
-          <p className="text-gray-700 text-xs tracking-widest">
-            &copy; {new Date().getFullYear()} TAHINA RESTAURANT DUBAI. ALL RIGHTS RESERVED. CRAFTED FOR EXCELLENCE.
+      {/* --- Section 03: The Board --- */}
+      <section id="theboard" className="py-60 bg-white">
+        <div className="container mx-auto px-10 text-center mb-32">
+          <SectionHeader number="03" title="Medical Board" subtitle="Authority" />
+          <p className="text-gray-400 text-xl font-light leading-relaxed max-w-2xl mx-auto text-center">
+            Our medical specialists are leaders from world-renowned institutes, dedicated to your long-term vitality.
           </p>
         </div>
+        <div className="container mx-auto px-10">
+           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+              <div className="p-12 bg-[#FAF9F6] rounded-[40px] shadow-[2px_2px_2px_gray] border border-gray-100 group">
+                 <div className="overflow-hidden mb-10 h-80">
+                    <img src={IMAGES.doctor1} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Specialist" />
+                 </div>
+                 <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#C5A059] mb-2">Director of Longevity</p>
+                 <h4 className="text-3xl font-serif text-[#0A192F]">Dr. Alistair Vaughn</h4>
+              </div>
+              <div className="p-12 bg-[#FAF9F6] rounded-[40px] shadow-[2px_2px_2px_gray] border border-gray-100 group">
+                 <div className="overflow-hidden mb-10 h-80">
+                    <img src={IMAGES.doctor2} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Specialist" />
+                 </div>
+                 <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#C5A059] mb-2">Chief Aesthetician</p>
+                 <h4 className="text-3xl font-serif text-[#0A192F]">Dr. Laila Al-Sayed</h4>
+              </div>
+              <div className="p-16 bg-[#0A192F] rounded-[40px] shadow-[2px_2px_2px_gray] flex flex-col justify-center text-center">
+                 <Star className="text-[#C5A059] mx-auto mb-10" size={48} />
+                 <h5 className="text-2xl font-serif text-white mb-8">Clinical Governance</h5>
+                 <p className="text-[11px] text-gray-400 uppercase tracking-widest leading-[2] italic">
+                   "We preserve biological heritage with Ivy League standards."
+                 </p>
+              </div>
+           </div>
+        </div>
+      </section>
+
+      {/* --- Section 04: Registry (Premium Form) --- */}
+      <section id="registry" className="py-72 bg-[#FAF9F6] relative overflow-hidden">
+         <div className="container mx-auto px-10 relative z-10">
+            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-20 xl:gap-40">
+               <div className="lg:w-2/5 flex flex-col justify-center">
+                  <SectionHeader number="04" title="Membership" subtitle="The Registry" />
+                  <p className="text-gray-500 font-light text-2xl leading-loose mb-16 max-w-lg">
+                    Admission to Abha Medical Center is a privilege. We manage your health as an asset to be protected.
+                  </p>
+                  
+                  <div className="space-y-10">
+                     <div className="flex gap-8 group items-start p-10 bg-white rounded-[40px] shadow-[2px_2px_2px_gray]">
+                        <Lock size={24} className="text-[#C5A059] shrink-0" />
+                        <div>
+                           <p className="text-[11px] uppercase tracking-[0.6em] font-bold text-[#0A192F] mb-2">Secure Gateway</p>
+                           <p className="text-xs text-gray-400 leading-relaxed">Your medical registry is protected by 256-bit institutional encryption.</p>
+                        </div>
+                     </div>
+                     <div className="flex gap-8 group items-start p-10 bg-white rounded-[40px] shadow-[2px_2px_2px_gray]">
+                        <Clock size={24} className="text-[#C5A059] shrink-0" />
+                        <div>
+                           <p className="text-[11px] uppercase tracking-[0.6em] font-bold text-[#0A192F] mb-2">Registry Response</p>
+                           <p className="text-xs text-gray-400 leading-relaxed">Applications are reviewed within 4 business hours by our concierge board.</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div className="lg:w-3/5">
+                  <div className="bg-white p-12 md:p-20 rounded-[40px] shadow-[2px_2px_2px_gray] border border-gray-100 relative overflow-hidden">
+                     <AnimatePresence mode="wait">
+                        {registryStatus === 'success' ? (
+                           <motion.div 
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              className="text-center py-20"
+                           >
+                              <div className="w-24 h-24 bg-[#C5A059] text-white rounded-full flex items-center justify-center mx-auto mb-10 shadow-2xl">
+                                 <CheckCircle2 size={48} strokeWidth={1} />
+                              </div>
+                              <h3 className="text-4xl font-serif text-[#0A192F] mb-6">Application Registered</h3>
+                              <p className="text-gray-500 max-w-md mx-auto leading-loose mb-12">
+                                Thank you for choosing Abha. A member of our Senior Medical Board will reach out via your preferred channel shortly.
+                              </p>
+                              <button onClick={() => setRegistryStatus('idle')} className="text-[#C5A059] text-[10px] font-bold uppercase tracking-[0.5em] border-b border-[#C5A059] pb-2">New Registry Request</button>
+                           </motion.div>
+                        ) : (
+                           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                              <div className="mb-16">
+                                 <h4 className="text-[12px] uppercase tracking-[0.8em] font-bold text-[#C5A059] mb-4">Board Submission</h4>
+                                 <p className="text-[10px] text-gray-300 uppercase tracking-widest">Confidential Admission Portal</p>
+                              </div>
+
+                              <form onSubmit={handleRegistrySubmit} className="space-y-12">
+                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                                    <div className="relative">
+                                       <label className="text-[9px] uppercase tracking-[0.4em] text-gray-300 mb-2 block">Legal Name</label>
+                                       <input required type="text" className="premium-input" placeholder="Full Identity" />
+                                    </div>
+                                    <div className="relative">
+                                       <label className="text-[9px] uppercase tracking-[0.4em] text-gray-300 mb-2 block">Contact Point</label>
+                                       <input required type="text" className="premium-input" placeholder="Email or Phone" />
+                                    </div>
+                                 </div>
+                                 <div className="relative">
+                                    <label className="text-[9px] uppercase tracking-[0.4em] text-gray-300 mb-2 block">Center of Interest</label>
+                                    <select className="premium-input appearance-none bg-transparent">
+                                       <option>Select Specialization</option>
+                                       <option>Regenerative Aesthetics</option>
+                                       <option>Biological Optimization</option>
+                                       <option>Diagnostics & Screening</option>
+                                    </select>
+                                 </div>
+                                 <div className="relative">
+                                    <label className="text-[9px] uppercase tracking-[0.4em] text-gray-300 mb-2 block">Brief Inquiry (Optional)</label>
+                                    <textarea className="premium-input min-h-[80px]" placeholder="Describe your medical aspirations..."></textarea>
+                                 </div>
+                                 <button type="submit" className="w-full py-8 bg-[#0A192F] text-[#E2D1B3] rounded-full uppercase tracking-[0.8em] font-bold text-[11px] hover:bg-[#C5A059] hover:text-white transition-all duration-700 shadow-2xl">
+                                    Submit Application
+                                 </button>
+                              </form>
+                           </motion.div>
+                        )}
+                     </AnimatePresence>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* --- Footer --- */}
+      <footer className="bg-[#FAF9F6] pt-60 pb-16 relative">
+         <div className="container mx-auto px-10">
+            <div className="grid lg:grid-cols-4 gap-20 mb-48">
+               <div className="space-y-12">
+                  <div className="flex flex-col">
+                     <span className="text-5xl font-serif text-[#0A192F] tracking-tighter">ABHA</span>
+                     <span className="text-[11px] tracking-[1.5em] font-bold text-[#C5A059] uppercase mt-4">The Atelier</span>
+                  </div>
+                  <p className="text-gray-400 text-xs font-light uppercase tracking-widest leading-loose">The absolute pinnacle of digital healthcare luxury in Dubai.</p>
+               </div>
+               <div>
+                  <h4 className="text-[11px] uppercase tracking-[1em] font-bold text-[#C5A059] mb-12">Centers</h4>
+                  <ul className="space-y-6 text-[11px] uppercase tracking-[0.5em] text-gray-400 font-bold">
+                     <li className="hover:text-[#0A192F] transition-colors cursor-pointer">Longevity Lab</li>
+                     <li className="hover:text-[#0A192F] transition-colors cursor-pointer">Aesthetic Suite</li>
+                     <li className="hover:text-[#0A192F] transition-colors cursor-pointer">Diagnostic Wing</li>
+                  </ul>
+               </div>
+               <div>
+                  <h4 className="text-[11px] uppercase tracking-[1em] font-bold text-[#C5A059] mb-12">Inquiry</h4>
+                  <ul className="space-y-6 text-[11px] uppercase tracking-[0.5em] text-gray-400 font-bold">
+                     <li className="hover:text-[#0A192F] transition-colors cursor-pointer">Board Registry</li>
+                     <li className="hover:text-[#0A192F] transition-colors cursor-pointer">Concierge Access</li>
+                     <li className="hover:text-[#0A192F] transition-colors cursor-pointer">Confidential Line</li>
+                  </ul>
+               </div>
+               <div className="space-y-12">
+                  <h4 className="text-[11px] uppercase tracking-[1em] font-bold text-[#C5A059] mb-12">Social</h4>
+                  <div className="flex gap-8">
+                     <Instagram className="text-gray-300 hover:text-[#E4405F] cursor-pointer transition-colors" size={24} />
+                     <Linkedin className="text-gray-300 hover:text-[#0077B5] cursor-pointer transition-colors" size={24} />
+                     <Facebook className="text-gray-300 hover:text-[#1877F2] cursor-pointer transition-colors" size={24} />
+                  </div>
+               </div>
+            </div>
+            <div className="pt-20 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-12 text-[10px] uppercase tracking-[0.6em] text-gray-300 font-bold">
+               <p>© 2024 Abha Medical Group • Global Standards • Dubai, UAE</p>
+               <div className="flex gap-12">
+                  <a href="#" className="hover:text-[#0A192F]">Privacy Policy</a>
+                  <a href="#" className="hover:text-[#0A192F]">Governance</a>
+               </div>
+            </div>
+         </div>
+         <div className="absolute bottom-0 right-0 p-20 opacity-[0.01] text-[30vw] font-serif select-none pointer-events-none">ABHA</div>
       </footer>
 
-      {/* Sticky WhatsApp Button */}
+      {/* --- Floating Utilities --- */}
+      
+      {/* WhatsApp Floating Button */}
       <a 
-        href="https://api.whatsapp.com/send?phone=971555938562" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-[90] bg-[#25D366] text-white p-4 rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] transition-all duration-300 flex items-center justify-center animate-[pulse_2s_infinite] group"
+        href={`https://wa.me/${CLINIC_INFO.phone.replace(/\D/g,'')}`} 
+        target="_blank" rel="noreferrer"
+        className="fixed bottom-12 left-12 z-[90] bg-white p-4 rounded-full shadow-2xl flex items-center gap-6 group hover:bg-[#25D366] transition-all duration-700"
       >
-        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-        <span className="absolute right-16 bg-white text-black font-semibold text-xs px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-          Book Table via WhatsApp
-        </span>
+        <div className="p-4 bg-[#25D366] rounded-full text-white shadow-xl shadow-[#25D366]/30 group-hover:scale-110 transition-transform duration-700"><MessageCircle size={32}/></div>
+        <div className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-1000">
+           <span className="text-[11px] font-bold uppercase tracking-[0.6em] pr-10 group-hover:text-white">The Concierge Desk</span>
+        </div>
       </a>
+
+      {/* Assistant */}
+      <div className="fixed bottom-12 right-12 z-[90]">
+        <AnimatePresence>
+          {isChatOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: 100, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 100, scale: 0.8 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-8 w-96 md:w-[450px] bg-white shadow-[2px_2px_2px_gray] border border-[#C5A059]/20 rounded-[40px] overflow-hidden"
+            >
+               <div className="bg-[#0A192F] p-12 text-white flex justify-between items-center relative overflow-hidden">
+                  <div className="flex items-center gap-10 relative z-10">
+                     <div className="w-16 h-16 border border-[#C5A059] rounded-full flex items-center justify-center italic font-serif text-[#C5A059] text-2xl">A</div>
+                     <div>
+                        <h6 className="text-[11px] font-bold uppercase tracking-[0.4em] mb-2">The Assistant</h6>
+                        <p className="text-[9px] text-[#C5A059] uppercase tracking-[1em] opacity-80 animate-pulse">Registry Open</p>
+                     </div>
+                  </div>
+                  <button onClick={() => setIsChatOpen(false)} className="opacity-40 hover:opacity-100 transition-opacity"><X size={28}/></button>
+               </div>
+               <div className="p-12 h-[400px] bg-[#FAF9F6] overflow-y-auto space-y-10 text-sm font-light leading-[2.5] italic text-gray-500 text-center">
+                  "Welcome to the Abha private circle. I am here to facilitate your registry process and guide you through our centers of excellence. How may I assist your health journey today?"
+               </div>
+               <div className="p-8 bg-white border-t border-gray-50 flex gap-6">
+                  <input className="flex-1 text-[11px] font-light uppercase tracking-[0.5em] focus:outline-none placeholder:text-gray-200" placeholder="Type your inquiry..." />
+                  <button className="text-[#C5A059]"><Send size={24}/></button>
+               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <button 
+          onClick={() => setIsChatOpen(!isChatOpen)}
+          className="bg-[#0A192F] text-[#C5A059] px-12 py-8 rounded-full flex items-center gap-10 shadow-2xl transition-all hover:bg-[#C5A059] hover:text-white"
+        >
+          <div className="text-right">
+             <p className="text-[11px] font-bold uppercase tracking-[0.8em]">{isChatOpen ? 'Close' : 'Registry Assistant'}</p>
+          </div>
+          <Fingerprint size={32}/>
+        </button>
+      </div>
+
     </div>
   );
 }
