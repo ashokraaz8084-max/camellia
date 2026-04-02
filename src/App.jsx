@@ -36,12 +36,13 @@ import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'fra
 // --- Global Configuration ---
 
 const CLINIC_INFO = {
-  name: "Dentologica",
-  fullName: "Dentologica, A Project By Al Manara Dental Clinic",
-  subBrand: "AL MANARA PROJECT",
-  address: "M1 floor - Building #154 Khalifa street - above Ajmal, Abu Dhabi, UAE",
-  phone: "+971 56 754 1109",
-  email: "registry@dentologica.ae",
+  name: "VICTORY",
+  fullName: "Victory Medical Center",
+  arabicName: "طب الأسنان ،الجلدية, التجميل و الليزر",
+  subBrand: "ABU DHABI ATELIER",
+  address: "223 Hadbat Shakhbout St, Abu Dhabi - UAE",
+  phone: "+971 2 309 4005",
+  email: "registry@victorymedical.ae",
   workingHours: "Sat - Thu: 09:00 AM - 09:00 PM"
 };
 
@@ -142,6 +143,7 @@ export default function App() {
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Montserrat', sans-serif; }
+        .font-arabic { font-family: 'Amiri', serif; }
         
         .gold-leaf {
           background: linear-gradient(135deg, #C5A059 0%, #F1E2C2 50%, #C5A059 100%);
@@ -180,7 +182,7 @@ export default function App() {
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-1000 ${isScrolled ? 'bg-white/95 backdrop-blur-xl py-3 shadow-sm border-b border-[#C5A059]/10' : 'bg-transparent py-6 md:py-10'}`}>
         <div className="container mx-auto px-6 md:px-10 flex justify-between items-center">
           <div className="flex flex-col group cursor-pointer">
-            <span className={`text-xl md:text-2xl font-serif tracking-tighter transition-colors ${isScrolled ? 'text-[#0A192F]' : 'text-white'}`}>DENTOLOGICA</span>
+            <span className={`text-xl md:text-3xl font-serif tracking-tighter transition-colors ${isScrolled ? 'text-[#0A192F]' : 'text-white'}`}>VICTORY</span>
             <span className="text-[6px] md:text-[7px] tracking-[0.8em] font-bold text-[#C5A059] uppercase mt-1">{CLINIC_INFO.subBrand}</span>
           </div>
 
@@ -219,7 +221,7 @@ export default function App() {
             className="fixed inset-0 z-[110] bg-[#0A192F] text-white p-8 flex flex-col justify-between"
           >
             <div className="flex justify-between items-center">
-              <span className="text-2xl font-serif">DENTOLOGICA</span>
+              <span className="text-2xl font-serif">VICTORY</span>
               <button onClick={() => setIsMenuOpen(false)} className="text-[#C5A059] p-2"><X size={32}/></button>
             </div>
             <div className="flex flex-col gap-6 text-center">
@@ -249,12 +251,18 @@ export default function App() {
           </LuxuryReveal>
           
           <LuxuryReveal delay={0.4}>
-            <h1 className="text-5xl md:text-[110px] font-serif text-white font-light tracking-tighter leading-none mb-1 md:mb-2 uppercase">
-              DENTOLOGICA
+            <h1 className="text-5xl md:text-[140px] font-serif text-white font-light tracking-tighter leading-none mb-1 md:mb-2 uppercase">
+              VICTORY
             </h1>
-            <h2 className="text-xl md:text-[50px] font-serif gold-leaf font-light italic mb-8 md:mb-12 leading-none uppercase">
-              A Project By Al Manara Dental Clinic
+            <h2 className="text-2xl md:text-[60px] font-serif gold-leaf font-light italic mb-8 md:mb-12 leading-none uppercase">
+              Medical Center
             </h2>
+          </LuxuryReveal>
+
+          <LuxuryReveal delay={0.6}>
+             <p className="text-[20px] md:text-[40px] font-arabic text-[#E2D1B3] tracking-[0.1em] mb-12 opacity-90 leading-relaxed max-w-4xl mx-auto">
+               {CLINIC_INFO.arabicName}
+             </p>
           </LuxuryReveal>
 
           <LuxuryReveal delay={0.8}>
@@ -285,7 +293,7 @@ export default function App() {
             <div className="col-span-12 lg:col-span-5 order-2 lg:order-1 text-center lg:text-left">
               <SectionHeader number="01" title="The Legacy" subtitle="Bespoke Care" />
               <p className="text-gray-500 text-base md:text-xl font-light leading-loose mb-10 md:mb-12 max-w-lg mx-auto lg:mx-0">
-                Located in the heart of Abu Dhabi, Dentologica is where clinical precision meets the legacy of Al Manara Dental Clinic.
+                Located in the heart of Abu Dhabi, Victory Medical Center is where clinical precision meets unparalleled luxury across Dentistry, Dermatology, and Laser Aesthetics.
               </p>
               <div className="grid grid-cols-2 gap-4 md:gap-12">
                  {[
@@ -294,7 +302,7 @@ export default function App() {
                    { t: "Board Experts", i: <Award size={20}/> },
                    { t: "Global Access", i: <Globe size={20}/> }
                  ].map((item, i) => (
-                   <div key={i} className="flex flex-col gap-3 p-4 md:p-8 bg-[#FAF9F6] rounded-[40px] shadow-[2px_2px_15px_gray] border border-gray-50">
+                   <div key={i} className="flex flex-col gap-3 p-4 md:p-8 bg-[#FAF9F6] rounded-[40px] shadow-[2px_2px_15px_gray] border border-gray-50 text-center lg:text-left">
                       <div className="text-[#C5A059] mx-auto lg:mx-0">{item.i}</div>
                       <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em]">{item.t}</span>
                    </div>
@@ -318,9 +326,9 @@ export default function App() {
         <div className="container mx-auto px-6 md:px-10">
           <SectionHeader number="02" title="Our Expertise" subtitle="Excellence Centers" light />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-             <ServiceCard title="Aesthetics" desc="Molecular level dental rejuvenation." img={IMAGES.service1} index={0} />
-             <ServiceCard title="Oral Longevity" desc="Vital dental performance protocols." img={IMAGES.service2} index={1} />
-             <ServiceCard title="Diagnostics" desc="Comprehensive radiological mapping." img={IMAGES.service3} index={2} />
+             <ServiceCard title="Dentistry" desc="Premium oral care and digital smile design." img={IMAGES.service1} index={0} />
+             <ServiceCard title="Dermatology" desc="Regenerative skincare and aesthetic treatments." img={IMAGES.service2} index={1} />
+             <ServiceCard title="Laser Therapy" desc="Advanced medical laser and facial sculpting." img={IMAGES.service3} index={2} />
           </div>
         </div>
       </section>
@@ -374,7 +382,7 @@ export default function App() {
                 <div className="absolute inset-0 flex items-center justify-center">
                    <div className="bg-white/90 backdrop-blur-md p-8 rounded-[30px] shadow-2xl text-center max-w-xs mx-4">
                       <MapPin className="text-[#C5A059] mx-auto mb-4" size={32} />
-                      <h4 className="text-lg font-serif text-[#0A192F] mb-2">Dentologica</h4>
+                      <h4 className="text-lg font-serif text-[#0A192F] mb-2">Victory Medical</h4>
                       <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-6">{CLINIC_INFO.address}</p>
                       <a 
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CLINIC_INFO.address)}`} 
@@ -406,17 +414,17 @@ export default function App() {
                  <div className="rounded-2xl overflow-hidden mb-6 md:mb-10 h-64 md:h-80">
                     <img src={IMAGES.doctor1} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Specialist" />
                  </div>
-                 <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Director of Longevity</p>
+                 <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Director of Surgery</p>
                  <h4 className="text-xl md:text-3xl font-serif text-[#0A192F]">Dr. Alistair Vaughn</h4>
               </div>
               <div className="p-8 md:p-12 bg-white rounded-[40px] shadow-[2px_2px_15px_gray] border border-gray-100 text-center group transition-all">
                  <div className="rounded-2xl overflow-hidden mb-6 md:mb-10 h-64 md:h-80">
                     <img src={IMAGES.doctor2} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt="Specialist" />
                  </div>
-                 <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Chief Aesthetician</p>
+                 <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Aesthetics Lead</p>
                  <h4 className="text-xl md:text-3xl font-serif text-[#0A192F]">Dr. Laila Al-Sayed</h4>
               </div>
-              <div className="p-8 md:p-16 bg-[#0A192F] rounded-[40px] shadow-[2px_2px_15_gray] flex flex-col justify-center text-center text-white">
+              <div className="p-8 md:p-16 bg-[#0A192F] rounded-[40px] shadow-[2px_2px_15px_gray] flex flex-col justify-center text-center text-white">
                  <Star className="text-[#C5A059] mx-auto mb-6 md:mb-10" size={40} />
                  <h5 className="text-lg md:text-2xl font-serif mb-4 md:mb-8 uppercase tracking-widest">Governance</h5>
                  <p className="text-[10px] md:text-[11px] text-gray-400 uppercase tracking-widest leading-loose italic">
@@ -434,13 +442,13 @@ export default function App() {
                <div className="lg:w-2/5 flex flex-col justify-center text-center lg:text-left">
                   <SectionHeader number="05" title="Book Appointment" subtitle="The Registry" />
                   <p className="text-gray-500 font-light text-lg md:text-2xl leading-relaxed mb-10 md:mb-16">
-                    Admission to Dentologica is a privilege. We manage your health as an asset to be protected.
+                    Admission to Victory Medical Center is a privilege. We manage your health as an asset to be protected.
                   </p>
                   
                   <div className="p-8 bg-[#FAF9F6] rounded-[40px] shadow-sm mb-12 border border-gray-50 text-left">
                     <div className="flex items-center gap-4 mb-4">
                       <MapPin size={18} className="text-[#C5A059]" />
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#0A192F]">Registry Center</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#0A192F]">Abu Dhabi Center</p>
                     </div>
                     <p className="text-xs text-gray-400 uppercase tracking-widest leading-loose">{CLINIC_INFO.address}</p>
                   </div>
@@ -486,11 +494,11 @@ export default function App() {
                                  </div>
                               </div>
                               <div className="relative">
-                                 <label className="text-[8px] uppercase tracking-widest text-gray-400 mb-1 block">Specialty</label>
+                                 <label className="text-[8px] uppercase tracking-widest text-gray-400 mb-1 block">Department</label>
                                  <select className="premium-input text-sm appearance-none bg-transparent">
-                                    <option>Aesthetic Dentistry</option>
-                                    <option>Regenerative Care</option>
-                                    <option>Precision Screening</option>
+                                    <option>Dentistry</option>
+                                    <option>Dermatology</option>
+                                    <option>Laser Aesthetics</option>
                                  </select>
                               </div>
                               <button type="submit" className="w-full py-5 md:py-8 bg-[#0A192F] text-[#E2D1B3] rounded-full uppercase tracking-widest font-bold text-[10px] hover:bg-[#C5A059] transition-all shadow-xl">
@@ -511,10 +519,10 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-20 mb-24">
                <div className="space-y-6 md:space-y-10">
                   <div className="flex flex-col group cursor-pointer">
-                     <span className="text-3xl md:text-5xl font-serif text-[#0A192F]">DENTOLOGICA</span>
+                     <span className="text-3xl md:text-5xl font-serif text-[#0A192F]">VICTORY</span>
                      <span className="text-[8px] md:text-[11px] tracking-widest font-bold text-[#C5A059] uppercase">The Atelier</span>
                   </div>
-                  <p className="text-gray-400 text-xs leading-loose uppercase tracking-widest">The pinnacle of dental luxury in Abu Dhabi.</p>
+                  <p className="text-gray-400 text-xs leading-loose uppercase tracking-widest">The pinnacle of health and aesthetics in Abu Dhabi.</p>
                </div>
                
                <div>
@@ -551,27 +559,26 @@ export default function App() {
             </div>
             
             <div className="pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 text-[8px] uppercase tracking-widest text-gray-400 font-bold text-center">
-               <p>© 2024 Dentologica • Abu Dhabi, UAE</p>
+               <p>© 2024 Victory Medical Center • Abu Dhabi, UAE</p>
                <div className="flex gap-10">
                   <a href="#" className="hover:text-[#0A192F]">Confidentiality</a>
                   <a href="#" className="hover:text-[#0A192F]">Governance</a>
                </div>
             </div>
          </div>
-         <div className="absolute bottom-0 right-0 p-20 opacity-[0.01] text-[18vw] font-serif select-none pointer-events-none uppercase">DENTOLOGICA</div>
+         <div className="absolute bottom-0 right-0 p-20 opacity-[0.01] text-[18vw] font-serif select-none pointer-events-none uppercase">VICTORY</div>
       </footer>
 
-      {/* --- Floating Cinematic Concierge --- */}
+      {/* --- Floating Utilities --- */}
       <a 
         href={`https://wa.me/${CLINIC_INFO.phone.replace(/[^0-9]/g, '')}`} 
         target="_blank" rel="noreferrer"
         className="fixed bottom-6 left-6 z-[90] bg-white p-3 md:p-4 rounded-full shadow-2xl flex items-center gap-3 group hover:bg-[#25D366] transition-all duration-700"
       >
         <div className="p-2 md:p-4 bg-[#25D366] rounded-full text-white shadow-xl group-hover:scale-110 transition-transform"><MessageCircle size={20}/></div>
-        <span className="hidden md:inline text-[11px] font-bold uppercase tracking-[0.5em] pr-4 group-hover:text-white">Concierge Desk</span>
+        <span className="hidden md:inline text-[11px] font-bold uppercase tracking-widest pr-4 group-hover:text-white">Concierge Desk</span>
       </a>
 
-      {/* Assistant */}
       <div className="fixed bottom-6 right-6 z-[90]">
         <AnimatePresence>
           {isChatOpen && (
@@ -583,7 +590,7 @@ export default function App() {
             >
                <div className="bg-[#0A192F] p-8 md:p-10 text-white flex justify-between items-center relative overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                     <div className="w-14 h-14 border border-[#C5A059] rounded-full flex items-center justify-center italic font-serif text-[#C5A059] text-2xl">D</div>
+                     <div className="w-14 h-14 border border-[#C5A059] rounded-full flex items-center justify-center italic font-serif text-[#C5A059] text-2xl">V</div>
                      <div>
                         <h6 className="text-[11px] font-bold uppercase tracking-widest">Assistant</h6>
                         <p className="text-[8px] text-[#C5A059] uppercase tracking-[1em] animate-pulse">Online</p>
@@ -592,7 +599,7 @@ export default function App() {
                   <button onClick={() => setIsChatOpen(false)} className="opacity-40 hover:opacity-100 transition-opacity"><X size={28}/></button>
                </div>
                <div className="p-10 h-[300px] md:h-[400px] bg-[#FAF9F6] overflow-y-auto space-y-8 text-sm font-light leading-loose italic text-gray-500 text-center">
-                  "Welcome to the Dentologica private circle. How may I assist your booking request today?"
+                  "Welcome to the Victory Medical private circle. How may I assist your booking request today?"
                </div>
                <div className="p-8 bg-white border-t border-gray-50 flex gap-4 items-center">
                   <input className="flex-1 text-[11px] font-light uppercase tracking-widest focus:outline-none" placeholder="Booking inquiry..." />
