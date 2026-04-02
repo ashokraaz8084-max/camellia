@@ -36,13 +36,12 @@ import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'fra
 // --- Global Configuration ---
 
 const CLINIC_INFO = {
-  name: "Al Andalus",
-  fullName: "Al Andalus Dental Clinic",
-  arabicName: "عيادة الأندلس لطب الأسنان",
-  subBrand: "ABU DHABI ATELIER",
-  address: "OUD AL TOUBA STREET, Abu Dhabi, UAE",
-  phone: "+971 3 751 1313",
-  email: "registry@alandalusdental.ae",
+  name: "Dentologica",
+  fullName: "Dentologica, A Project By Al Manara Dental Clinic",
+  subBrand: "AL MANARA PROJECT",
+  address: "M1 floor - Building #154 Khalifa street - above Ajmal, Abu Dhabi, UAE",
+  phone: "+971 56 754 1109",
+  email: "registry@dentologica.ae",
   workingHours: "Sat - Thu: 09:00 AM - 09:00 PM"
 };
 
@@ -143,7 +142,6 @@ export default function App() {
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
         .font-serif { font-family: 'Playfair Display', serif; }
         .font-sans { font-family: 'Montserrat', sans-serif; }
-        .font-arabic { font-family: 'Amiri', serif; }
         
         .gold-leaf {
           background: linear-gradient(135deg, #C5A059 0%, #F1E2C2 50%, #C5A059 100%);
@@ -182,7 +180,7 @@ export default function App() {
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-1000 ${isScrolled ? 'bg-white/95 backdrop-blur-xl py-3 shadow-sm border-b border-[#C5A059]/10' : 'bg-transparent py-6 md:py-10'}`}>
         <div className="container mx-auto px-6 md:px-10 flex justify-between items-center">
           <div className="flex flex-col group cursor-pointer">
-            <span className={`text-xl md:text-2xl font-serif tracking-tighter transition-colors ${isScrolled ? 'text-[#0A192F]' : 'text-white'}`}>AL ANDALUS</span>
+            <span className={`text-xl md:text-2xl font-serif tracking-tighter transition-colors ${isScrolled ? 'text-[#0A192F]' : 'text-white'}`}>DENTOLOGICA</span>
             <span className="text-[6px] md:text-[7px] tracking-[0.8em] font-bold text-[#C5A059] uppercase mt-1">{CLINIC_INFO.subBrand}</span>
           </div>
 
@@ -221,7 +219,7 @@ export default function App() {
             className="fixed inset-0 z-[110] bg-[#0A192F] text-white p-8 flex flex-col justify-between"
           >
             <div className="flex justify-between items-center">
-              <span className="text-2xl font-serif">AL ANDALUS</span>
+              <span className="text-2xl font-serif">DENTOLOGICA</span>
               <button onClick={() => setIsMenuOpen(false)} className="text-[#C5A059] p-2"><X size={32}/></button>
             </div>
             <div className="flex flex-col gap-6 text-center">
@@ -229,10 +227,10 @@ export default function App() {
                 <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setIsMenuOpen(false)} className="text-4xl font-serif hover:italic hover:text-[#C5A059] transition-all">{item}</a>
               ))}
             </div>
-            <div className="space-y-4 border-t border-white/10 pt-8 text-center">
+            <div className="space-y-4 border-t border-white/10 pt-8 text-center text-white/70">
               <p className="text-[10px] uppercase tracking-widest text-[#C5A059]">Concierge Line</p>
               <p className="text-xl font-light">{CLINIC_INFO.phone}</p>
-              <p className="text-[10px] text-gray-400 uppercase">{CLINIC_INFO.address}</p>
+              <p className="text-[10px] uppercase">{CLINIC_INFO.address}</p>
             </div>
           </motion.div>
         )}
@@ -247,22 +245,16 @@ export default function App() {
 
         <div className="container mx-auto px-6 relative z-10">
           <LuxuryReveal delay={0.2}>
-            <span className="inline-block text-[#C5A059] text-[8px] md:text-[10px] tracking-[0.8em] md:tracking-[1.5em] uppercase font-bold mb-4 md:mb-8">ABU DHABI ATELIER FLAGSHIP</span>
+            <span className="inline-block text-[#C5A059] text-[8px] md:text-[10px] tracking-[0.8em] md:tracking-[1.5em] uppercase font-bold mb-4 md:mb-8">ABU DHABI FLAGSHIP</span>
           </LuxuryReveal>
           
           <LuxuryReveal delay={0.4}>
-            <h1 className="text-5xl md:text-[120px] font-serif text-white font-light tracking-tighter leading-none mb-1 md:mb-2 uppercase">
-              AL ANDALUS
+            <h1 className="text-5xl md:text-[110px] font-serif text-white font-light tracking-tighter leading-none mb-1 md:mb-2 uppercase">
+              DENTOLOGICA
             </h1>
-            <h2 className="text-2xl md:text-[80px] font-serif gold-leaf font-light italic mb-8 md:mb-12 leading-none uppercase">
-              Dental Clinic
+            <h2 className="text-xl md:text-[50px] font-serif gold-leaf font-light italic mb-8 md:mb-12 leading-none uppercase">
+              A Project By Al Manara Dental Clinic
             </h2>
-          </LuxuryReveal>
-
-          <LuxuryReveal delay={0.6}>
-             <p className="text-[20px] md:text-[40px] font-arabic text-[#E2D1B3] tracking-[0.3em] mb-12 opacity-90">
-               {CLINIC_INFO.arabicName}
-             </p>
           </LuxuryReveal>
 
           <LuxuryReveal delay={0.8}>
@@ -293,7 +285,7 @@ export default function App() {
             <div className="col-span-12 lg:col-span-5 order-2 lg:order-1 text-center lg:text-left">
               <SectionHeader number="01" title="The Legacy" subtitle="Bespoke Care" />
               <p className="text-gray-500 text-base md:text-xl font-light leading-loose mb-10 md:mb-12 max-w-lg mx-auto lg:mx-0">
-                Located in the heart of Abu Dhabi, Al Andalus Dental Clinic is where clinical precision meets unparalleled luxury.
+                Located in the heart of Abu Dhabi, Dentologica is where clinical precision meets the legacy of Al Manara Dental Clinic.
               </p>
               <div className="grid grid-cols-2 gap-4 md:gap-12">
                  {[
@@ -326,9 +318,9 @@ export default function App() {
         <div className="container mx-auto px-6 md:px-10">
           <SectionHeader number="02" title="Our Expertise" subtitle="Excellence Centers" light />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-             <ServiceCard title="Aesthetics" desc="Molecular level rejuvenation." img={IMAGES.service1} index={0} />
-             <ServiceCard title="Longevity" desc="Vital performance protocols." img={IMAGES.service2} index={1} />
-             <ServiceCard title="Diagnostics" desc="Comprehensive 7T mapping." img={IMAGES.service3} index={2} />
+             <ServiceCard title="Aesthetics" desc="Molecular level dental rejuvenation." img={IMAGES.service1} index={0} />
+             <ServiceCard title="Oral Longevity" desc="Vital dental performance protocols." img={IMAGES.service2} index={1} />
+             <ServiceCard title="Diagnostics" desc="Comprehensive radiological mapping." img={IMAGES.service3} index={2} />
           </div>
         </div>
       </section>
@@ -339,7 +331,6 @@ export default function App() {
           <SectionHeader number="03" title="Find Us" subtitle="Abu Dhabi Headquarters" />
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
-            {/* Contact Details Card */}
             <div className="lg:col-span-5 space-y-8">
               <div className="p-8 md:p-12 bg-[#FAF9F6] rounded-[40px] shadow-[2px_2px_15px_gray] border border-gray-100 flex flex-col justify-center h-full">
                 <div className="space-y-12">
@@ -376,7 +367,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Map Simulation Card */}
             <div className="lg:col-span-7">
               <div className="h-full min-h-[400px] bg-gray-100 rounded-[40px] shadow-[2px_2px_15px_gray] overflow-hidden relative grayscale group hover:grayscale-0 transition-all duration-1000">
                 <img src={IMAGES.reception} className="w-full h-full object-cover" alt="Clinic Interior" />
@@ -384,7 +374,7 @@ export default function App() {
                 <div className="absolute inset-0 flex items-center justify-center">
                    <div className="bg-white/90 backdrop-blur-md p-8 rounded-[30px] shadow-2xl text-center max-w-xs mx-4">
                       <MapPin className="text-[#C5A059] mx-auto mb-4" size={32} />
-                      <h4 className="text-lg font-serif text-[#0A192F] mb-2">{CLINIC_INFO.fullName}</h4>
+                      <h4 className="text-lg font-serif text-[#0A192F] mb-2">Dentologica</h4>
                       <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-6">{CLINIC_INFO.address}</p>
                       <a 
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CLINIC_INFO.address)}`} 
@@ -426,7 +416,7 @@ export default function App() {
                  <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Chief Aesthetician</p>
                  <h4 className="text-xl md:text-3xl font-serif text-[#0A192F]">Dr. Laila Al-Sayed</h4>
               </div>
-              <div className="p-8 md:p-16 bg-[#0A192F] rounded-[40px] shadow-[2px_2px_15px_gray] flex flex-col justify-center text-center text-white">
+              <div className="p-8 md:p-16 bg-[#0A192F] rounded-[40px] shadow-[2px_2px_15_gray] flex flex-col justify-center text-center text-white">
                  <Star className="text-[#C5A059] mx-auto mb-6 md:mb-10" size={40} />
                  <h5 className="text-lg md:text-2xl font-serif mb-4 md:mb-8 uppercase tracking-widest">Governance</h5>
                  <p className="text-[10px] md:text-[11px] text-gray-400 uppercase tracking-widest leading-loose italic">
@@ -444,10 +434,9 @@ export default function App() {
                <div className="lg:w-2/5 flex flex-col justify-center text-center lg:text-left">
                   <SectionHeader number="05" title="Book Appointment" subtitle="The Registry" />
                   <p className="text-gray-500 font-light text-lg md:text-2xl leading-relaxed mb-10 md:mb-16">
-                    Admission to Al Andalus is a privilege. We manage your health as an asset to be protected.
+                    Admission to Dentologica is a privilege. We manage your health as an asset to be protected.
                   </p>
                   
-                  {/* Address Summary in Registry */}
                   <div className="p-8 bg-[#FAF9F6] rounded-[40px] shadow-sm mb-12 border border-gray-50 text-left">
                     <div className="flex items-center gap-4 mb-4">
                       <MapPin size={18} className="text-[#C5A059]" />
@@ -497,7 +486,7 @@ export default function App() {
                                  </div>
                               </div>
                               <div className="relative">
-                                 <label className="text-[8px] uppercase tracking-widest text-gray-400 mb-1 block">Department</label>
+                                 <label className="text-[8px] uppercase tracking-widest text-gray-400 mb-1 block">Specialty</label>
                                  <select className="premium-input text-sm appearance-none bg-transparent">
                                     <option>Aesthetic Dentistry</option>
                                     <option>Regenerative Care</option>
@@ -522,7 +511,7 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-20 mb-24">
                <div className="space-y-6 md:space-y-10">
                   <div className="flex flex-col group cursor-pointer">
-                     <span className="text-3xl md:text-5xl font-serif text-[#0A192F]">AL ANDALUS</span>
+                     <span className="text-3xl md:text-5xl font-serif text-[#0A192F]">DENTOLOGICA</span>
                      <span className="text-[8px] md:text-[11px] tracking-widest font-bold text-[#C5A059] uppercase">The Atelier</span>
                   </div>
                   <p className="text-gray-400 text-xs leading-loose uppercase tracking-widest">The pinnacle of dental luxury in Abu Dhabi.</p>
@@ -538,10 +527,6 @@ export default function App() {
                     <li className="flex gap-4 items-center">
                       <Phone size={16} className="text-[#C5A059] shrink-0" />
                       <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{CLINIC_INFO.phone}</span>
-                    </li>
-                    <li className="flex gap-4 items-center">
-                      <Mail size={16} className="text-[#C5A059] shrink-0" />
-                      <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{CLINIC_INFO.email}</span>
                     </li>
                   </ul>
                </div>
@@ -565,20 +550,18 @@ export default function App() {
                </div>
             </div>
             
-            <div className="pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 text-[8px] uppercase tracking-widest text-gray-400 font-bold">
-               <p>© 2024 Al Andalus Dental Clinic • Abu Dhabi, UAE</p>
+            <div className="pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 text-[8px] uppercase tracking-widest text-gray-400 font-bold text-center">
+               <p>© 2024 Dentologica • Abu Dhabi, UAE</p>
                <div className="flex gap-10">
                   <a href="#" className="hover:text-[#0A192F]">Confidentiality</a>
                   <a href="#" className="hover:text-[#0A192F]">Governance</a>
                </div>
             </div>
          </div>
-         <div className="absolute bottom-0 right-0 p-20 opacity-[0.01] text-[20vw] font-serif select-none pointer-events-none uppercase">ANDALUS</div>
+         <div className="absolute bottom-0 right-0 p-20 opacity-[0.01] text-[18vw] font-serif select-none pointer-events-none uppercase">DENTOLOGICA</div>
       </footer>
 
       {/* --- Floating Cinematic Concierge --- */}
-      
-      {/* WhatsApp Button */}
       <a 
         href={`https://wa.me/${CLINIC_INFO.phone.replace(/[^0-9]/g, '')}`} 
         target="_blank" rel="noreferrer"
@@ -600,7 +583,7 @@ export default function App() {
             >
                <div className="bg-[#0A192F] p-8 md:p-10 text-white flex justify-between items-center relative overflow-hidden">
                   <div className="flex items-center gap-4 relative z-10">
-                     <div className="w-14 h-14 border border-[#C5A059] rounded-full flex items-center justify-center italic font-serif text-[#C5A059] text-2xl">A</div>
+                     <div className="w-14 h-14 border border-[#C5A059] rounded-full flex items-center justify-center italic font-serif text-[#C5A059] text-2xl">D</div>
                      <div>
                         <h6 className="text-[11px] font-bold uppercase tracking-widest">Assistant</h6>
                         <p className="text-[8px] text-[#C5A059] uppercase tracking-[1em] animate-pulse">Online</p>
@@ -609,7 +592,7 @@ export default function App() {
                   <button onClick={() => setIsChatOpen(false)} className="opacity-40 hover:opacity-100 transition-opacity"><X size={28}/></button>
                </div>
                <div className="p-10 h-[300px] md:h-[400px] bg-[#FAF9F6] overflow-y-auto space-y-8 text-sm font-light leading-loose italic text-gray-500 text-center">
-                  "Welcome to the Al Andalus Dental private circle. How may I assist your booking request today?"
+                  "Welcome to the Dentologica private circle. How may I assist your booking request today?"
                </div>
                <div className="p-8 bg-white border-t border-gray-50 flex gap-4 items-center">
                   <input className="flex-1 text-[11px] font-light uppercase tracking-widest focus:outline-none" placeholder="Booking inquiry..." />
