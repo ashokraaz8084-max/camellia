@@ -38,6 +38,7 @@ const CLINIC_INFO = {
   subBrand: "KALBA ATELIER",
   address: "Sharjah - Kalba, UAE",
   phone: "+971 55 106 1400",
+  whatsapp: "+971 55 106 1400", // Update this line with your new WhatsApp number
   email: "registry@camelliamedical.ae",
   workingHours: "Sat - Thu: 09:00 AM - 09:00 PM"
 };
@@ -145,7 +146,7 @@ export default function App() {
                     `Sent from ${CLINIC_INFO.name} Digital Atelier`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${CLINIC_INFO.phone.replace(/\D/g, '')}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${CLINIC_INFO.whatsapp.replace(/\D/g, '')}?text=${encodedMessage}`;
 
     setRegistryStatus('submitting');
     
@@ -317,7 +318,7 @@ export default function App() {
                  <a href="#appointment" className="w-full sm:w-auto px-8 py-4 bg-[#C5A059] text-white text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] shadow-[2px_2px_2px_gray] rounded-full text-center active:scale-95 transition-transform">
                    Book Appointment
                  </a>
-                 <a href={`https://wa.me/${CLINIC_INFO.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="w-full sm:w-auto px-8 py-4 border border-white/20 backdrop-blur-md text-white text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] flex items-center justify-center gap-3 rounded-full shadow-[2px_2px_2px_gray] active:scale-95 transition-transform">
+                 <a href={`https://wa.me/${CLINIC_INFO.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="w-full sm:w-auto px-8 py-4 border border-white/20 backdrop-blur-md text-white text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] flex items-center justify-center gap-3 rounded-full shadow-[2px_2px_2px_gray] active:scale-95 transition-transform">
                    <MessageCircle size={16} className="text-[#25D366]" />
                    WhatsApp
                  </a>
@@ -665,7 +666,7 @@ export default function App() {
                   <h4 className="text-[9px] uppercase tracking-widest font-bold text-[#C5A059] mb-4 md:mb-8 text-center md:text-left">Atelier</h4>
                   <ul className="space-y-3 text-[9px] md:text-[10px] text-gray-500 font-bold uppercase tracking-widest text-center md:text-left">
                      <li><a href="#appointment" className="hover:text-[#0A192F] transition-colors">Book Appointment</a></li>
-                     <li><a href={`https://wa.me/${CLINIC_INFO.phone.replace(/\D/g, '')}`} className="hover:text-[#0A192F] transition-colors">WhatsApp Concierge</a></li>
+                     <li><a href={`https://wa.me/${CLINIC_INFO.whatsapp.replace(/\D/g, '')}`} className="hover:text-[#0A192F] transition-colors">WhatsApp Concierge</a></li>
                      <li><a href="#expertise" className="hover:text-[#0A192F] transition-colors">Services Portal</a></li>
                   </ul>
                </div>
@@ -695,7 +696,7 @@ export default function App() {
       
       {/* WhatsApp FAB */}
       <a 
-        href={`https://wa.me/${CLINIC_INFO.phone.replace(/\D/g, '')}`} 
+        href={`https://wa.me/${CLINIC_INFO.whatsapp.replace(/\D/g, '')}`} 
         target="_blank" rel="noreferrer"
         className="fixed bottom-5 left-5 md:bottom-8 md:left-8 z-[90] bg-white p-2 md:p-3 rounded-full shadow-[2px_2px_2px_gray] flex items-center gap-2 group hover:bg-[#25D366] transition-all duration-500 active:scale-95"
       >
